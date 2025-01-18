@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
@@ -28,13 +28,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="min-h-screen bg-background font-sans antialiased">
+            <div className="relative min-h-screen bg-background">
               <Header />
-              <main className="container mx-auto py-6">
-                {children}
-              </main>
+              {children}
             </div>
-            <Toaster position="bottom-right" />
+            <Toaster />
           </ThemeProvider>
         </AuthProvider>
       </body>

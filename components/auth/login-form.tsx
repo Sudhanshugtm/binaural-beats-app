@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 
@@ -13,6 +13,7 @@ import { toast } from "sonner"
 
 export function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = React.useState(false)
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -24,10 +25,12 @@ export function LoginForm() {
     const password = formData.get("password") as string
 
     try {
+      const callbackUrl = searchParams?.get("callbackUrl") || "/player"
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false,
+        callbackUrl,
       })
 
       if (result?.error) {
@@ -36,7 +39,7 @@ export function LoginForm() {
       }
 
       toast.success("Logged in successfully")
-      router.push("/player")
+      router.push(callbackUrl)
       router.refresh()
     } catch (error) {
       toast.error("Something went wrong. Please try again.")

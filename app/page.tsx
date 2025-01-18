@@ -18,79 +18,79 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <main className="flex flex-col min-h-[calc(100vh-4rem)]">
       {/* Hero Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                Experience Deep Focus & Meditation
-              </h1>
-              <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Unlock your mind&apos;s potential with scientifically designed binaural beats. 
-                Enhance focus, reduce stress, and achieve deeper meditation states.
-              </p>
-            </div>
-            <div className="space-x-4">
-              <Button 
-                onClick={handleStartSession} 
-                size="lg" 
-                className="bg-primary hover:bg-primary/90"
-              >
-                Start Session
-              </Button>
-            </div>
+      <section className="flex-1 flex items-center justify-center bg-background">
+        <div className="container max-w-6xl px-4 py-16 md:py-24">
+          <div className="text-center space-y-8">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+              Experience Deep Focus & Meditation
+            </h1>
+            <p className="mx-auto max-w-2xl text-lg md:text-xl text-muted-foreground">
+              Unlock your mind&apos;s potential with scientifically designed binaural beats. 
+              Enhance focus, reduce stress, and achieve deeper meditation states.
+            </p>
+            <Button 
+              onClick={handleStartSession} 
+              size="lg" 
+              className="px-8"
+            >
+              Start Session
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50 dark:bg-gray-900">
-        <div className="container px-4 md:px-6">
-          <h2 className="text-3xl font-bold tracking-tighter text-center mb-12">
+      <section className="py-16 md:py-24 bg-muted/50">
+        <div className="container max-w-6xl px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">
             Features
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="flex flex-col items-center space-y-2 border-gray-200 p-4 rounded-lg">
-              <div className="p-2 bg-primary/10 rounded-full">
-                <Brain className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-bold">Neural Synchronization</h3>
-              <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-                Scientifically designed frequencies to enhance brain wave patterns
-              </p>
-            </div>
-            <div className="flex flex-col items-center space-y-2 border-gray-200 p-4 rounded-lg">
-              <div className="p-2 bg-primary/10 rounded-full">
-                <Focus className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-bold">Deep Focus</h3>
-              <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-                Achieve flow state and enhanced concentration
-              </p>
-            </div>
-            <div className="flex flex-col items-center space-y-2 border-gray-200 p-4 rounded-lg">
-              <div className="p-2 bg-primary/10 rounded-full">
-                <Music className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-bold">Multiple Frequencies</h3>
-              <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-                Choose from delta, theta, alpha, and beta waves
-              </p>
-            </div>
-            <div className="flex flex-col items-center space-y-2 border-gray-200 p-4 rounded-lg">
-              <div className="p-2 bg-primary/10 rounded-full">
-                <Crown className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-bold">Premium Features</h3>
-              <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-                Sign in to track sessions and save your favorites
-              </p>
-            </div>
+            <FeatureCard
+              icon={<Brain className="h-8 w-8" />}
+              title="Neural Synchronization"
+              description="Scientifically designed frequencies to enhance brain wave patterns"
+            />
+            <FeatureCard
+              icon={<Focus className="h-8 w-8" />}
+              title="Deep Focus"
+              description="Achieve flow state and enhanced concentration"
+            />
+            <FeatureCard
+              icon={<Music className="h-8 w-8" />}
+              title="Multiple Frequencies"
+              description="Choose from delta, theta, alpha, and beta waves"
+            />
+            <FeatureCard
+              icon={<Crown className="h-8 w-8" />}
+              title="Premium Features"
+              description="Sign in to track sessions and save your favorites"
+            />
           </div>
         </div>
       </section>
+    </main>
+  );
+}
+
+function FeatureCard({
+  icon,
+  title,
+  description
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex flex-col items-center text-center p-6 rounded-lg bg-background shadow-sm">
+      <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+        {icon}
+      </div>
+      <h3 className="font-semibold text-lg mb-2">{title}</h3>
+      <p className="text-muted-foreground">{description}</p>
     </div>
   );
 }

@@ -1,10 +1,22 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Brain, Focus, Music, Crown } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleStartSession = () => {
+    if (session) {
+      router.push('/dashboard');
+    } else {
+      router.push('/player');
+    }
+  };
+
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section */}
@@ -21,16 +33,13 @@ export default function Home() {
               </p>
             </div>
             <div className="space-x-4">
-              <Link href="/player">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
-                  Start Session
-                </Button>
-              </Link>
-              <Link href="/auth/login">
-                <Button variant="outline" size="lg">
-                  Sign In
-                </Button>
-              </Link>
+              <Button 
+                onClick={handleStartSession} 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90"
+              >
+                Start Session
+              </Button>
             </div>
           </div>
         </div>
@@ -76,52 +85,12 @@ export default function Home() {
               </div>
               <h3 className="font-bold">Premium Features</h3>
               <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-                Track sessions, save favorites, and customize your experience
+                Sign in to track sessions and save your favorites
               </p>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Benefits Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                Transform Your Mind
-              </h2>
-              <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                Our binaural beats technology helps you achieve deeper meditation states,
-                enhance focus, reduce stress, and improve cognitive performance.
-                Join thousands of users who have already experienced the benefits.
-              </p>
-            </div>
-            <Link href="/auth/register">
-              <Button size="lg" className="bg-primary hover:bg-primary/90">
-                Get Started Free
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="w-full border-t border-gray-200 dark:border-gray-800">
-        <div className="container flex flex-col gap-2 sm:flex-row py-12 px-4 text-center sm:px-6 lg:px-8">
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            © 2024 Binaural Beats App. All rights reserved.
-          </p>
-          <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-            <Link className="text-xs hover:underline underline-offset-4" href="/terms">
-              Terms of Service
-            </Link>
-            <Link className="text-xs hover:underline underline-offset-4" href="/privacy">
-              Privacy Policy
-            </Link>
-          </nav>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -8,7 +8,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const NOISE_TYPES = {
+type NoiseType = "white" | "pink" | "brown" | "green" | "blue" | "violet" | "gray" | "rain";
+
+const NOISE_TYPES: Record<NoiseType, { name: string; description: string }> = {
   white: { name: "White Noise", description: "Uniform sound across all frequencies" },
   pink: { name: "Pink Noise", description: "Approx. more energy in lower frequencies" },
   brown: { name: "Brown Noise", description: "Approx. deeper emphasis on low frequencies" },
@@ -20,8 +22,8 @@ const NOISE_TYPES = {
 };
 
 interface NoiseGeneratorProps {
-  noiseType: string;
-  setNoiseType: (value: string) => void;
+  noiseType: NoiseType;
+  setNoiseType: (value: NoiseType) => void;
 }
 
 export const NoiseGenerator: React.FC<NoiseGeneratorProps> = ({ noiseType, setNoiseType }) => {
@@ -30,7 +32,7 @@ export const NoiseGenerator: React.FC<NoiseGeneratorProps> = ({ noiseType, setNo
       <Label className="text-base font-medium block text-gray-700 dark:text-gray-200">Noise Type</Label>
       <Select value={noiseType} onValueChange={setNoiseType}>
         <SelectTrigger className="w-full text-base bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600">
-          <SelectValue>{NOISE_TYPES[noiseType as keyof typeof NOISE_TYPES].name}</SelectValue>
+          <SelectValue>{NOISE_TYPES[noiseType].name}</SelectValue>
         </SelectTrigger>
         <SelectContent className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
           {Object.entries(NOISE_TYPES).map(([value, { name, description }]) => (

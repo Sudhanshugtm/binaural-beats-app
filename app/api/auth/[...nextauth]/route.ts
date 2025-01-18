@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from "next-auth"
+import NextAuth from "next-auth"
 import { MongoDBAdapter } from "@auth/mongodb-adapter"
 import GoogleProvider from "next-auth/providers/google"
 import GitHubProvider from "next-auth/providers/github"
@@ -6,7 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { compare } from "bcryptjs"
 import clientPromise from "@/lib/mongodb"
 
-export const authOptions: NextAuthOptions = {
+const handler = NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: "jwt"
@@ -64,7 +64,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-}
+})
 
-const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST }

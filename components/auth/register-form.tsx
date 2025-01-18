@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { signIn } from "next-auth/react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,6 +27,7 @@ export function RegisterForm() {
     }
 
     try {
+      // Register the user
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -36,11 +38,23 @@ export function RegisterForm() {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || "Something went wrong")
+        throw new Error(error.error || "Failed to register")
+      }
+
+      // After successful registration, automatically sign in
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        throw new Error(result.error)
       }
 
       toast.success("Account created successfully")
-      router.push("/auth/login")
+      router.push("/player")
+      router.refresh()
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Something went wrong")
     } finally {

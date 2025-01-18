@@ -1,50 +1,47 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
+import * as React from "react"
+import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
+import Link from "next/link"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Icons } from "@/components/ui/icons";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Icons } from "@/components/ui/icons"
+import { toast } from "sonner"
 
 export function LoginForm() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = React.useState(false);
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const [isLoading, setIsLoading] = React.useState(false)
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsLoading(true);
+    event.preventDefault()
+    setIsLoading(true)
 
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const formData = new FormData(event.currentTarget)
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
 
     try {
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false,
-        callbackUrl: searchParams?.get("callbackUrl") || "/dashboard",
-      });
+      })
 
       if (result?.error) {
-        toast.error(result.error);
-        return;
+        toast.error(result.error)
+        return
       }
 
-      const callback = searchParams?.get("callbackUrl") || "/dashboard";
-      router.push(callback);
-      router.refresh();
-      toast.success("Logged in successfully");
+      toast.success("Logged in successfully")
+      router.push("/player")
+      router.refresh()
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
@@ -85,26 +82,6 @@ export function LoginForm() {
           </Button>
         </div>
       </form>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline" disabled={isLoading} onClick={() => signIn("github")}>
-          <Icons.github className="mr-2 h-4 w-4" />
-          GitHub
-        </Button>
-        <Button variant="outline" disabled={isLoading} onClick={() => signIn("google")}>
-          <Icons.google className="mr-2 h-4 w-4" />
-          Google
-        </Button>
-      </div>
       <p className="text-center text-sm text-muted-foreground">
         Don't have an account?{" "}
         <Link href="/auth/register" className="underline">
@@ -112,5 +89,5 @@ export function LoginForm() {
         </Link>
       </p>
     </div>
-  );
+  )
 }

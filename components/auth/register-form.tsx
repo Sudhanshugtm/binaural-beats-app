@@ -2,43 +2,28 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/ui/icons"
+import { toast } from "sonner"
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters long.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters long.",
-  }),
-})
-
-interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export function RegisterForm({ className, ...props }: RegisterFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  })
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+export function RegisterForm() {
   const router = useRouter()
+  const [isLoading, setIsLoading] = React.useState(false)
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
     setIsLoading(true)
+
+    const formData = new FormData(event.currentTarget)
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    }
 
     try {
       const response = await fetch("/api/auth/register", {
@@ -46,36 +31,26 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(data),
       })
 
       if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || "Failed to register")
+        const error = await response.json()
+        throw new Error(error.error || "Something went wrong")
       }
 
-      toast({
-        title: "Success!",
-        description: "Your account has been created. Please sign in.",
-      })
-
+      toast.success("Account created successfully")
       router.push("/auth/login")
     } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          title: "Something went wrong.",
-          description: error.message,
-          variant: "destructive",
-        })
-      }
+      toast.error(error instanceof Error ? error.message : "Something went wrong")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="grid gap-6" {...props}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="grid gap-6">
+      <form onSubmit={onSubmit}>
         <div className="grid gap-4">
           <div className="grid gap-1">
             <Label htmlFor="name">Name</Label>
@@ -84,13 +59,11 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
               placeholder="John Doe"
               type="text"
               autoCapitalize="none"
+              autoComplete="name"
               autoCorrect="off"
               disabled={isLoading}
-              {...register("name")}
+              required
             />
-            {errors?.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
-            )}
           </div>
           <div className="grid gap-1">
             <Label htmlFor="email">Email</Label>
@@ -102,25 +75,21 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
               autoComplete="email"
               autoCorrect="off"
               disabled={isLoading}
-              {...register("email")}
+              required
             />
-            {errors?.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
-            )}
           </div>
           <div className="grid gap-1">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
+              placeholder="••••••••"
               type="password"
               autoCapitalize="none"
               autoComplete="new-password"
               disabled={isLoading}
-              {...register("password")}
+              required
+              minLength={8}
             />
-            {errors?.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
-            )}
           </div>
           <Button disabled={isLoading}>
             {isLoading && (
@@ -130,6 +99,12 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
           </Button>
         </div>
       </form>
+      <p className="text-center text-sm text-muted-foreground">
+        Already have an account?{" "}
+        <Link href="/auth/login" className="underline">
+          Sign in
+        </Link>
+      </p>
     </div>
   )
 }

@@ -2,67 +2,51 @@
 
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
 import { signIn } from "next-auth/react"
+import Link from "next/link"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/ui/icons"
+import { toast } from "sonner"
 
-const formSchema = z.object({
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters long.",
-  }),
-})
-
-interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export function LoginForm({ className, ...props }: LoginFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  })
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+export function LoginForm() {
+  const [isLoading, setIsLoading] = React.useState(false)
   const searchParams = useSearchParams()
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
     setIsLoading(true)
 
-    const signInResult = await signIn("credentials", {
-      email: values.email.toLowerCase(),
-      password: values.password,
-      redirect: false,
-      callbackUrl: searchParams?.get("callbackUrl") || "/dashboard"
-    })
+    const formData = new FormData(event.currentTarget)
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
 
-    setIsLoading(false)
-
-    if (!signInResult?.ok) {
-      return toast({
-        title: "Something went wrong.",
-        description: "Your sign in request failed. Please try again.",
-        variant: "destructive",
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: searchParams?.get("callbackUrl") || "/dashboard",
       })
-    }
 
-    return toast({
-      title: "Success!",
-      description: "You have been signed in.",
-    })
+      if (result?.error) {
+        toast.error(result.error)
+        return
+      }
+
+      toast.success("Logged in successfully")
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <div className="grid gap-6" {...props}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="grid gap-6">
+      <form onSubmit={onSubmit}>
         <div className="grid gap-4">
           <div className="grid gap-1">
             <Label htmlFor="email">Email</Label>
@@ -74,25 +58,20 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
               autoComplete="email"
               autoCorrect="off"
               disabled={isLoading}
-              {...register("email")}
+              required
             />
-            {errors?.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
-            )}
           </div>
           <div className="grid gap-1">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
+              placeholder="••••••••"
               type="password"
               autoCapitalize="none"
               autoComplete="current-password"
               disabled={isLoading}
-              {...register("password")}
+              required
             />
-            {errors?.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
-            )}
           </div>
           <Button disabled={isLoading}>
             {isLoading && (
@@ -122,6 +101,12 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
           Google
         </Button>
       </div>
+      <p className="text-center text-sm text-muted-foreground">
+        Don't have an account?{" "}
+        <Link href="/auth/register" className="underline">
+          Sign up
+        </Link>
+      </p>
     </div>
   )
 }

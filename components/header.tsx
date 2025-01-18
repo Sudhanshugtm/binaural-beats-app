@@ -12,25 +12,35 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <div className="mr-4 flex">
+      <div className="container flex h-14 max-w-screen-2xl items-center">
+        <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold">Binaural Beats</span>
+            <span className="hidden font-bold sm:inline-block">
+              Binaural Beats
+            </span>
           </Link>
         </div>
 
-        <div className="flex flex-1 items-center justify-end space-x-4">
-          <nav className="flex items-center space-x-2">
-            <ModeToggle />
+        {/* Push items to the right */}
+        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end md:space-x-4">
+          <div className="w-full flex-1 md:w-auto md:flex-none">
+            <Link href="/" className="mr-6 flex items-center space-x-2 md:hidden">
+              <span className="font-bold">Binaural Beats</span>
+            </Link>
+          </div>
+          <nav className="flex items-center">
+            {/* Theme Toggle - Always visible */}
+            <div className="mr-2">
+              <ModeToggle />
+            </div>
+            
+            {/* Auth Button or User Nav */}
             {session ? (
               <UserNav user={session.user} />
             ) : (
-              <Link href="/auth/login">
-                <Button>
-                  Sign In
-                  <Icons.github className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+              <Button asChild variant="secondary" size="sm">
+                <Link href="/auth/login">Sign In</Link>
+              </Button>
             )}
           </nav>
         </div>

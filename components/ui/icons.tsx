@@ -1,7 +1,7 @@
 import {
   Loader2,
   Mail,
-  GitHubIcon,
+  Github,
   Twitter,
   Check,
   ChevronLeft,
@@ -16,7 +16,7 @@ import {
 export const Icons = {
   spinner: Loader2,
   mail: Mail,
-  gitHub: GitHubIcon,
+  github: Github,
   twitter: Twitter,
   check: Check,
   chevronLeft: ChevronLeft,

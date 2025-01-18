@@ -1,26 +1,20 @@
-import 'next-auth'
-import { DefaultSession } from 'next-auth'
+import "next-auth";
+import { DefaultSession } from "next-auth";
 
-declare module 'next-auth' {
+declare module "next-auth" {
   interface Session {
     user: {
-      id: string
-      email: string
-      name?: string | null
-      image?: string | null
-    } & DefaultSession['user']
+      id: string;
+    } & DefaultSession["user"];
   }
 
   interface User {
-    id: string
-    email: string
-    name?: string | null
-    image?: string | null
+    id: string;
     stats?: {
-      totalSessions: number
-      totalMinutes: number
-      preferredModes: Record<string, number>
-      lastSession: Date | null
-    }
+      totalSessions: number;
+      totalMinutes: number;
+      preferredModes: Record<string, number>;
+      lastSession: Date | null;
+    };
   }
 }

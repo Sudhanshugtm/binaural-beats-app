@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-function NumberCounter({ end, duration = 2000 }) {
+function NumberCounter({ end, duration = 2000 }: { end: number; duration?: number }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -74,30 +74,28 @@ export default function Home() {
         {/* Hero Content */}
         <div className="relative container mx-auto px-6 z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <div 
-              className={\`inline-block mb-6 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-sm backdrop-blur-xl transition-all duration-700 \${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }\`}
-            >
+            <div className={`inline-block mb-6 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-sm backdrop-blur-xl transition-all duration-700 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}>
               <span className="text-purple-200">✨ Experience the future of meditation</span>
             </div>
 
-            <h1 className={\`mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent text-5xl md:text-7xl font-bold tracking-tight transition-all duration-700 \${
+            <h1 className={`mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent text-5xl md:text-7xl font-bold tracking-tight transition-all duration-700 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }\`}>
+            }`}>
               Unlock Your Mind's <br /> Full Potential
             </h1>
 
-            <p className={\`mb-12 text-gray-400 text-xl md:text-2xl max-w-2xl mx-auto transition-all duration-700 delay-300 \${
+            <p className={`mb-12 text-gray-400 text-xl md:text-2xl max-w-2xl mx-auto transition-all duration-700 delay-300 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }\`}>
+            }`}>
               Scientifically designed binaural beats to enhance focus, reduce stress, and achieve deeper meditation states.
             </p>
 
             {/* Stats Counter */}
-            <div className={\`grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 transition-all duration-700 delay-500 \${
+            <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 transition-all duration-700 delay-500 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }\`}>
+            }`}>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-400 mb-2">
                   <NumberCounter end={50000} />
@@ -122,9 +120,9 @@ export default function Home() {
               </div>
             </div>
 
-            <div className={\`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-700 \${
+            <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-700 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }\`}>
+            }`}>
               <Button
                 onClick={handleStartSession}
                 size="lg"

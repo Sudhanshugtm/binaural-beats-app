@@ -5,12 +5,13 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import AuthProvider from "@/components/auth/auth-provider";
 import { Header } from "@/components/header";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Binaural Beats App",
-  description: "A modern binaural beats application for focus and meditation",
+  title: "Binaural Beats",
+  description: "Boost your productivity with audio science",
 };
 
 export default function RootLayout({
@@ -28,11 +29,13 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="relative min-h-screen bg-background">
-              <Header />
-              {children}
-            </div>
-            <Toaster />
+            <TooltipProvider>
+              <div className="relative min-h-screen bg-background">
+                <Header />
+                {children}
+              </div>
+              <Toaster />
+            </TooltipProvider>
           </ThemeProvider>
         </AuthProvider>
       </body>

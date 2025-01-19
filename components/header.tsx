@@ -5,12 +5,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { UserNav } from "@/components/user-nav";
-import { Headphones, Menu } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Headphones } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -59,28 +54,6 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link 
-              href="/about" 
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              About
-            </Link>
-            <Link 
-              href="/features" 
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              Features
-            </Link>
-            <Link 
-              href="/science" 
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              The Science
-            </Link>
-          </nav>
-
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             <ModeToggle />
@@ -103,39 +76,6 @@ export function Header() {
                 </DialogContent>
               </Dialog>
             )}
-
-            {/* Mobile Menu */}
-            <div className="md:hidden">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                  <nav className="flex flex-col space-y-4 mt-8">
-                    <Link 
-                      href="/about"
-                      className="text-lg font-medium hover:text-primary transition-colors"
-                    >
-                      About
-                    </Link>
-                    <Link 
-                      href="/features"
-                      className="text-lg font-medium hover:text-primary transition-colors"
-                    >
-                      Features
-                    </Link>
-                    <Link 
-                      href="/science"
-                      className="text-lg font-medium hover:text-primary transition-colors"
-                    >
-                      The Science
-                    </Link>
-                  </nav>
-                </SheetContent>
-              </Sheet>
-            </div>
           </div>
         </div>
       </div>

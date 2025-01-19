@@ -26,25 +26,43 @@ const handler = NextAuth({
           throw new Error("Invalid credentials");
         }
 
-        const client = await clientPromise;
-        const users = client.db().collection("users");
-        const user = await users.findOne({ email: credentials.email });
+        try {
+          const client = await clientPromise;
+          const db = client.db();
+          const users = db.collection("users");
+          
+          // Normalize email to lowercase
+          const user = await users.findOne({ 
+            email: credentials.email.toLowerCase() 
+          });
 
-        if (!user || !user.password) {
-          throw new Error("User not found");
+          if (!user) {
+            console.log("User not found:", credentials.email);
+            throw new Error("Invalid email or password");
+          }
+
+          if (!user.password) {
+            console.log("No password found for user");
+            throw new Error("Invalid email or password");
+          }
+
+          const isValid = await compare(credentials.password, user.password);
+
+          if (!isValid) {
+            console.log("Invalid password");
+            throw new Error("Invalid email or password");
+          }
+
+          // Return standardized user object
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
+          throw error;
         }
-
-        const isValid = await compare(credentials.password, user.password);
-
-        if (!isValid) {
-          throw new Error("Invalid password");
-        }
-
-        return {
-          id: user._id.toString(),
-          email: user.email,
-          name: user.name,
-        };
       }
     }),
     GoogleProvider({
@@ -57,9 +75,15 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
     async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.sub!;
+      if (session.user) {
+        session.user.id = token.id as string;
       }
       return session;
     },

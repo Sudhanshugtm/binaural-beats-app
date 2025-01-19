@@ -13,11 +13,15 @@ export async function POST(req: Request) {
       );
     }
 
+    // Normalize email to lowercase
+    const normalizedEmail = email.toLowerCase();
+
     const client = await clientPromise;
     const db = client.db();
+    const users = db.collection("users");
 
     // Check if user already exists
-    const existingUser = await db.collection("users").findOne({ email });
+    const existingUser = await users.findOne({ email: normalizedEmail });
     if (existingUser) {
       return NextResponse.json(
         { error: "User already exists" },
@@ -28,9 +32,9 @@ export async function POST(req: Request) {
     const hashedPassword = await hash(password, 12);
 
     // Insert new user with initialized session stats
-    const result = await db.collection("users").insertOne({
+    const result = await users.insertOne({
       name,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
       createdAt: new Date(),
       sessions: [],

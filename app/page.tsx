@@ -1,29 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Brain, Waves, Sparkles, Crown, ChevronRight, Volume2 } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-function NumberCounter({ end, duration = 2000 }: { end: number; duration?: number }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTime: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      setCount(Math.floor(progress * end));
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
-    };
-    window.requestAnimationFrame(step);
-  }, [end, duration]);
-
-  return <span>{count.toLocaleString()}+</span>;
-}
 
 export default function Home() {
   const { data: session } = useSession();
@@ -78,34 +59,6 @@ export default function Home() {
               Scientifically designed binaural beats to enhance focus, reduce stress, and achieve deeper meditation states.
             </p>
 
-            {/* Stats Counter */}
-            <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 transition-all duration-700 delay-500 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400 mb-2">
-                  <NumberCounter end={50000} />
-                </div>
-                <div className="text-gray-500">Active Users</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-400 mb-2">
-                  <NumberCounter end={100000} />
-                </div>
-                <div className="text-gray-500">Sessions Completed</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400 mb-2">
-                  <NumberCounter end={12} />
-                </div>
-                <div className="text-gray-500">Frequency Patterns</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-400 mb-2">4.9</div>
-                <div className="text-gray-500">User Rating</div>
-              </div>
-            </div>
-
             <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-700 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}>
@@ -133,8 +86,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Rest of the content remains the same */}
-      {/* ... */}
+      {/* Rest of the sections remain the same */}
     </div>
   );
 }

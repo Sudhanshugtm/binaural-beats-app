@@ -44,19 +44,19 @@ export default function Home() {
             <div className={`inline-block mb-6 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-sm backdrop-blur-xl transition-all duration-700 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}>
-              <span className="text-purple-200">✨ Experience the future of meditation</span>
+              <span className="text-purple-200">✨ Boost your productivity with audio science</span>
             </div>
 
             <h1 className={`mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent text-5xl md:text-7xl font-bold tracking-tight transition-all duration-700 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}>
-              Unlock Your Mind's <br /> Full Potential
+              Enhance Your Focus <br /> & Performance
             </h1>
 
             <p className={`mb-12 text-gray-400 text-xl md:text-2xl max-w-2xl mx-auto transition-all duration-700 delay-300 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}>
-              Scientifically designed binaural beats to enhance focus, reduce stress, and achieve deeper meditation states.
+              Science-backed audio frequencies designed to boost concentration, enhance creativity, and optimize your mind's performance.
             </p>
 
             <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-700 ${
@@ -69,11 +69,11 @@ export default function Home() {
               >
                 <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <span className="relative">
-                  Start Free Session
+                  Start Your Flow
                   <ChevronRight className="inline-block ml-2 h-5 w-5" />
                 </span>
               </Button>
-              <span className="text-gray-500">No account required</span>
+              <span className="text-gray-500">Instant access - no signup needed</span>
             </div>
           </div>
         </div>

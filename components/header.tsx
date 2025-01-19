@@ -64,8 +64,8 @@ export function Header() {
               <Dialog>
                 <DialogTrigger asChild>
                   <Button 
-                    variant="outline"
-                    className="relative group"
+                    variant="secondary"
+                    className="relative group border border-input hover:border-primary"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity rounded-md" />
                     <span>Sign In</span>

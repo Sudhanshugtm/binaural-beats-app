@@ -10,33 +10,38 @@ export function AuthPopup() {
 
   return (
     <div className="grid gap-4 py-4">
+      <div className="flex flex-col space-y-2 text-center mb-4">
+        <h2 className="text-2xl font-semibold tracking-tight">
+          {mode === 'login' ? 'Welcome back' : 'Create account'}
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          {mode === 'login' 
+            ? 'Enter your credentials to sign in' 
+            : 'Enter your details below'}
+        </p>
+      </div>
+
       {mode === 'login' ? (
         <>
           <LoginForm />
-          <div className="text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Button 
-              variant="link" 
-              className="px-2 text-primary" 
-              onClick={() => setMode('register')}
-            >
-              Sign up
-            </Button>
-          </div>
+          <Button 
+            variant="link" 
+            className="text-sm text-muted-foreground hover:text-primary" 
+            onClick={() => setMode('register')}
+          >
+            Don't have an account? Sign up
+          </Button>
         </>
       ) : (
         <>
           <RegisterForm />
-          <div className="text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Button 
-              variant="link" 
-              className="px-2 text-primary" 
-              onClick={() => setMode('login')}
-            >
-              Sign in
-            </Button>
-          </div>
+          <Button 
+            variant="link" 
+            className="text-sm text-muted-foreground hover:text-primary" 
+            onClick={() => setMode('login')}
+          >
+            Already have an account? Sign in
+          </Button>
         </>
       )}
     </div>

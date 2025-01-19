@@ -77,13 +77,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-          <div className="w-[30px] h-[50px] rounded-full border-2 border-purple-500/50 flex justify-center p-2">
-            <div className="w-1 h-3 bg-gradient-to-b from-purple-500 to-blue-500 rounded-full animate-bounce" />
-          </div>
-        </div>
       </section>
 
       {/* Rest of the sections remain the same */}

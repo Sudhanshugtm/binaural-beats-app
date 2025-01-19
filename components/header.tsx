@@ -16,7 +16,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { LoginForm } from "./auth/login-form";
+import { AuthPopup } from "./auth-popup";
 import { useState, useEffect } from "react";
 
 export function Header() {
@@ -99,9 +99,7 @@ export function Header() {
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
-                  <div className="grid gap-4 py-4">
-                    <LoginForm />
-                  </div>
+                  <AuthPopup />
                 </DialogContent>
               </Dialog>
             )}

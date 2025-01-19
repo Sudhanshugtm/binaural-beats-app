@@ -307,7 +307,7 @@ export default function BinauralBeatExperience() {
   // --------------------------------------------------------------------------------
   //   STOP AUDIO
   // --------------------------------------------------------------------------------
-  const stopAudio = () => {
+  const stopAudio = async () => {
     if (isBackgroundPlaying) {
       setIsBackgroundPlaying(false);
       if (backgroundAudioContextRef.current) {
@@ -317,16 +317,33 @@ export default function BinauralBeatExperience() {
     }
 
     if (audioContextRef.current) {
-      audioContextRef.current.close().then(() => {
-        audioContextRef.current = null;
-        oscillatorLeftRef.current = null;
-        oscillatorRightRef.current = null;
-        gainNodeRef.current = null;
-        analyserRef.current = null;
-        noiseSourceRef.current = null;
-        noiseGainRef.current = null;
-        setOmBuffer(null);
+      await audioContextRef.current.close();
+      audioContextRef.current = null;
+      oscillatorLeftRef.current = null;
+      oscillatorRightRef.current = null;
+      gainNodeRef.current = null;
+      analyserRef.current = null;
+      noiseSourceRef.current = null;
+      noiseGainRef.current = null;
+      setOmBuffer(null);
+    }
+
+    // Save session data
+    try {
+      await fetch("/api/sessions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          duration: timer,
+          mode: audioMode,
+          frequency: audioMode === "binaural" ? beatFrequency : undefined,
+          noiseType: audioMode === "noise" ? noiseType : undefined,
+        }),
       });
+    } catch (error) {
+      console.error("Failed to save session:", error);
     }
 
     setIsPlaying(false);

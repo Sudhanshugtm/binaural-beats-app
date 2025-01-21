@@ -307,26 +307,54 @@ export default function BinauralBeatExperience() {
   // --------------------------------------------------------------------------------
   //   STOP AUDIO
   // --------------------------------------------------------------------------------
-  const stopAudio = () => {
+  const stopAudio = async () => {
+    // Stop any background audio first
     if (isBackgroundPlaying) {
       setIsBackgroundPlaying(false);
       if (backgroundAudioContextRef.current) {
-        backgroundAudioContextRef.current.close();
+        await backgroundAudioContextRef.current.close();
         backgroundAudioContextRef.current = null;
       }
     }
 
+    // Clean up audio nodes based on current mode
     if (audioContextRef.current) {
-      audioContextRef.current.close().then(() => {
-        audioContextRef.current = null;
+      // Stop and disconnect oscillators for binaural mode
+      if (oscillatorLeftRef.current) {
+        oscillatorLeftRef.current.stop();
+        oscillatorLeftRef.current.disconnect();
         oscillatorLeftRef.current = null;
+      }
+      if (oscillatorRightRef.current) {
+        oscillatorRightRef.current.stop();
+        oscillatorRightRef.current.disconnect();
         oscillatorRightRef.current = null;
-        gainNodeRef.current = null;
-        analyserRef.current = null;
+      }
+
+      // Stop and disconnect noise source
+      if (noiseSourceRef.current) {
+        noiseSourceRef.current.stop();
+        noiseSourceRef.current.disconnect();
         noiseSourceRef.current = null;
+      }
+      if (noiseGainRef.current) {
+        noiseGainRef.current.disconnect();
         noiseGainRef.current = null;
-        setOmBuffer(null);
-      });
+      }
+
+      // Clean up gain and analyser nodes
+      if (gainNodeRef.current) {
+        gainNodeRef.current.disconnect();
+        gainNodeRef.current = null;
+      }
+      if (analyserRef.current) {
+        analyserRef.current.disconnect();
+        analyserRef.current = null;
+      }
+
+      // Suspend the audio context but don't close it
+      await audioContextRef.current.suspend();
+      setOmBuffer(null);
     }
 
     setIsPlaying(false);
@@ -451,10 +479,43 @@ export default function BinauralBeatExperience() {
   // --------------------------------------------------------------------------------
   //   SWITCH AUDIO MODE
   // --------------------------------------------------------------------------------
-  const handleAudioModeChange = (newMode: AudioMode) => {
+  const handleAudioModeChange = async (newMode: AudioMode) => {
+    // Stop current audio and clean up
     if (isPlaying) {
-      stopAudio();
+      // Stop and disconnect all nodes without closing the context
+      if (oscillatorLeftRef.current) {
+        oscillatorLeftRef.current.stop();
+        oscillatorLeftRef.current.disconnect();
+        oscillatorLeftRef.current = null;
+      }
+      if (oscillatorRightRef.current) {
+        oscillatorRightRef.current.stop();
+        oscillatorRightRef.current.disconnect();
+        oscillatorRightRef.current = null;
+      }
+      if (noiseSourceRef.current) {
+        noiseSourceRef.current.stop();
+        noiseSourceRef.current.disconnect();
+        noiseSourceRef.current = null;
+      }
+      if (noiseGainRef.current) {
+        noiseGainRef.current.disconnect();
+        noiseGainRef.current = null;
+      }
+      if (gainNodeRef.current) {
+        gainNodeRef.current.disconnect();
+        gainNodeRef.current = null;
+      }
+      if (analyserRef.current) {
+        analyserRef.current.disconnect();
+        analyserRef.current = null;
+      }
+      setOmBuffer(null);
+      setIsPlaying(false);
+      stopTimer();
     }
+
+    // Switch mode
     setAudioMode(newMode);
   };
 
@@ -705,6 +766,7 @@ export default function BinauralBeatExperience() {
         {/* Mobile Controls */}
         <div className="md:hidden flex items-center justify-between mb-6">
           <Button
+            data-testid="play-button"
             variant="secondary"
             size="icon"
             onClick={isPlaying ? stopAudio : startAudio}

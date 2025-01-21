@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { Volume2, VolumeX, Play, Pause, MoreHorizontal } from 'lucide-react';
+import { useTabVisibility } from "@/hooks/use-tab-visibility";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
@@ -156,6 +157,9 @@ export default function BinauralBeatExperience() {
   // ---- Dark mode theming from next-themes (optional) ----
   const { theme } = useTheme();
   const isDarkMode = theme === "dark";
+
+  // ---- Handle tab visibility changes ----
+  useTabVisibility(audioContextRef, gainNodeRef);
 
   // ---- Canvas and animation refs ----
   const canvasRef = useRef<HTMLCanvasElement | null>(null);

@@ -1,14 +1,14 @@
-import { RefObject } from 'react';
+import { MutableRefObject } from 'react';
 
 interface AudioRefs {
-  audioContextRef: RefObject<AudioContext | null>;
-  backgroundAudioContextRef: RefObject<AudioContext | null>;
-  oscillatorLeftRef: RefObject<OscillatorNode | null>;
-  oscillatorRightRef: RefObject<OscillatorNode | null>;
-  gainNodeRef: RefObject<GainNode | null>;
-  analyserRef: RefObject<AnalyserNode | null>;
-  noiseSourceRef: RefObject<AudioBufferSourceNode | null>;
-  noiseGainRef: RefObject<GainNode | null>;
+  audioContextRef: MutableRefObject<AudioContext | null>;
+  backgroundAudioContextRef: MutableRefObject<AudioContext | null>;
+  oscillatorLeftRef: MutableRefObject<OscillatorNode | null>;
+  oscillatorRightRef: MutableRefObject<OscillatorNode | null>;
+  gainNodeRef: MutableRefObject<GainNode | null>;
+  analyserRef: MutableRefObject<AnalyserNode | null>;
+  noiseSourceRef: MutableRefObject<AudioBufferSourceNode | null>;
+  noiseGainRef: MutableRefObject<GainNode | null>;
 }
 
 export const handleVisibilityChange = async (

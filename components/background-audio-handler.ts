@@ -50,6 +50,9 @@ export const handleVisibilityChange = async (
       const merger = ctx.createChannelMerger(2);
       const gain = ctx.createGain();
 
+      // Set initial gain value
+      gain.gain.setValueAtTime(1, ctx.currentTime);
+
       leftOsc.frequency.setValueAtTime(fixedBaseFrequency, ctx.currentTime);
       rightOsc.frequency.setValueAtTime(fixedBaseFrequency + beatFrequency, ctx.currentTime);
 
@@ -58,13 +61,14 @@ export const handleVisibilityChange = async (
       merger.connect(gain);
       gain.connect(ctx.destination);
 
-      leftOsc.start();
-      rightOsc.start();
-
-      // Store the new nodes
+      // Store the new nodes before starting oscillators
       oscillatorLeftRef.current = leftOsc;
       oscillatorRightRef.current = rightOsc;
       gainNodeRef.current = gain;
+
+      // Start oscillators after storing refs
+      leftOsc.start();
+      rightOsc.start();
     } else if (audioMode === 'noise' && noiseSourceRef.current) {
       // For noise, recreate the noise source in the background context
       const { noiseSource, noiseGain } = createNoise(ctx, noiseType);

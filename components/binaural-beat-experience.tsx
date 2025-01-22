@@ -173,7 +173,7 @@ export default function BinauralBeatExperience() {
       }
 
       // Add visibility change listener for background audio
-      document.addEventListener("visibilitychange", handleVisibilityChangeForTabSwitch);
+      document.addEventListener("visibilitychange", handleVisibilityChange);
 
       // Cleanup on unmount
       return () => {
@@ -189,7 +189,7 @@ export default function BinauralBeatExperience() {
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
         }
-        document.removeEventListener("visibilitychange", handleVisibilityChangeForTabSwitch);
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
       };
     }
   }, []);
@@ -491,6 +491,8 @@ export default function BinauralBeatExperience() {
   //   HANDLE VISIBILITY CHANGE (Background Audio)
   // --------------------------------------------------------------------------------
   const handleVisibilityChange = async () => {
+    if (typeof document === "undefined") return;
+
     const audioRefs = {
       audioContextRef,
       backgroundAudioContextRef,
@@ -502,15 +504,21 @@ export default function BinauralBeatExperience() {
       noiseGainRef,
     };
 
-    await handleVisibilityChangeBackground(
-      audioRefs,
-      isPlaying,
-      setIsBackgroundPlaying,
-      audioMode,
-      beatFrequency,
-      noiseType,
-      startAudio
-    );
+    if (document.hidden && isPlaying) {
+      await handleVisibilityChangeBackground(
+        audioRefs,
+        isPlaying,
+        setIsBackgroundPlaying,
+        audioMode,
+        beatFrequency,
+        noiseType,
+        startAudio
+      );
+    } else if (!document.hidden && isBackgroundPlaying) {
+      // When returning to the page, restart the main audio
+      stopAudio();
+      await startAudio();
+    }
   };
 
   // --------------------------------------------------------------------------------

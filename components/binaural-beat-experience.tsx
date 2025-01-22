@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { Volume2, VolumeX, Play, Pause, MoreHorizontal } from 'lucide-react';
+import { handleVisibilityChange as handleVisibilityChangeBackground } from './background-audio-handler';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
@@ -171,10 +172,16 @@ export default function BinauralBeatExperience() {
         navigator.mediaSession.setActionHandler("stop", () => stopAudio());
       }
 
+      // Add visibility change listener for background audio
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
       // Cleanup on unmount
       return () => {
         if (audioContextRef.current) {
           audioContextRef.current.close();
+        }
+        if (backgroundAudioContextRef.current) {
+          backgroundAudioContextRef.current.close();
         }
         if (timerIntervalRef.current) {
           clearInterval(timerIntervalRef.current);
@@ -182,6 +189,7 @@ export default function BinauralBeatExperience() {
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
         }
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
       };
     }
   }, []);
@@ -477,6 +485,31 @@ export default function BinauralBeatExperience() {
       stopAudio();
       startAudio();
     }
+  };
+
+  // --------------------------------------------------------------------------------
+  //   HANDLE VISIBILITY CHANGE (Background Audio)
+  // --------------------------------------------------------------------------------
+  const handleVisibilityChange = async () => {
+    const audioRefs = {
+      audioContextRef,
+      backgroundAudioContextRef,
+      oscillatorLeftRef,
+      oscillatorRightRef,
+      gainNodeRef,
+      analyserRef,
+      noiseSourceRef,
+      noiseGainRef,
+    };
+
+    await handleVisibilityChangeBackground(
+      audioRefs,
+      isPlaying,
+      setIsBackgroundPlaying,
+      audioMode,
+      beatFrequency,
+      noiseType
+    );
   };
 
   // --------------------------------------------------------------------------------

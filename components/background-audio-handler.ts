@@ -17,7 +17,8 @@ export const handleVisibilityChange = async (
   setIsBackgroundPlaying: (value: boolean) => void,
   audioMode: string,
   beatFrequency: number,
-  noiseType: string
+  noiseType: string,
+  onRestart: () => void
 ) => {
   const {
     audioContextRef,
@@ -102,7 +103,7 @@ export const handleVisibilityChange = async (
 
     // Restart the main audio context
     if (isPlaying) {
-      startAudio();
+      onRestart();
     }
   }
 };

@@ -508,7 +508,8 @@ export default function BinauralBeatExperience() {
       setIsBackgroundPlaying,
       audioMode,
       beatFrequency,
-      noiseType
+      noiseType,
+      startAudio
     );
   };
 

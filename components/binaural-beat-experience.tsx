@@ -173,7 +173,7 @@ export default function BinauralBeatExperience() {
       }
 
       // Add visibility change listener for background audio
-      document.addEventListener("visibilitychange", handleVisibilityChange);
+      document.addEventListener("visibilitychange", handleVisibilityChangeForTabSwitch);
 
       // Cleanup on unmount
       return () => {
@@ -189,7 +189,7 @@ export default function BinauralBeatExperience() {
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
         }
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        document.removeEventListener("visibilitychange", handleVisibilityChangeForTabSwitch);
       };
     }
   }, []);
@@ -544,7 +544,7 @@ export default function BinauralBeatExperience() {
     return source;
   };
 
-  const handleVisibilityChange = () => {
+  const handleVisibilityChangeForTabSwitch = () => {
     if (typeof document === "undefined") return;
 
     if (document.hidden && isPlaying) {

@@ -136,7 +136,7 @@
   appearance: none;
   width: 28px; /* Larger for better touch target */
   height: 28px; /* Larger for better touch target */
-  background: theme('colors.primary');
+  background: hsl(var(--primary));
   cursor: pointer;
   border-radius: 50%;
   border: 2px solid white; /* Border for better visibility */
@@ -146,7 +146,7 @@
 .slider-thumb::-moz-range-thumb {
   width: 28px; /* Larger for better touch target */
   height: 28px; /* Larger for better touch target */
-  background: theme('colors.primary');
+  background: hsl(var(--primary));
   cursor: pointer;
   border-radius: 50%;
   border: 2px solid white; /* Border for better visibility */
@@ -159,11 +159,11 @@
 }
 
 .slider-thumb:focus::-webkit-slider-thumb {
-  outline: 2px solid theme('colors.primary');
+  outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }
 
 .slider-thumb:focus::-moz-range-thumb {
-  outline: 2px solid theme('colors.primary');
+  outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }

@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
-import AuthProvider from "@/components/auth/auth-provider";
 import { Header } from "@/components/header";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -22,22 +21,20 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider>
-              <div className="relative min-h-screen bg-background">
-                <Header />
-                {children}
-              </div>
-              <Toaster />
-            </TooltipProvider>
-          </ThemeProvider>
-        </AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TooltipProvider>
+            <div className="relative min-h-screen bg-background">
+              <Header />
+              {children}
+            </div>
+            <Toaster />
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,21 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { UserNav } from "@/components/user-nav";
 import { Headphones } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { AuthPopup } from "./auth-popup";
 import { useState, useEffect } from "react";
 
 export function Header() {
-  const { data: session } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -57,25 +47,6 @@ export function Header() {
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             <ModeToggle />
-            
-            {session ? (
-              <UserNav user={session.user} />
-            ) : (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="secondary"
-                    className="relative group border border-input hover:border-primary"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity rounded-md" />
-                    <span>Sign In</span>
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <AuthPopup />
-                </DialogContent>
-              </Dialog>
-            )}
           </div>
         </div>
       </div>

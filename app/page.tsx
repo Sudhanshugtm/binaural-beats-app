@@ -2,12 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { data: session } = useSession();
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
 
@@ -16,11 +14,7 @@ export default function Home() {
   }, []);
 
   const handleStartSession = () => {
-    if (session) {
-      router.push('/dashboard');
-    } else {
-      router.push('/player');
-    }
+    router.push('/player');
   };
 
   return (

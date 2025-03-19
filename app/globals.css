@@ -20,20 +20,28 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
+    --primary: 256 90% 45%; /* Improved contrast purple */
+    --primary-foreground: 0 0% 100%; /* Pure white for contrast */
+    --secondary: 210 40% 90%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
+    --muted-foreground: 215.4 40% 30%; /* Darker for better contrast */
+    --accent: 210 40% 90%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --border: 214.3 31.8% 80%; /* Darker border for visibility */
+    --input: 214.3 31.8% 80%;
+    --ring: 256 90% 45%;
     --radius: 0.5rem;
+    
+    /* Font size variables for better accessibility */
+    --font-size-xs: 0.8125rem; /* 13px */
+    --font-size-sm: 0.9375rem; /* 15px instead of 14px */
+    --font-size-base: 1.0625rem; /* 17px instead of 16px */
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-2xl: 1.75rem;
   }
  
   .dark {
@@ -43,19 +51,42 @@
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
+    --primary: 256 85% 65%; /* Brighter purple for dark mode */
+    --primary-foreground: 0 0% 0%; /* Pure black for contrast */
+    --secondary: 217.2 32.6% 25%; /* Lighter for visibility */
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --muted: 217.2 32.6% 25%;
+    --muted-foreground: 215 20.2% 80%; /* Brighter for better contrast */
+    --accent: 217.2 32.6% 25%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62.8% 45%; /* Brighter red for visibility */
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --border: 217.2 32.6% 30%; /* Lighter border for visibility */
+    --input: 217.2 32.6% 30%;
+    --ring: 256 85% 65%;
+  }
+  
+  /* High contrast theme for accessibility */
+  .high-contrast {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 270 100% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 85%;
+    --muted-foreground: 0 0% 0%;
+    --accent: 270 100% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 100% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 40%;
+    --input: 0 0% 80%;
+    --ring: 270 100% 40%;
   }
 }
 
@@ -65,23 +96,74 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+  }
+  
+  /* Improved focus styles for better accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+  
+  /* Base text sizes using the custom variables */
+  .text-xs {
+    font-size: var(--font-size-xs);
+  }
+  .text-sm {
+    font-size: var(--font-size-sm);
+  }
+  .text-base {
+    font-size: var(--font-size-base);
+  }
+  .text-lg {
+    font-size: var(--font-size-lg);
+  }
+  .text-xl {
+    font-size: var(--font-size-xl);
+  }
+  .text-2xl {
+    font-size: var(--font-size-2xl);
+  }
+  
+  /* Skip to content link for keyboard users */
+  .skip-to-content {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded;
   }
 }
 
 .slider-thumb::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
-  background: theme('colors.indigo.500');
+  width: 28px; /* Larger for better touch target */
+  height: 28px; /* Larger for better touch target */
+  background: theme('colors.primary');
   cursor: pointer;
   border-radius: 50%;
+  border: 2px solid white; /* Border for better visibility */
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Shadow for depth and visibility */
 }
 
 .slider-thumb::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background: theme('colors.indigo.500');
+  width: 28px; /* Larger for better touch target */
+  height: 28px; /* Larger for better touch target */
+  background: theme('colors.primary');
   cursor: pointer;
   border-radius: 50%;
+  border: 2px solid white; /* Border for better visibility */
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Shadow for depth and visibility */
+}
+
+/* Focus styles for slider */
+.slider-thumb:focus {
+  outline: none;
+}
+
+.slider-thumb:focus::-webkit-slider-thumb {
+  outline: 2px solid theme('colors.primary');
+  outline-offset: 2px;
+}
+
+.slider-thumb:focus::-moz-range-thumb {
+  outline: 2px solid theme('colors.primary');
+  outline-offset: 2px;
 }

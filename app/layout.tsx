@@ -28,9 +28,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
+            <a href="#main-content" className="skip-to-content">
+              Skip to content
+            </a>
             <div className="relative min-h-screen bg-background">
               <Header />
-              {children}
+              <main id="main-content" tabIndex={-1}>
+                {children}
+              </main>
             </div>
             <Toaster />
           </TooltipProvider>

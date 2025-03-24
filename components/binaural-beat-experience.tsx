@@ -1498,17 +1498,33 @@ export default function BinauralBeatExperience() {
                 // Now restart just the noise portion
                 if (audioContextRef.current) {
                   const ctx = audioContextRef.current;
-                  const { noiseSource, noiseGain } = createNoise(ctx, value);
-                  noiseSourceRef.current = noiseSource;
-                  noiseGainRef.current = noiseGain;
+                  const noiseResult = createNoise(ctx, value);
                   
-                  // Connect to analyzer for visualization if it exists
-                  if (analyserRef.current) {
-                    noiseGain.connect(analyserRef.current);
+                  // Handle both synchronous and Promise-based results
+                  const setupNoiseSource = (result: { noiseSource: AudioNode; noiseGain: GainNode }) => {
+                    noiseSourceRef.current = result.noiseSource;
+                    noiseGainRef.current = result.noiseGain;
+                    
+                    // Connect to analyzer for visualization if it exists
+                    if (analyserRef.current) {
+                      result.noiseGain.connect(analyserRef.current);
+                    }
+                    
+                    // Start the new noise source if it has a start method
+                    if ('start' in result.noiseSource && typeof result.noiseSource.start === 'function') {
+                      (result.noiseSource as AudioBufferSourceNode).start();
+                    }
+                  };
+                  
+                  // Handle the result, which might be a Promise
+                  if (noiseResult instanceof Promise) {
+                    noiseResult.then(setupNoiseSource).catch(error => {
+                      console.error("Error setting up noise source:", error);
+                      stopAudio();
+                    });
+                  } else {
+                    setupNoiseSource(noiseResult);
                   }
-                  
-                  // Start the new noise source
-                  noiseSource.start();
                   console.log("New noise source started successfully");
                 }
               } catch (cleanupError) {

@@ -1050,8 +1050,8 @@ export default function BinauralBeatExperience() {
             try {
               // Handle different node types - ScriptProcessorNode and AudioWorkletNode
               // don't have stop() methods, only AudioBufferSourceNode does
-              if (noiseSourceRef.current.stop && typeof noiseSourceRef.current.stop === 'function') {
-                noiseSourceRef.current.stop();
+              if ('stop' in noiseSourceRef.current && typeof noiseSourceRef.current.stop === 'function') {
+                (noiseSourceRef.current as AudioBufferSourceNode).stop();
               }
               noiseSourceRef.current.disconnect();
             } catch (e) {

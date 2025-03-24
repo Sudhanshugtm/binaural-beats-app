@@ -7,6 +7,7 @@ import { compare } from "bcryptjs"
 import clientPromise from "@/lib/mongodb"
 
 const handler = NextAuth({
+  // @ts-expect-error - Known issue: MongoDB adapter has type incompatibility with next-auth
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: "jwt"

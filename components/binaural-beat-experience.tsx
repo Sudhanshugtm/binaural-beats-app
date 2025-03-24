@@ -1071,11 +1071,33 @@ export default function BinauralBeatExperience() {
 
           // Create fresh noise generator with current noise type
           console.log("Creating new noise generator with type:", noiseType);
-          const { noiseSource, noiseGain } = createNoise(ctx, noiseType);
+          const noiseResult = createNoise(ctx, noiseType);
           
-          // Store references to the new nodes
-          noiseSourceRef.current = noiseSource;
-          noiseGainRef.current = noiseGain;
+          // Function to handle noise setup
+          const setupNoise = async (result: { noiseSource: AudioNode; noiseGain: GainNode }) => {
+            // Store references to the new nodes
+            noiseSourceRef.current = result.noiseSource;
+            noiseGainRef.current = result.noiseGain;
+            
+            // Connect to analyzer if it exists
+            if (analyserRef.current) {
+              result.noiseGain.connect(analyserRef.current);
+            }
+            
+            // Start the noise source if it has a start method
+            if ('start' in result.noiseSource && typeof result.noiseSource.start === 'function') {
+              (result.noiseSource as AudioBufferSourceNode).start();
+            }
+          };
+          
+          // Handle both promise and direct return
+          if (noiseResult instanceof Promise) {
+            noiseResult.then(setupNoise).catch(error => {
+              console.error("Error setting up noise:", error);
+            });
+          } else {
+            setupNoise(noiseResult);
+          }
           
           // Create analyzer node for visualization if not exists
           if (!analyserRef.current) {
@@ -1087,15 +1109,10 @@ export default function BinauralBeatExperience() {
             analyserRef.current.connect(ctx.destination);
           }
           
-          // Connect the noise gain to the analyzer for visualization
-          if (analyserRef.current) {
-            noiseGain.connect(analyserRef.current);
-          }
-          
-          // Start the noise source if it's an AudioBufferSourceNode
-          if (noiseSource.start && typeof noiseSource.start === 'function') {
-            noiseSource.start();
-          }
+          // Connect the noise gain to the analyzer for visualization in the setupNoise function
+          // We move these operations into the setupNoise function to ensure we have access to the nodes
+
+          // The start of the noise source is now handled in the setupNoise function
           console.log("Noise source started successfully");
         } catch (error) {
           console.error("Error setting up noise:", error);
@@ -1234,8 +1251,8 @@ export default function BinauralBeatExperience() {
       if (noiseSourceRef.current) {
         // Handle different types of audio nodes - AudioWorkletNode or ScriptProcessorNode 
         // may not have a stop() method, only AudioBufferSourceNode does
-        if (noiseSourceRef.current.stop && typeof noiseSourceRef.current.stop === 'function') {
-          noiseSourceRef.current.stop();
+        if ('stop' in noiseSourceRef.current && typeof noiseSourceRef.current.stop === 'function') {
+          (noiseSourceRef.current as AudioBufferSourceNode).stop();
         }
         noiseSourceRef.current.disconnect();
       }
@@ -1485,7 +1502,10 @@ export default function BinauralBeatExperience() {
             setTimeout(() => {
               try {
                 if (noiseSourceRef.current) {
-                  noiseSourceRef.current.stop();
+                  // Check if stop method exists
+                  if ('stop' in noiseSourceRef.current && typeof noiseSourceRef.current.stop === 'function') {
+                    (noiseSourceRef.current as AudioBufferSourceNode).stop();
+                  }
                   noiseSourceRef.current.disconnect();
                   noiseSourceRef.current = null;
                 }

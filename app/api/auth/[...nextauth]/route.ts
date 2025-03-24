@@ -1,5 +1,4 @@
 import NextAuth from "next-auth"
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
 import GoogleProvider from "next-auth/providers/google"
 import GitHubProvider from "next-auth/providers/github"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -7,8 +6,7 @@ import { compare } from "bcryptjs"
 import clientPromise from "@/lib/mongodb"
 
 const handler = NextAuth({
-  // @ts-expect-error - Known issue: MongoDB adapter has type incompatibility with next-auth
-  adapter: MongoDBAdapter(clientPromise),
+  // No adapter needed as we're not storing users
   session: {
     strategy: "jwt"
   },

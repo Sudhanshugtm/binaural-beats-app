@@ -89,11 +89,191 @@ export function applyFadeInOut(channelData: Float32Array, sampleRate: number) {
 }
 
 /**
- * High-quality noise generation for different noise colors
+ * High-quality real-time noise generation for different noise colors
  */
 export function createNoise(ctx: AudioContext, noiseType: string) {
-  // Create a shorter buffer for better performance while still sounding good
-  const bufferSize = ctx.sampleRate * 3; // 3 seconds
+  // For rain, we'll still use a buffer-based approach as it's more complex
+  if (noiseType === "rain") {
+    return createBufferNoise(ctx, noiseType);
+  }
+
+  // Set up for real-time generation
+  // Use larger buffer size for better performance
+  const bufferSize = 4096;
+  let processorNode;
+  
+  try {
+    // First try to use AudioWorkletNode if available (modern browsers)
+    if (ctx.audioWorklet && typeof window !== 'undefined' && 
+        'AudioWorkletNode' in window) {
+      // Create a processor node using AudioWorklet (modern approach)
+      return createAudioWorkletNoise(ctx, noiseType);
+    } else {
+      // Fallback to ScriptProcessorNode (older browsers)
+      processorNode = ctx.createScriptProcessor(bufferSize, 1, 2);
+      console.log("Using ScriptProcessorNode for real-time noise generation");
+    }
+  } catch (e) {
+    console.error("Error creating AudioWorklet, falling back to ScriptProcessor:", e);
+    processorNode = ctx.createScriptProcessor(bufferSize, 1, 2);
+  }
+
+  // Create filter parameters based on noise type
+  let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+  let lastOutputL = 0, lastOutputR = 0;
+  
+  // For brown and pink noise
+  const brownFilter = { lastValueL: 0, lastValueR: 0 };
+  
+  // Pink noise requires more precise filtering
+  const pinkFilter = {
+    b0L: 0, b1L: 0, b2L: 0, b3L: 0, b4L: 0, b5L: 0,
+    b0R: 0, b1R: 0, b2R: 0, b3R: 0, b4R: 0, b5R: 0,
+  };
+
+  // Continuous real-time noise generation
+  processorNode.onaudioprocess = (audioProcessingEvent) => {
+    const outputBuffer = audioProcessingEvent.outputBuffer;
+    const leftOutput = outputBuffer.getChannelData(0);
+    const rightOutput = outputBuffer.getChannelData(1);
+    
+    // Generate different noise types
+    for (let i = 0; i < outputBuffer.length; i++) {
+      // Generate slightly different values for left/right for better stereo image
+      const whiteNoiseL = Math.random() * 2 - 1;
+      const whiteNoiseR = Math.random() * 2 - 1;
+      
+      let outputL, outputR;
+      
+      switch (noiseType) {
+        case "pink":
+          // Pink noise using Paul Kellet's refined method (better quality)
+          // Left channel
+          pinkFilter.b0L = 0.99886 * pinkFilter.b0L + whiteNoiseL * 0.0555179;
+          pinkFilter.b1L = 0.99332 * pinkFilter.b1L + whiteNoiseL * 0.0750759;
+          pinkFilter.b2L = 0.96900 * pinkFilter.b2L + whiteNoiseL * 0.1538520;
+          pinkFilter.b3L = 0.86650 * pinkFilter.b3L + whiteNoiseL * 0.3104856;
+          pinkFilter.b4L = 0.55000 * pinkFilter.b4L + whiteNoiseL * 0.5329522;
+          pinkFilter.b5L = -0.7616 * pinkFilter.b5L - whiteNoiseL * 0.0168980;
+          outputL = (pinkFilter.b0L + pinkFilter.b1L + pinkFilter.b2L + pinkFilter.b3L + 
+                     pinkFilter.b4L + pinkFilter.b5L + whiteNoiseL * 0.5362) * 0.11;
+          
+          // Right channel
+          pinkFilter.b0R = 0.99886 * pinkFilter.b0R + whiteNoiseR * 0.0555179;
+          pinkFilter.b1R = 0.99332 * pinkFilter.b1R + whiteNoiseR * 0.0750759;
+          pinkFilter.b2R = 0.96900 * pinkFilter.b2R + whiteNoiseR * 0.1538520;
+          pinkFilter.b3R = 0.86650 * pinkFilter.b3R + whiteNoiseR * 0.3104856;
+          pinkFilter.b4R = 0.55000 * pinkFilter.b4R + whiteNoiseR * 0.5329522;
+          pinkFilter.b5R = -0.7616 * pinkFilter.b5R - whiteNoiseR * 0.0168980;
+          outputR = (pinkFilter.b0R + pinkFilter.b1R + pinkFilter.b2R + pinkFilter.b3R + 
+                     pinkFilter.b4R + pinkFilter.b5R + whiteNoiseR * 0.5362) * 0.11;
+          break;
+          
+        case "brown":
+          // High-quality brown noise (proper 1/f² spectrum)
+          // Using leaky integrator for continuous sound
+          brownFilter.lastValueL = (0.97 * brownFilter.lastValueL) + (0.03 * whiteNoiseL);
+          brownFilter.lastValueR = (0.97 * brownFilter.lastValueR) + (0.03 * whiteNoiseR);
+          outputL = brownFilter.lastValueL * 3.5; // Gain to bring to similar levels
+          outputR = brownFilter.lastValueR * 3.5;
+          break;
+          
+        case "blue":
+          // Real-time blue noise - first-order differentiation
+          outputL = whiteNoiseL - lastOutputL;
+          outputR = whiteNoiseR - lastOutputR;
+          lastOutputL = whiteNoiseL;
+          lastOutputR = whiteNoiseR;
+          // Scale to prevent clipping
+          outputL *= 0.5;
+          outputR *= 0.5;
+          break;
+          
+        case "violet":
+          // Violet noise - second-order differentiation
+          const tempL = whiteNoiseL - lastOutputL;
+          const tempR = whiteNoiseR - lastOutputR;
+          outputL = tempL - b0;
+          outputR = tempR - b1;
+          b0 = tempL;
+          b1 = tempR;
+          // Scale to prevent clipping
+          outputL *= 0.25;
+          outputR *= 0.25;
+          break;
+          
+        case "green":
+          // Green noise - mid-emphasis using basic IIR bandpass
+          // Simple mid-pass filter
+          const x0L = whiteNoiseL;
+          const x0R = whiteNoiseR;
+          outputL = 0.30 * x0L + 0.40 * b2 - 0.70 * b4;
+          outputR = 0.30 * x0R + 0.40 * b3 - 0.70 * b5;
+          b4 = b2;
+          b5 = b3;
+          b2 = x0L;
+          b3 = x0R;
+          // Boost to compensate for filter loss
+          outputL *= 2.0;
+          outputR *= 2.0;
+          break;
+          
+        case "gray":
+          // Gray noise - perceptually flat equalization 
+          const input = whiteNoiseL;
+          // Simple psychoacoustic filter approximation
+          outputL = 0.50 * input + 0.25 * b6 - 0.10 * lastOutputL;
+          outputR = 0.50 * whiteNoiseR + 0.25 * b6 - 0.10 * lastOutputR;
+          b6 = input;
+          lastOutputL = outputL;
+          lastOutputR = outputR;
+          // Boost to match levels
+          outputL *= 1.8;
+          outputR *= 1.8;
+          break;
+          
+        default:
+          // White noise - plain uniform random
+          outputL = whiteNoiseL;
+          outputR = whiteNoiseR;
+      }
+      
+      // Soft-clipping to prevent digital distortion
+      leftOutput[i] = Math.tanh(outputL);
+      rightOutput[i] = Math.tanh(outputR);
+    }
+  };
+
+  // Create gain node for volume control
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.setValueAtTime(0.7, ctx.currentTime); // Lower default gain
+  
+  // Create compressor for better dynamics
+  const compressor = ctx.createDynamicsCompressor();
+  compressor.threshold.value = -20;
+  compressor.knee.value = 20;
+  compressor.ratio.value = 5;
+  compressor.attack.value = 0.005;
+  compressor.release.value = 0.05;
+
+  // Connect nodes: processor -> gain -> compressor -> destination
+  processorNode.connect(noiseGain);
+  noiseGain.connect(compressor);
+  compressor.connect(ctx.destination);
+  
+  // Return with the same interface as the buffer-based approach
+  return { 
+    noiseSource: processorNode, 
+    noiseGain: noiseGain
+  };
+}
+
+/**
+ * Create buffer-based noise (for rain sounds and fallback)
+ */
+function createBufferNoise(ctx: AudioContext, noiseType: string) {
+  // Create a buffer with increased size for less obvious looping
+  const bufferSize = ctx.sampleRate * 5; // 5 seconds buffer (longer than original)
   const buffer = ctx.createBuffer(2, bufferSize, ctx.sampleRate);
   
   // Create stereo channels
@@ -187,6 +367,200 @@ export function createNoise(ctx: AudioContext, noiseType: string) {
       console.error("Critical audio error:", finalError);
       throw new Error("Unable to create audio");
     }
+  }
+}
+
+/**
+ * Modern AudioWorklet-based approach (uses async/await)
+ */
+async function createAudioWorkletNoise(ctx: AudioContext, noiseType: string) {
+  try {
+    // Check if already registered
+    const isWorkletRegistered = (ctx as any)._noiseWorkletRegistered;
+    
+    if (!isWorkletRegistered) {
+      // Create processor code as blob
+      const processorCode = `
+        class NoiseProcessor extends AudioWorkletProcessor {
+          constructor() {
+            super();
+            this.noiseType = "${noiseType}";
+            
+            // State for various noise types
+            this.brownLastL = 0;
+            this.brownLastR = 0;
+            this.lastOutputL = 0;
+            this.lastOutputR = 0;
+            this.b0 = 0;
+            this.b1 = 0;
+            this.b2 = 0;
+            this.b3 = 0;
+            this.b4 = 0;
+            this.b5 = 0;
+            this.b6 = 0;
+            
+            // Pink noise coefficients
+            this.pinkCoeffs = {
+              b0L: 0, b1L: 0, b2L: 0, b3L: 0, b4L: 0, b5L: 0,
+              b0R: 0, b1R: 0, b2R: 0, b3R: 0, b4R: 0, b5R: 0
+            };
+          }
+        
+          process(inputs, outputs) {
+            const output = outputs[0];
+            const leftChannel = output[0];
+            const rightChannel = output[1];
+            
+            for (let i = 0; i < leftChannel.length; i++) {
+              // Generate white noise base
+              const whiteNoiseL = Math.random() * 2 - 1;
+              const whiteNoiseR = Math.random() * 2 - 1;
+              
+              let outputL, outputR;
+              
+              switch (this.noiseType) {
+                case "pink":
+                  // Pink noise using Paul Kellet's refined method
+                  this.pinkCoeffs.b0L = 0.99886 * this.pinkCoeffs.b0L + whiteNoiseL * 0.0555179;
+                  this.pinkCoeffs.b1L = 0.99332 * this.pinkCoeffs.b1L + whiteNoiseL * 0.0750759;
+                  this.pinkCoeffs.b2L = 0.96900 * this.pinkCoeffs.b2L + whiteNoiseL * 0.1538520;
+                  this.pinkCoeffs.b3L = 0.86650 * this.pinkCoeffs.b3L + whiteNoiseL * 0.3104856;
+                  this.pinkCoeffs.b4L = 0.55000 * this.pinkCoeffs.b4L + whiteNoiseL * 0.5329522;
+                  this.pinkCoeffs.b5L = -0.7616 * this.pinkCoeffs.b5L - whiteNoiseL * 0.0168980;
+                  outputL = (this.pinkCoeffs.b0L + this.pinkCoeffs.b1L + this.pinkCoeffs.b2L + 
+                             this.pinkCoeffs.b3L + this.pinkCoeffs.b4L + this.pinkCoeffs.b5L + 
+                             whiteNoiseL * 0.5362) * 0.11;
+                  
+                  this.pinkCoeffs.b0R = 0.99886 * this.pinkCoeffs.b0R + whiteNoiseR * 0.0555179;
+                  this.pinkCoeffs.b1R = 0.99332 * this.pinkCoeffs.b1R + whiteNoiseR * 0.0750759;
+                  this.pinkCoeffs.b2R = 0.96900 * this.pinkCoeffs.b2R + whiteNoiseR * 0.1538520;
+                  this.pinkCoeffs.b3R = 0.86650 * this.pinkCoeffs.b3R + whiteNoiseR * 0.3104856;
+                  this.pinkCoeffs.b4R = 0.55000 * this.pinkCoeffs.b4R + whiteNoiseR * 0.5329522;
+                  this.pinkCoeffs.b5R = -0.7616 * this.pinkCoeffs.b5R - whiteNoiseR * 0.0168980;
+                  outputR = (this.pinkCoeffs.b0R + this.pinkCoeffs.b1R + this.pinkCoeffs.b2R + 
+                             this.pinkCoeffs.b3R + this.pinkCoeffs.b4R + this.pinkCoeffs.b5R + 
+                             whiteNoiseR * 0.5362) * 0.11;
+                  break;
+                  
+                case "brown":
+                  // High-quality brown noise
+                  this.brownLastL = (0.97 * this.brownLastL) + (0.03 * whiteNoiseL);
+                  this.brownLastR = (0.97 * this.brownLastR) + (0.03 * whiteNoiseR);
+                  outputL = this.brownLastL * 3.5;
+                  outputR = this.brownLastR * 3.5;
+                  break;
+                  
+                case "blue":
+                  // Blue noise - first-order high-pass
+                  outputL = whiteNoiseL - this.lastOutputL;
+                  outputR = whiteNoiseR - this.lastOutputR;
+                  this.lastOutputL = whiteNoiseL;
+                  this.lastOutputR = whiteNoiseR;
+                  outputL *= 0.5;
+                  outputR *= 0.5;
+                  break;
+                  
+                case "violet":
+                  // Violet noise - second-order high-pass
+                  const tempL = whiteNoiseL - this.lastOutputL;
+                  const tempR = whiteNoiseR - this.lastOutputR;
+                  outputL = tempL - this.b0;
+                  outputR = tempR - this.b1;
+                  this.b0 = tempL;
+                  this.b1 = tempR;
+                  outputL *= 0.25;
+                  outputR *= 0.25;
+                  break;
+                  
+                case "green":
+                  // Green noise - mid-emphasis filter
+                  const x0L = whiteNoiseL;
+                  const x0R = whiteNoiseR;
+                  outputL = 0.30 * x0L + 0.40 * this.b2 - 0.70 * this.b4;
+                  outputR = 0.30 * x0R + 0.40 * this.b3 - 0.70 * this.b5;
+                  this.b4 = this.b2;
+                  this.b5 = this.b3;
+                  this.b2 = x0L;
+                  this.b3 = x0R;
+                  outputL *= 2.0;
+                  outputR *= 2.0;
+                  break;
+                  
+                case "gray":
+                  // Gray noise - perceptual equalization
+                  const input = whiteNoiseL;
+                  outputL = 0.50 * input + 0.25 * this.b6 - 0.10 * this.lastOutputL;
+                  outputR = 0.50 * whiteNoiseR + 0.25 * this.b6 - 0.10 * this.lastOutputR;
+                  this.b6 = input;
+                  this.lastOutputL = outputL;
+                  this.lastOutputR = outputR;
+                  outputL *= 1.8;
+                  outputR *= 1.8;
+                  break;
+                  
+                default:
+                  // White noise 
+                  outputL = whiteNoiseL;
+                  outputR = whiteNoiseR;
+              }
+              
+              // Soft-clipping to prevent digital distortion
+              leftChannel[i] = Math.tanh(outputL);
+              rightChannel[i] = Math.tanh(outputR);
+            }
+            return true;
+          }
+        }
+        
+        registerProcessor('noise-processor', NoiseProcessor);
+      `;
+      
+      const blob = new Blob([processorCode], { type: 'application/javascript' });
+      const url = URL.createObjectURL(blob);
+      
+      // Register the processor
+      await ctx.audioWorklet.addModule(url);
+      
+      // Mark as registered
+      (ctx as any)._noiseWorkletRegistered = true;
+      
+      // Clean up
+      URL.revokeObjectURL(url);
+    }
+    
+    // Create the node
+    // @ts-ignore - TypeScript might not know about AudioWorkletNode
+    const workletNode = new AudioWorkletNode(ctx, 'noise-processor', {
+      outputChannelCount: [2]
+    });
+    
+    // Set parameters if needed
+    // workletNode.parameters.get('paramName').value = someValue;
+    
+    // Create gain node for volume control
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.7, ctx.currentTime);
+    
+    // Create compressor
+    const compressor = ctx.createDynamicsCompressor();
+    compressor.threshold.value = -20;
+    compressor.knee.value = 20;
+    compressor.ratio.value = 5;
+    compressor.attack.value = 0.005;
+    compressor.release.value = 0.05;
+    
+    // Connect
+    workletNode.connect(noiseGain);
+    noiseGain.connect(compressor);
+    compressor.connect(ctx.destination);
+    
+    console.log("Successfully created AudioWorklet for noise generation");
+    
+    return { noiseSource: workletNode, noiseGain };
+  } catch (e) {
+    console.error("AudioWorklet initialization failed:", e);
+    // Fallback to buffer-based approach
+    return createBufferNoise(ctx, noiseType);
   }
 }
 
@@ -493,7 +867,8 @@ export default function BinauralBeatExperience() {
   const gainNodeRef = useRef<GainNode | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
 
-  const noiseSourceRef = useRef<AudioBufferSourceNode | null>(null);
+  // Allow for either AudioBufferSourceNode, ScriptProcessorNode, or AudioWorkletNode
+  const noiseSourceRef = useRef<AudioNode | null>(null);
   const noiseGainRef = useRef<GainNode | null>(null);
 
   // ---- Timer & background context ----
@@ -673,7 +1048,11 @@ export default function BinauralBeatExperience() {
           // Clean up any existing noise source
           if (noiseSourceRef.current) {
             try {
-              noiseSourceRef.current.stop();
+              // Handle different node types - ScriptProcessorNode and AudioWorkletNode
+              // don't have stop() methods, only AudioBufferSourceNode does
+              if (noiseSourceRef.current.stop && typeof noiseSourceRef.current.stop === 'function') {
+                noiseSourceRef.current.stop();
+              }
               noiseSourceRef.current.disconnect();
             } catch (e) {
               console.log("Error stopping previous noise source:", e);
@@ -713,8 +1092,10 @@ export default function BinauralBeatExperience() {
             noiseGain.connect(analyserRef.current);
           }
           
-          // Start the noise source
-          noiseSource.start();
+          // Start the noise source if it's an AudioBufferSourceNode
+          if (noiseSource.start && typeof noiseSource.start === 'function') {
+            noiseSource.start();
+          }
           console.log("Noise source started successfully");
         } catch (error) {
           console.error("Error setting up noise:", error);
@@ -837,8 +1218,7 @@ export default function BinauralBeatExperience() {
   const stopAudio = () => {
     // Stop all audio cleanly
     try {
-      // Track any buffer sources that need to be stopped
-      const sourcesToStop: AudioBufferSourceNode[] = [];
+      // We'll handle all nodes directly rather than tracking them in an array
       
       // Properly disconnect and stop all audio nodes
       if (oscillatorLeftRef.current) {
@@ -852,7 +1232,11 @@ export default function BinauralBeatExperience() {
       }
       
       if (noiseSourceRef.current) {
-        noiseSourceRef.current.stop();
+        // Handle different types of audio nodes - AudioWorkletNode or ScriptProcessorNode 
+        // may not have a stop() method, only AudioBufferSourceNode does
+        if (noiseSourceRef.current.stop && typeof noiseSourceRef.current.stop === 'function') {
+          noiseSourceRef.current.stop();
+        }
         noiseSourceRef.current.disconnect();
       }
       

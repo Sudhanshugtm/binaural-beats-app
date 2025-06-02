@@ -24,37 +24,37 @@ interface FrequencyPreset {
 
 const FREQUENCY_PRESETS: FrequencyPreset[] = [
   { 
-    name: "Delta", 
+    name: "Deep Sleep", 
     frequency: 2, 
-    category: "Deep Sleep", 
-    description: "Deep restorative sleep", 
+    category: "Bedtime", 
+    description: "Fall asleep fast & stay asleep", 
     icon: "🌙", 
     color: "from-violet-400 via-purple-500 to-indigo-600",
     gradient: "from-violet-500/20 to-indigo-600/20"
   },
   { 
-    name: "Theta", 
+    name: "Dream State", 
     frequency: 6, 
-    category: "REM & Dreams", 
-    description: "REM sleep, vivid dreams", 
+    category: "Creativity", 
+    description: "Vivid dreams & deep meditation", 
     icon: "✨", 
     color: "from-pink-400 via-purple-500 to-violet-600",
     gradient: "from-pink-500/20 to-violet-600/20"
   },
   { 
-    name: "Alpha", 
+    name: "Calm Focus", 
     frequency: 10, 
-    category: "Relaxed Focus", 
-    description: "Calm focused state", 
+    category: "Relaxation", 
+    description: "Stress relief & gentle concentration", 
     icon: "🧘", 
     color: "from-cyan-400 via-blue-500 to-purple-600",
     gradient: "from-cyan-500/20 to-purple-600/20"
   },
   { 
-    name: "Beta", 
+    name: "Sharp Focus", 
     frequency: 20, 
-    category: "Alert Focus", 
-    description: "Active concentration", 
+    category: "Productivity", 
+    description: "Peak alertness & mental clarity", 
     icon: "⚡", 
     color: "from-orange-400 via-pink-500 to-red-500",
     gradient: "from-orange-500/20 to-red-500/20"

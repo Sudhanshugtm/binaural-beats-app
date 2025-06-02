@@ -3,7 +3,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useTheme } from "next-themes";
 import { Volume2, VolumeX, Play, Pause, Settings, Timer, Music, Brain, Waves, MoreHorizontal } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -52,8 +51,8 @@ export default function AwardWinningBinauralExperience() {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { theme } = useTheme();
-  const isDarkMode = theme === "dark";
+  // Always use bright, vibrant mode for award-winning experience
+  const isDarkMode = false;
 
   const canvasRef = useAudioVisualization(
     audioContextRef.current,
@@ -195,37 +194,33 @@ export default function AwardWinningBinauralExperience() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Dynamic vibrant background */}
-      <div className={`absolute inset-0 transition-all duration-1000 ${
-        isDarkMode 
-          ? 'bg-gradient-to-br from-purple-900 via-violet-800/60 to-fuchsia-900/40' 
-          : 'bg-gradient-to-br from-violet-100 via-purple-100/80 to-fuchsia-100/60'
-      }`}>
+      {/* Dynamic vibrant bright background */}
+      <div className="absolute inset-0 transition-all duration-1000 bg-gradient-to-br from-violet-200 via-purple-200/90 to-fuchsia-200/70">
         {/* Welcoming animated background orbs */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Vibrant floating orbs */}
-          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-40 animate-pulse ${
+          {/* Bright vibrant floating orbs */}
+          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-50 animate-pulse ${
             isPlaying 
-              ? (isDarkMode ? 'bg-gradient-to-r from-fuchsia-500 via-purple-500 to-violet-600' : 'bg-gradient-to-r from-fuchsia-400 via-purple-400 to-violet-500')
-              : (isDarkMode ? 'bg-gradient-to-r from-purple-500/30 to-fuchsia-500/30' : 'bg-gradient-to-r from-purple-400/40 to-fuchsia-400/40')
+              ? 'bg-gradient-to-r from-fuchsia-400 via-purple-400 to-violet-500'
+              : 'bg-gradient-to-r from-purple-400/50 to-fuchsia-400/50'
           }`} style={{ 
             animationDuration: isPlaying ? `${2 + beatFrequency * 0.1}s` : '4s',
             transform: `scale(${isPlaying ? 1 + Math.sin(Date.now() * 0.001) * 0.1 : 1})`
           }} />
           
-          <div className={`absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl opacity-35 animate-pulse ${
+          <div className={`absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl opacity-45 animate-pulse ${
             isPlaying 
-              ? (isDarkMode ? 'bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600' : 'bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500')
-              : (isDarkMode ? 'bg-gradient-to-r from-blue-500/25 to-cyan-500/25' : 'bg-gradient-to-r from-blue-400/35 to-cyan-400/35')
+              ? 'bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500'
+              : 'bg-gradient-to-r from-blue-400/45 to-cyan-400/45'
           }`} style={{ 
             animationDuration: isPlaying ? `${3 + beatFrequency * 0.15}s` : '6s',
             animationDelay: '1s'
           }} />
           
-          <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl opacity-25 animate-pulse ${
+          <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl opacity-35 animate-pulse ${
             isPlaying 
-              ? (isDarkMode ? 'bg-gradient-to-r from-orange-500 via-pink-500 to-fuchsia-600' : 'bg-gradient-to-r from-orange-400 via-pink-400 to-fuchsia-500')
-              : (isDarkMode ? 'bg-gradient-to-r from-pink-500/20 to-orange-500/20' : 'bg-gradient-to-r from-pink-400/30 to-orange-400/30')
+              ? 'bg-gradient-to-r from-orange-400 via-pink-400 to-fuchsia-500'
+              : 'bg-gradient-to-r from-pink-400/40 to-orange-400/40'
           }`} style={{ 
             animationDuration: isPlaying ? `${4 + beatFrequency * 0.2}s` : '8s',
             animationDelay: '2s'
@@ -258,30 +253,24 @@ export default function AwardWinningBinauralExperience() {
             <Button 
               variant="ghost" 
               size="sm"
-              className={`backdrop-blur-md border-0 ${
-                isDarkMode 
-                  ? 'bg-white/5 hover:bg-white/10 text-white/60 hover:text-white' 
-                  : 'bg-black/5 hover:bg-black/10 text-gray-600 hover:text-gray-900'
-              }`}
+              className="backdrop-blur-md border-0 bg-white/20 hover:bg-white/30 text-gray-700 hover:text-gray-900"
             >
               <Settings className="w-5 h-5" />
             </Button>
           </SheetTrigger>
           <SheetContent 
             side="right" 
-            className={`w-80 ${
-              isDarkMode ? 'bg-gray-900/95 border-gray-800' : 'bg-white/95 border-gray-200'
-            } backdrop-blur-xl`}
+            className="w-80 bg-white/95 border-purple-200 backdrop-blur-xl"
           >
             <div className="space-y-6 pt-6">
               <div>
-                <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className="text-lg font-semibold mb-4 text-gray-900">
                   Audio Settings
                 </h3>
                 
                 <div className="space-y-4">
                   <div>
-                    <Label className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <Label className="text-sm font-medium text-gray-700">
                       Volume: {Math.round(volume * 100)}%
                     </Label>
                     <Slider
@@ -294,7 +283,7 @@ export default function AwardWinningBinauralExperience() {
                   </div>
 
                   <div>
-                    <Label className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <Label className="text-sm font-medium text-gray-700">
                       Beat Frequency: {beatFrequency}Hz
                     </Label>
                     <Slider
@@ -310,7 +299,7 @@ export default function AwardWinningBinauralExperience() {
               </div>
 
               <div>
-                <h4 className={`text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <h4 className="text-sm font-semibold mb-3 text-gray-700">
                   Quick Presets
                 </h4>
                 <div className="grid grid-cols-1 gap-2">
@@ -321,9 +310,7 @@ export default function AwardWinningBinauralExperience() {
                       className={`justify-start h-auto p-3 ${
                         beatFrequency === preset.frequency
                           ? `bg-gradient-to-r ${preset.color} text-white`
-                          : isDarkMode
-                          ? 'hover:bg-gray-800 text-gray-300'
-                          : 'hover:bg-gray-100 text-gray-700'
+                          : 'hover:bg-purple-50 text-gray-700'
                       }`}
                       onClick={() => updateFrequency(preset.frequency)}
                     >
@@ -350,15 +337,11 @@ export default function AwardWinningBinauralExperience() {
             /* Welcome state */
             <div className="space-y-6 animate-in fade-in duration-1000">
               {/* Welcome message */}
-              <div className={`${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className="text-gray-900">
                 <h1 className="text-3xl md:text-5xl font-light mb-4 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent animate-pulse">
                   Welcome to Binaural Beats
                 </h1>
-                <p className={`text-lg md:text-xl font-light bg-gradient-to-r ${
-                  isDarkMode 
-                    ? 'from-purple-300 via-pink-300 to-violet-300' 
-                    : 'from-purple-600 via-pink-600 to-violet-600'
-                } bg-clip-text text-transparent`}>
+                <p className="text-lg md:text-xl font-light bg-gradient-to-r from-purple-600 via-pink-600 to-violet-600 bg-clip-text text-transparent">
                   Choose your frequency and start your magical journey ✨
                 </p>
               </div>
@@ -372,9 +355,7 @@ export default function AwardWinningBinauralExperience() {
                     className={`h-auto p-4 md:p-6 backdrop-blur-md border ${
                       beatFrequency === preset.frequency
                         ? `bg-gradient-to-r ${preset.color} text-white border-white/20`
-                        : isDarkMode
-                        ? 'bg-white/5 hover:bg-white/10 text-white border-white/10 hover:border-white/20'
-                        : 'bg-black/5 hover:bg-black/10 text-gray-900 border-black/10 hover:border-black/20'
+                        : 'bg-white/20 hover:bg-white/30 text-gray-900 border-purple-200/30 hover:border-purple-300/50'
                     }`}
                     onClick={() => updateFrequency(preset.frequency)}
                   >
@@ -389,18 +370,12 @@ export default function AwardWinningBinauralExperience() {
               </div>
               
               {/* Custom frequency slider */}
-              <div className={`backdrop-blur-md rounded-2xl p-6 border-2 ${
-                isDarkMode 
-                  ? 'bg-gradient-to-r from-purple-500/10 via-fuchsia-500/10 to-cyan-500/10 border-purple-500/20' 
-                  : 'bg-gradient-to-r from-purple-100/50 via-fuchsia-100/50 to-cyan-100/50 border-purple-300/30'
-              }`}>
+              <div className="backdrop-blur-md rounded-2xl p-6 border-2 bg-gradient-to-r from-purple-100/70 via-fuchsia-100/70 to-cyan-100/70 border-purple-300/40">
                 <div className="text-center mb-4">
                   <div className={`text-2xl md:text-3xl font-light mb-1 bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent`}>
                     {beatFrequency.toFixed(1)} Hz
                   </div>
-                  <div className={`text-sm font-medium ${
-                    isDarkMode ? 'text-purple-300' : 'text-purple-600'
-                  }`}>
+                  <div className="text-sm font-medium text-purple-600">
                     Custom Frequency 🎛️
                   </div>
                 </div>
@@ -418,7 +393,7 @@ export default function AwardWinningBinauralExperience() {
             /* Playing state */
             <div className="space-y-6 animate-in fade-in duration-500">
               {/* Dynamic frequency display */}
-              <div className={`relative ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className="relative text-gray-900">
                 <div className={`text-6xl md:text-8xl lg:text-9xl font-extralight tracking-wider mb-2 transition-all duration-300 ${
                   isPlaying ? 'animate-pulse' : ''
                 }`} style={{
@@ -426,9 +401,7 @@ export default function AwardWinningBinauralExperience() {
                 }}>
                   {beatFrequency.toFixed(1)}
                 </div>
-                <div className={`text-lg md:text-xl font-light tracking-widest ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                }`}>
+                <div className="text-lg md:text-xl font-light tracking-widest text-gray-600">
                   Hz
                 </div>
                 <div className={`text-base md:text-lg font-medium mt-2 bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent`}>
@@ -437,26 +410,18 @@ export default function AwardWinningBinauralExperience() {
               </div>
 
               {/* Enhanced timer display */}
-              <div className={`backdrop-blur-md rounded-2xl p-4 ${
-                isDarkMode ? 'bg-white/10 border border-white/20' : 'bg-black/10 border border-black/20'
-              }`}>
-                <div className={`text-3xl md:text-4xl font-mono tracking-wider font-bold ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
-                }`}>
+              <div className="backdrop-blur-md rounded-2xl p-4 bg-white/30 border border-purple-200/40">
+                <div className="text-3xl md:text-4xl font-mono tracking-wider font-bold text-gray-900">
                   {formatTime(timer)}
                 </div>
-                <div className={`text-sm md:text-base mt-1 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                }`}>
+                <div className="text-sm md:text-base mt-1 text-gray-600">
                   of {formatTime(selectedDuration)}
                 </div>
               </div>
 
               {/* Enhanced progress bar */}
               <div className="w-64 md:w-80 mx-auto">
-                <div className={`w-full h-2 md:h-3 rounded-full ${
-                  isDarkMode ? 'bg-gray-800' : 'bg-gray-200'
-                }`}>
+                <div className="w-full h-2 md:h-3 rounded-full bg-purple-200">
                   <div 
                     className={`h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${currentPreset.color} shadow-lg`}
                     style={{ 
@@ -491,22 +456,18 @@ export default function AwardWinningBinauralExperience() {
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 z-30 p-3 md:p-6">
-        <Card className={`backdrop-blur-xl border-0 ${
-          isDarkMode 
-            ? 'bg-gray-900/40 text-white' 
-            : 'bg-white/40 text-gray-900'
-        }`}>
+        <Card className="backdrop-blur-xl border-0 bg-white/50 text-gray-900">
           <CardContent className="p-3 md:p-6">
             <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:items-center md:justify-between">
               {/* Mode selector */}
               <div className="flex items-center justify-center md:justify-start gap-2">
-                <Waves className={`w-4 h-4 md:w-5 md:h-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
+                <Waves className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
                 <span className="text-xs md:text-sm font-medium">Binaural</span>
               </div>
 
               {/* Session duration */}
               <div className="flex items-center justify-center gap-2">
-                <Timer className={`w-4 h-4 md:w-5 md:h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                <Timer className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                 <div className="flex gap-1">
                   {SESSION_DURATIONS.map((duration) => (
                     <Button
@@ -516,9 +477,7 @@ export default function AwardWinningBinauralExperience() {
                       className={`text-xs h-7 px-2 md:h-8 md:px-3 ${
                         selectedDuration === duration.value
                           ? `bg-gradient-to-r ${currentPreset.color}`
-                          : isDarkMode
-                          ? 'hover:bg-gray-800'
-                          : 'hover:bg-gray-100'
+                          : 'hover:bg-purple-100'
                       }`}
                       onClick={() => setSelectedDuration(duration.value)}
                     >
@@ -534,7 +493,7 @@ export default function AwardWinningBinauralExperience() {
                   variant="ghost"
                   size="sm"
                   onClick={toggleMute}
-                  className={`p-1 md:p-2 ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+                  className="p-1 md:p-2 hover:bg-purple-100"
                 >
                   {isMuted ? (
                     <VolumeX className="w-4 h-4 md:w-5 md:h-5" />

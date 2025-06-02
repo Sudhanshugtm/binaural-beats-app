@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { ModeToggle } from "@/components/mode-toggle";
 import { Headphones } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -46,7 +45,7 @@ export function Header() {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
-            <ModeToggle />
+            {/* Theme toggle removed for award-winning bright experience */}
           </div>
         </div>
       </div>

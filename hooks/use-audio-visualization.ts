@@ -28,7 +28,7 @@ interface WaveRing {
 export function useAudioVisualization(
   audioContext: AudioContext | null,
   analyserNode: AnalyserNode | null,
-  isDarkMode: boolean,
+  _isDarkMode: boolean, // kept for compatibility but not used
   isPlaying: boolean,
   beatFrequency: number = 10
 ) {
@@ -118,10 +118,8 @@ export function useAudioVisualization(
       const centerX = canvas.width / (2 * window.devicePixelRatio);
       const centerY = canvas.height / (2 * window.devicePixelRatio);
 
-      // Create subtle overlay instead of solid background
-      ctx.fillStyle = isDarkMode 
-        ? 'rgba(5, 8, 15, 0.3)' 
-        : 'rgba(245, 248, 255, 0.3)';
+      // Create subtle bright overlay
+      ctx.fillStyle = 'rgba(245, 248, 255, 0.2)';
       ctx.fillRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
 
       if (dataArrayRef.current) {
@@ -155,17 +153,11 @@ export function useAudioVisualization(
       ctx.save();
       ctx.translate(centerX, centerY);
 
-      // Draw ambient background gradient
+      // Draw bright ambient background gradient
       const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 400);
-      if (isDarkMode) {
-        gradient.addColorStop(0, `hsla(240, 100%, 10%, ${0.3 + amplitudeFactor * 0.3})`);
-        gradient.addColorStop(0.5, `hsla(260, 80%, 5%, ${0.2 + amplitudeFactor * 0.2})`);
-        gradient.addColorStop(1, 'hsla(280, 60%, 2%, 0.1)');
-      } else {
-        gradient.addColorStop(0, `hsla(200, 100%, 95%, ${0.3 + amplitudeFactor * 0.3})`);
-        gradient.addColorStop(0.5, `hsla(220, 80%, 90%, ${0.2 + amplitudeFactor * 0.2})`);
-        gradient.addColorStop(1, 'hsla(240, 60%, 85%, 0.1)');
-      }
+      gradient.addColorStop(0, `hsla(280, 100%, 95%, ${0.3 + amplitudeFactor * 0.3})`);
+      gradient.addColorStop(0.5, `hsla(260, 80%, 90%, ${0.2 + amplitudeFactor * 0.2})`);
+      gradient.addColorStop(1, 'hsla(240, 60%, 85%, 0.1)');
       ctx.fillStyle = gradient;
       ctx.fillRect(-centerX, -centerY, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
 
@@ -209,15 +201,9 @@ export function useAudioVisualization(
         const coreRadius = 80 + beatPulse * 40 + bassFactor * 60;
         const coreGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, coreRadius);
         
-        if (isDarkMode) {
-          coreGradient.addColorStop(0, `hsla(280, 100%, 70%, ${0.8 + amplitudeFactor * 0.2})`);
-          coreGradient.addColorStop(0.7, `hsla(260, 80%, 50%, ${0.4 + amplitudeFactor * 0.3})`);
-          coreGradient.addColorStop(1, 'hsla(240, 60%, 30%, 0)');
-        } else {
-          coreGradient.addColorStop(0, `hsla(200, 100%, 80%, ${0.8 + amplitudeFactor * 0.2})`);
-          coreGradient.addColorStop(0.7, `hsla(220, 80%, 60%, ${0.4 + amplitudeFactor * 0.3})`);
-          coreGradient.addColorStop(1, 'hsla(240, 60%, 40%, 0)');
-        }
+        coreGradient.addColorStop(0, `hsla(280, 100%, 80%, ${0.8 + amplitudeFactor * 0.2})`);
+        coreGradient.addColorStop(0.7, `hsla(260, 80%, 60%, ${0.4 + amplitudeFactor * 0.3})`);
+        coreGradient.addColorStop(1, 'hsla(240, 60%, 40%, 0)');
         
         ctx.fillStyle = coreGradient;
         ctx.beginPath();
@@ -312,9 +298,7 @@ export function useAudioVisualization(
         // Core particle
         ctx.fillStyle = isPlaying
           ? particle.color
-          : isDarkMode
-          ? "rgba(255, 255, 255, 0.4)"
-          : "rgba(0, 0, 0, 0.4)";
+          : "rgba(100, 50, 150, 0.4)";
         
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, finalRadius, 0, Math.PI * 2);
@@ -334,7 +318,7 @@ export function useAudioVisualization(
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [analyserNode, isDarkMode, isPlaying, beatFrequency]);
+  }, [analyserNode, isPlaying, beatFrequency]);
 
   return canvasRef;
 }

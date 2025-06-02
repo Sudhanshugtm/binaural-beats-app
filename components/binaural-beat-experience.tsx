@@ -1433,34 +1433,40 @@ export default function BinauralBeatExperience() {
       audioContextRef.current
     ) {
       const ctx = audioContextRef.current;
-      const fixedBaseFrequency = 250; // Match the improved base frequency
+      const carrierFrequency = 250; // Fixed carrier frequency for optimal binaural effect
       const now = ctx.currentTime;
       
-      // Use exponential ramp for smoother frequency transitions (50ms transition)
-      // This prevents audible artifacts when changing frequency
+      // Use proper binaural beat method: carrier ± beat/2
+      // This creates the correct beating effect between the ears
+      const leftFreq = carrierFrequency - (beatFrequency / 2);
+      const rightFreq = carrierFrequency + (beatFrequency / 2);
       
-      // Base frequency remains constant in left ear
+      // Use smooth transitions to prevent audio artifacts
       oscillatorLeftRef.current.frequency.setTargetAtTime(
-        fixedBaseFrequency, 
+        leftFreq, 
         now,
-        0.05 // Time constant for the transition (50ms)
+        0.05 // Time constant for smooth transition
       );
       
-      // Right ear frequency changes based on desired beat frequency
       oscillatorRightRef.current.frequency.setTargetAtTime(
-        fixedBaseFrequency + beatFrequency,
+        rightFreq,
         now,
         0.05
       );
       
-      // Add a slight correction to sync phase if needed
-      if (Math.abs(oscillatorRightRef.current.frequency.value - (fixedBaseFrequency + beatFrequency)) > 1) {
+      // Phase correction if frequencies drift too far
+      const leftCurrentFreq = oscillatorLeftRef.current.frequency.value;
+      const rightCurrentFreq = oscillatorRightRef.current.frequency.value;
+      
+      if (Math.abs(leftCurrentFreq - leftFreq) > 1 || Math.abs(rightCurrentFreq - rightFreq) > 1) {
+        // Cancel any pending changes and correct immediately
+        oscillatorLeftRef.current.frequency.cancelScheduledValues(now);
         oscillatorRightRef.current.frequency.cancelScheduledValues(now);
-        oscillatorRightRef.current.frequency.setTargetAtTime(
-          fixedBaseFrequency + beatFrequency,
-          now,
-          0.01 // Faster correction if we're way off
-        );
+        
+        oscillatorLeftRef.current.frequency.setTargetAtTime(leftFreq, now, 0.01);
+        oscillatorRightRef.current.frequency.setTargetAtTime(rightFreq, now, 0.01);
+        
+        console.log(`Frequency correction applied: L:${leftFreq}Hz, R:${rightFreq}Hz (beat: ${beatFrequency}Hz)`);
       }
     }
   };
@@ -1683,24 +1689,37 @@ export default function BinauralBeatExperience() {
     const ctx = audioContextRef.current;
     if (!ctx) return;
 
-    // When tab becomes visible again
     if (!document.hidden && isPlaying) {
-      // Resume the audio context
+      // Tab became visible again - ensure audio context is running
       if (ctx.state === "suspended") {
-        ctx.resume();
+        ctx.resume().then(() => {
+          console.log("Audio context resumed after tab switch");
+          // Force frequency update after resume to maintain accuracy
+          updateFrequency();
+        });
+      } else {
+        // Context wasn't suspended, but still refresh frequencies to prevent drift
+        setTimeout(() => {
+          updateFrequency();
+        }, 50); // Small delay to let browser settle
       }
-      
-      // Update frequency values to ensure they're synchronized
-      if (audioMode === "binaural" && oscillatorLeftRef.current && oscillatorRightRef.current) {
-        const fixedBaseFrequency = 200;
-        oscillatorLeftRef.current.frequency.setValueAtTime(
-          fixedBaseFrequency,
-          ctx.currentTime
-        );
-        oscillatorRightRef.current.frequency.setValueAtTime(
-          fixedBaseFrequency + beatFrequency,
-          ctx.currentTime
-        );
+    } else if (document.hidden && isPlaying) {
+      // Tab is being hidden - try to keep audio context alive
+      // Some browsers suspend context anyway, but we can try
+      if (ctx.state === "running") {
+        // Force a small audio operation to keep context active
+        try {
+          const now = ctx.currentTime;
+          if (gainNodeRef.current) {
+            // Create a tiny, imperceptible gain change to keep context alive
+            gainNodeRef.current.gain.setValueAtTime(
+              gainNodeRef.current.gain.value,
+              now
+            );
+          }
+        } catch (e) {
+          console.log("Could not maintain audio context while tab hidden");
+        }
       }
     }
   };

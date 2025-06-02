@@ -1,15 +1,15 @@
 import dynamic from 'next/dynamic'
 
-const BinauralBeatExperience = dynamic(
-  () => import('@/components/binaural-beat-experience'),
+const AwardWinningBinauralExperience = dynamic(
+  () => import('@/components/binaural-beat-experience-award-winning'),
   { ssr: false }
 )
 
 export default function PlayerPage() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-black">
-      {/* Immersive Full-Screen Experience */}
-      <BinauralBeatExperience />
+      {/* Award-Winning Immersive Experience */}
+      <AwardWinningBinauralExperience />
     </div>
   )
 }

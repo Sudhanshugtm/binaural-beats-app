@@ -494,10 +494,10 @@ export default function AwardWinningBinauralExperience() {
                           <div className="font-semibold text-lg tracking-wide">{preset.name}</div>
                           <div className="text-sm opacity-80 font-mono">{preset.frequency}Hz</div>
                         </div>
-                        <div className="text-xs opacity-70 leading-relaxed">{preset.description}</div>
+                        <div className="text-xs opacity-70 leading-relaxed px-2">{preset.description}</div>
                         <Badge variant="secondary" className={`transition-all duration-300 ${
                           beatFrequency === preset.frequency 
-                            ? 'bg-white/20 text-white' 
+                            ? 'bg-white/30 text-white shadow-lg' 
                             : 'bg-white/10 text-white/80 hover:bg-white/20'
                         }`}>
                           {preset.category}
@@ -514,7 +514,7 @@ export default function AwardWinningBinauralExperience() {
               </div>
               
               {/* Custom frequency control */}
-              <Card className="p-8 backdrop-blur-xl bg-white/10 border border-white/20 max-w-md mx-auto">
+              <Card className="p-8 backdrop-blur-xl bg-white/10 border border-white/20 max-w-md mx-auto hover:bg-white/15 transition-all duration-300">
                 <div className="text-center space-y-4">
                   <div className="flex items-center justify-center gap-2 mb-4">
                     <Music className="w-5 h-5 text-white/70" />
@@ -522,6 +522,9 @@ export default function AwardWinningBinauralExperience() {
                   </div>
                   <div className="text-3xl font-light text-white">
                     {beatFrequency.toFixed(1)} Hz
+                  </div>
+                  <div className="text-xs text-white/60 mb-2">
+                    Slide to adjust beat frequency (1-40 Hz)
                   </div>
                   <Slider
                     value={[beatFrequency]}
@@ -617,7 +620,7 @@ export default function AwardWinningBinauralExperience() {
               onClick={() => setShowSettings(true)}
               className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40 transition-all duration-300 btn-interactive hover:shadow-lg"
             >
-              <Settings className="w-6 h-6 hover:animate-spin" style={{ animationDuration: '2s' }} />
+              <Settings className="w-6 h-6 text-white/90 hover:text-white transition-colors duration-300" />
             </Button>
           </div>
         </div>

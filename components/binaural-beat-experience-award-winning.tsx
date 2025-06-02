@@ -584,11 +584,10 @@ export default function AwardWinningBinauralExperience() {
               variant="ghost"
               size="lg"
               onClick={toggleMute}
-              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40 transition-all duration-300 btn-interactive hover:shadow-lg"
+              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center"
+              style={{ color: isMuted ? '#fca5a5' : 'white' }}
             >
-              <div className={`transition-all duration-300 ${isMuted ? 'animate-pulse text-red-300' : ''}`}>
-                {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
-              </div>
+              {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
             </Button>
             
             <div className="relative">
@@ -618,9 +617,10 @@ export default function AwardWinningBinauralExperience() {
               variant="ghost"
               size="lg"
               onClick={() => setShowSettings(true)}
-              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40 transition-all duration-300 btn-interactive hover:shadow-lg"
+              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center"
+              style={{ color: 'white' }}
             >
-              <Settings className="w-6 h-6 text-white/90 hover:text-white transition-colors duration-300" />
+              <Settings className="w-6 h-6" />
             </Button>
           </div>
         </div>

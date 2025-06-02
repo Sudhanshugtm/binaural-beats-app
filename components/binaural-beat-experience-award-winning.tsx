@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Volume2, VolumeX, Play, Pause, Settings, Timer, Music, Brain, Waves, MoreHorizontal, Heart, Sparkles, Headphones } from 'lucide-react';
+import { Volume2, VolumeX, Play, Pause, Settings, Timer, Music, Brain, Waves, MoreHorizontal, Heart, Sparkles, Headphones, Square } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
@@ -76,6 +76,7 @@ export default function AwardWinningBinauralExperience() {
   const [timer, setTimer] = useState(0);
   const [selectedDuration, setSelectedDuration] = useState(15 * 60);
   const [showSettings, setShowSettings] = useState(false);
+  const [hasStartedSession, setHasStartedSession] = useState(false);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorLeftRef = useRef<OscillatorNode | null>(null);
@@ -174,14 +175,33 @@ export default function AwardWinningBinauralExperience() {
     }
   };
 
+  const resetSession = () => {
+    stopAudio();
+    setIsPlaying(false);
+    setHasStartedSession(false);
+    setTimer(0);
+  };
+
   const togglePlayPause = async () => {
     if (isPlaying) {
-      stopAudio();
+      // Just pause, don't stop completely
+      if (gainNodeRef.current && audioContextRef.current) {
+        gainNodeRef.current.gain.setValueAtTime(0, audioContextRef.current.currentTime);
+      }
       setIsPlaying(false);
-      setTimer(0);
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
     } else {
-      await startAudio();
+      // Resume or start
+      if (gainNodeRef.current && audioContextRef.current) {
+        gainNodeRef.current.gain.setValueAtTime(isMuted ? 0 : volume, audioContextRef.current.currentTime);
+      } else {
+        await startAudio();
+      }
       setIsPlaying(true);
+      setHasStartedSession(true);
       timerIntervalRef.current = setInterval(() => {
         setTimer(prev => {
           if (prev >= selectedDuration) {
@@ -451,7 +471,7 @@ export default function AwardWinningBinauralExperience() {
       {/* Main content area */}
       <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
         <div className="text-center space-y-8 max-w-4xl">
-          {!isPlaying ? (
+          {!hasStartedSession ? (
             /* Welcome state with modern design */
             <div className="space-y-10 animate-in fade-in duration-1000">
               <div className="space-y-4">
@@ -538,23 +558,35 @@ export default function AwardWinningBinauralExperience() {
               </Card>
             </div>
           ) : (
-            /* Playing state with enhanced visuals */
+            /* Session active state - much more meaningful */
             <div className="space-y-8 animate-in fade-in duration-500">
-              <div className="text-center space-y-4">
-                <div className="text-8xl md:text-9xl font-ultralight text-white tracking-widest drop-shadow-2xl">
-                  {beatFrequency.toFixed(1)}
+              {/* Main session info */}
+              <div className="text-center space-y-6">
+                <div className="flex items-center justify-center gap-4">
+                  <span className="text-4xl">{currentPreset.icon}</span>
+                  <div>
+                    <h2 className="text-3xl md:text-4xl font-semibold text-white">{currentPreset.name}</h2>
+                    <p className="text-lg text-white/70">{currentPreset.description}</p>
+                  </div>
                 </div>
-                <div className="text-xl text-white/60 font-light">Hz</div>
-                <div className="flex items-center justify-center gap-3">
-                  <span className="text-2xl">{currentPreset.icon}</span>
-                  <div className="text-lg text-white/80 font-medium">{currentPreset.name}</div>
-                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-                    {currentPreset.category}
-                  </Badge>
-                </div>
+                
+                <Badge variant="secondary" className="bg-white/20 text-white border-white/30 px-4 py-2 text-lg">
+                  {currentPreset.category}
+                </Badge>
+                
+                {isPlaying ? (
+                  <div className="text-white/60 text-sm flex items-center justify-center gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    Playing binaural beats
+                  </div>
+                ) : (
+                  <div className="text-white/60 text-sm">
+                    Session paused
+                  </div>
+                )}
               </div>
 
-              {/* Enhanced timer display */}
+              {/* Session progress */}
               <Card className="p-6 backdrop-blur-xl bg-white/10 border border-white/20 max-w-sm mx-auto">
                 <div className="text-center space-y-3">
                   <div className="flex items-center justify-center gap-2">
@@ -575,11 +607,17 @@ export default function AwardWinningBinauralExperience() {
                   </div>
                 </div>
               </Card>
+              
+              {/* Quick frequency adjustment */}
+              <div className="flex items-center justify-center gap-2 text-white/60 text-sm">
+                <span>Beat frequency:</span>
+                <span className="font-mono">{beatFrequency.toFixed(1)}Hz</span>
+              </div>
             </div>
           )}
 
           {/* Enhanced control buttons with ripple effects */}
-          <div className="flex items-center justify-center gap-6 pt-8">
+          <div className="flex items-center justify-center gap-4 pt-8">
             <Button
               variant="ghost"
               size="lg"
@@ -589,6 +627,19 @@ export default function AwardWinningBinauralExperience() {
             >
               {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
             </Button>
+            
+            {/* Stop button - only show during session */}
+            {hasStartedSession && (
+              <Button
+                variant="ghost"
+                size="lg"
+                onClick={resetSession}
+                className="w-14 h-14 rounded-full bg-white/10 hover:bg-red-500/20 border border-white/20 hover:border-red-400/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center"
+                style={{ color: 'white' }}
+              >
+                <Square className="w-5 h-5" />
+              </Button>
+            )}
             
             <div className="relative">
               <Button

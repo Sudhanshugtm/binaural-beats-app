@@ -195,23 +195,50 @@ export default function AwardWinningBinauralExperience() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Dynamic background with ambient effects */}
+      {/* Dynamic cheerful background */}
       <div className={`absolute inset-0 transition-all duration-1000 ${
         isDarkMode 
-          ? 'bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900' 
-          : 'bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50'
+          ? 'bg-gradient-to-br from-indigo-900 via-purple-900/30 to-pink-900/20' 
+          : 'bg-gradient-to-br from-blue-50 via-purple-50/50 to-pink-50/30'
       }`}>
-        {/* Animated background orbs */}
+        {/* Welcoming animated background orbs */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 animate-pulse ${
-            isDarkMode ? 'bg-purple-500' : 'bg-blue-400'
-          }`} style={{ animationDuration: '4s' }} />
-          <div className={`absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 animate-pulse ${
-            isDarkMode ? 'bg-blue-500' : 'bg-purple-400'
-          }`} style={{ animationDuration: '6s', animationDelay: '2s' }} />
-          <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-10 animate-pulse ${
-            isDarkMode ? 'bg-cyan-500' : 'bg-indigo-400'
-          }`} style={{ animationDuration: '8s', animationDelay: '1s' }} />
+          {/* Primary cheerful orbs */}
+          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-30 animate-pulse ${
+            isPlaying 
+              ? (isDarkMode ? 'bg-gradient-to-r from-purple-400 to-pink-400' : 'bg-gradient-to-r from-blue-300 to-purple-300')
+              : (isDarkMode ? 'bg-purple-500/20' : 'bg-blue-400/20')
+          }`} style={{ 
+            animationDuration: isPlaying ? `${2 + beatFrequency * 0.1}s` : '4s',
+            transform: `scale(${isPlaying ? 1 + Math.sin(Date.now() * 0.001) * 0.1 : 1})`
+          }} />
+          
+          <div className={`absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl opacity-25 animate-pulse ${
+            isPlaying 
+              ? (isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-blue-400' : 'bg-gradient-to-r from-purple-300 to-pink-300')
+              : (isDarkMode ? 'bg-blue-500/20' : 'bg-purple-400/20')
+          }`} style={{ 
+            animationDuration: isPlaying ? `${3 + beatFrequency * 0.15}s` : '6s',
+            animationDelay: '1s'
+          }} />
+          
+          <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl opacity-15 animate-pulse ${
+            isPlaying 
+              ? (isDarkMode ? 'bg-gradient-to-r from-pink-400 to-orange-400' : 'bg-gradient-to-r from-indigo-300 to-cyan-300')
+              : (isDarkMode ? 'bg-cyan-500/15' : 'bg-indigo-400/15')
+          }`} style={{ 
+            animationDuration: isPlaying ? `${4 + beatFrequency * 0.2}s` : '8s',
+            animationDelay: '2s'
+          }} />
+          
+          {/* Welcome sparkles */}
+          {!isPlaying && (
+            <>
+              <div className="absolute top-1/3 left-1/3 w-3 h-3 bg-yellow-400 rounded-full animate-ping opacity-60" style={{ animationDelay: '1s' }} />
+              <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-pink-400 rounded-full animate-ping opacity-50" style={{ animationDelay: '2s' }} />
+              <div className="absolute bottom-1/3 left-2/3 w-4 h-4 bg-blue-400 rounded-full animate-ping opacity-40" style={{ animationDelay: '3s' }} />
+            </>
+          )}
         </div>
       </div>
 
@@ -222,36 +249,17 @@ export default function AwardWinningBinauralExperience() {
         style={{ background: 'transparent' }}
       />
 
-      {/* Header with settings */}
-      <div className="relative z-20 p-6 flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Brain className={`w-6 h-6 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
-            <h1 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              Binaural Beats
-            </h1>
-          </div>
-          <Badge 
-            variant="secondary" 
-            className={`px-3 py-1 text-sm font-medium backdrop-blur-md ${
-              isDarkMode 
-                ? 'bg-white/10 text-white border-white/20' 
-                : 'bg-black/10 text-gray-900 border-black/20'
-            }`}
-          >
-            {currentPreset.category}
-          </Badge>
-        </div>
-
+      {/* Minimal header with settings */}
+      <div className="absolute top-4 right-4 z-20">
         <Sheet open={showSettings} onOpenChange={setShowSettings}>
           <SheetTrigger asChild>
             <Button 
               variant="ghost" 
               size="sm"
-              className={`backdrop-blur-md ${
+              className={`backdrop-blur-md border-0 ${
                 isDarkMode 
-                  ? 'bg-white/10 hover:bg-white/20 text-white' 
-                  : 'bg-black/10 hover:bg-black/20 text-gray-900'
+                  ? 'bg-white/5 hover:bg-white/10 text-white/60 hover:text-white' 
+                  : 'bg-black/5 hover:bg-black/10 text-gray-600 hover:text-gray-900'
               }`}
             >
               <Settings className="w-5 h-5" />
@@ -333,60 +341,135 @@ export default function AwardWinningBinauralExperience() {
         </Sheet>
       </div>
 
-      {/* Central control interface */}
+      {/* Central welcoming interface */}
       <div className="absolute inset-0 z-30 flex items-center justify-center px-4">
         <div className="text-center space-y-6 md:space-y-8 max-w-sm md:max-w-none">
-          {/* Main frequency display */}
-          <div className={`relative ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            <div className="text-6xl md:text-8xl lg:text-9xl font-extralight tracking-wider mb-2">
-              {beatFrequency.toFixed(1)}
+          {!isPlaying ? (
+            /* Welcome state */
+            <div className="space-y-6 animate-in fade-in duration-1000">
+              {/* Welcome message */}
+              <div className={`${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h1 className="text-3xl md:text-5xl font-light mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+                  Welcome to Binaural Beats
+                </h1>
+                <p className={`text-lg md:text-xl font-light ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  Choose your frequency and start your journey
+                </p>
+              </div>
+              
+              {/* Frequency preset cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-8">
+                {FREQUENCY_PRESETS.map((preset) => (
+                  <Button
+                    key={preset.name}
+                    variant="ghost"
+                    className={`h-auto p-4 md:p-6 backdrop-blur-md border ${
+                      beatFrequency === preset.frequency
+                        ? `bg-gradient-to-r ${preset.color} text-white border-white/20`
+                        : isDarkMode
+                        ? 'bg-white/5 hover:bg-white/10 text-white border-white/10 hover:border-white/20'
+                        : 'bg-black/5 hover:bg-black/10 text-gray-900 border-black/10 hover:border-black/20'
+                    }`}
+                    onClick={() => updateFrequency(preset.frequency)}
+                  >
+                    <div className="text-center space-y-2">
+                      <div className="text-2xl">{preset.icon}</div>
+                      <div className="font-medium">{preset.name}</div>
+                      <div className="text-sm opacity-75">{preset.frequency}Hz</div>
+                      <div className="text-xs opacity-60">{preset.description}</div>
+                    </div>
+                  </Button>
+                ))}
+              </div>
+              
+              {/* Custom frequency slider */}
+              <div className={`backdrop-blur-md rounded-2xl p-6 ${
+                isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-black/5 border border-black/10'
+              }`}>
+                <div className={`text-center mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className="text-2xl md:text-3xl font-light mb-1">{beatFrequency.toFixed(1)} Hz</div>
+                  <div className="text-sm opacity-75">Custom Frequency</div>
+                </div>
+                <Slider
+                  value={[beatFrequency]}
+                  onValueChange={([value]) => updateFrequency(value)}
+                  min={1}
+                  max={40}
+                  step={0.5}
+                  className="w-full"
+                />
+              </div>
             </div>
-            <div className={`text-lg md:text-xl font-light tracking-widest ${
-              isDarkMode ? 'text-gray-400' : 'text-gray-600'
-            }`}>
-              Hz
-            </div>
-            <div className={`text-base md:text-lg font-medium mt-2 ${
-              isDarkMode ? 'text-purple-400' : 'text-purple-600'
-            }`}>
-              {currentPreset.name}
-            </div>
-          </div>
+          ) : (
+            /* Playing state */
+            <div className="space-y-6 animate-in fade-in duration-500">
+              {/* Dynamic frequency display */}
+              <div className={`relative ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <div className={`text-6xl md:text-8xl lg:text-9xl font-extralight tracking-wider mb-2 transition-all duration-300 ${
+                  isPlaying ? 'animate-pulse' : ''
+                }`} style={{
+                  textShadow: isPlaying ? `0 0 30px ${currentPreset.color.includes('purple') ? '#a855f7' : '#3b82f6'}` : 'none'
+                }}>
+                  {beatFrequency.toFixed(1)}
+                </div>
+                <div className={`text-lg md:text-xl font-light tracking-widest ${
+                  isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                  Hz
+                </div>
+                <div className={`text-base md:text-lg font-medium mt-2 bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent`}>
+                  {currentPreset.name}
+                </div>
+              </div>
 
-          {/* Timer display */}
-          <div className={`text-2xl md:text-3xl font-mono tracking-wider ${
-            isDarkMode ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            {formatTime(timer)}
-            <span className={`text-sm md:text-base ml-2 ${
-              isDarkMode ? 'text-gray-500' : 'text-gray-500'
-            }`}>
-              / {formatTime(selectedDuration)}
-            </span>
-          </div>
+              {/* Enhanced timer display */}
+              <div className={`backdrop-blur-md rounded-2xl p-4 ${
+                isDarkMode ? 'bg-white/10 border border-white/20' : 'bg-black/10 border border-black/20'
+              }`}>
+                <div className={`text-3xl md:text-4xl font-mono tracking-wider font-bold ${
+                  isDarkMode ? 'text-white' : 'text-gray-900'
+                }`}>
+                  {formatTime(timer)}
+                </div>
+                <div className={`text-sm md:text-base mt-1 ${
+                  isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                  of {formatTime(selectedDuration)}
+                </div>
+              </div>
 
-          {/* Progress bar */}
-          <div className="w-64 md:w-80 mx-auto">
-            <div className={`w-full h-1 md:h-1.5 rounded-full ${
-              isDarkMode ? 'bg-gray-800' : 'bg-gray-200'
-            }`}>
-              <div 
-                className={`h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${currentPreset.color}`}
-                style={{ width: `${progress}%` }}
-              />
+              {/* Enhanced progress bar */}
+              <div className="w-64 md:w-80 mx-auto">
+                <div className={`w-full h-2 md:h-3 rounded-full ${
+                  isDarkMode ? 'bg-gray-800' : 'bg-gray-200'
+                }`}>
+                  <div 
+                    className={`h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${currentPreset.color} shadow-lg`}
+                    style={{ 
+                      width: `${progress}%`,
+                      boxShadow: `0 0 20px ${currentPreset.color.includes('purple') ? '#a855f7' : '#3b82f6'}40`
+                    }}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Play/pause control */}
           <Button
             onClick={isPlaying ? stopAudio : startAudio}
             size="lg"
-            className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-r ${currentPreset.color} hover:scale-105 transform transition-all duration-200 shadow-2xl`}
+            className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-r ${currentPreset.color} hover:scale-105 transform transition-all duration-300 shadow-2xl ${
+              isPlaying ? 'animate-pulse' : 'hover:shadow-3xl'
+            }`}
+            style={{
+              boxShadow: isPlaying ? `0 0 40px ${currentPreset.color.includes('purple') ? '#a855f7' : '#3b82f6'}60` : undefined
+            }}
           >
             {isPlaying ? (
-              <Pause className="w-6 h-6 md:w-8 md:h-8 text-white" />
+              <Pause className="w-8 h-8 md:w-10 md:h-10 text-white" />
             ) : (
-              <Play className="w-6 h-6 md:w-8 md:h-8 text-white ml-1" />
+              <Play className="w-8 h-8 md:w-10 md:h-10 text-white ml-1" />
             )}
           </Button>
         </div>

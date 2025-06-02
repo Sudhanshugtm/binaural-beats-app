@@ -118,9 +118,10 @@ export function useAudioVisualization(
       const centerX = canvas.width / (2 * window.devicePixelRatio);
       const centerY = canvas.height / (2 * window.devicePixelRatio);
 
+      // Create subtle overlay instead of solid background
       ctx.fillStyle = isDarkMode 
-        ? 'rgba(5, 8, 15, 0.95)' 
-        : 'rgba(245, 248, 255, 0.95)';
+        ? 'rgba(5, 8, 15, 0.3)' 
+        : 'rgba(245, 248, 255, 0.3)';
       ctx.fillRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
 
       if (dataArrayRef.current) {
@@ -168,12 +169,13 @@ export function useAudioVisualization(
       ctx.fillStyle = gradient;
       ctx.fillRect(-centerX, -centerY, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
 
-      // Draw wave rings
-      waveRingsRef.current.forEach((ring, index) => {
-        ring.rotation += ring.speed * (1 + amplitudeFactor * 2);
-        
-        const pulseRadius = ring.radius + Math.sin(time * 2 + index) * 20 * amplitudeFactor;
-        const dynamicOpacity = ring.opacity + amplitudeFactor * 0.3;
+      // Draw wave rings (only when playing)
+      if (isPlaying) {
+        waveRingsRef.current.forEach((ring, index) => {
+          ring.rotation += ring.speed * (1 + amplitudeFactor * 3);
+          
+          const pulseRadius = ring.radius + Math.sin(time * 2 + index) * 30 * amplitudeFactor;
+          const dynamicOpacity = (ring.opacity + amplitudeFactor * 0.5) * (isPlaying ? 1 : 0.2);
         
         ctx.save();
         ctx.rotate(ring.rotation);
@@ -196,36 +198,39 @@ export function useAudioVisualization(
           }
         }
         
-        ctx.closePath();
-        ctx.stroke();
-        ctx.restore();
-      });
-
-      // Draw central visualization core
-      const coreRadius = 80 + beatPulse * 40 + bassFactor * 60;
-      const coreGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, coreRadius);
-      
-      if (isDarkMode) {
-        coreGradient.addColorStop(0, `hsla(280, 100%, 70%, ${0.8 + amplitudeFactor * 0.2})`);
-        coreGradient.addColorStop(0.7, `hsla(260, 80%, 50%, ${0.4 + amplitudeFactor * 0.3})`);
-        coreGradient.addColorStop(1, 'hsla(240, 60%, 30%, 0)');
-      } else {
-        coreGradient.addColorStop(0, `hsla(200, 100%, 80%, ${0.8 + amplitudeFactor * 0.2})`);
-        coreGradient.addColorStop(0.7, `hsla(220, 80%, 60%, ${0.4 + amplitudeFactor * 0.3})`);
-        coreGradient.addColorStop(1, 'hsla(240, 60%, 40%, 0)');
+          ctx.closePath();
+          ctx.stroke();
+          ctx.restore();
+        });
       }
-      
-      ctx.fillStyle = coreGradient;
-      ctx.beginPath();
-      ctx.arc(0, 0, coreRadius, 0, Math.PI * 2);
-      ctx.fill();
+
+      // Draw central visualization core (only when playing)
+      if (isPlaying) {
+        const coreRadius = 80 + beatPulse * 40 + bassFactor * 60;
+        const coreGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, coreRadius);
+        
+        if (isDarkMode) {
+          coreGradient.addColorStop(0, `hsla(280, 100%, 70%, ${0.8 + amplitudeFactor * 0.2})`);
+          coreGradient.addColorStop(0.7, `hsla(260, 80%, 50%, ${0.4 + amplitudeFactor * 0.3})`);
+          coreGradient.addColorStop(1, 'hsla(240, 60%, 30%, 0)');
+        } else {
+          coreGradient.addColorStop(0, `hsla(200, 100%, 80%, ${0.8 + amplitudeFactor * 0.2})`);
+          coreGradient.addColorStop(0.7, `hsla(220, 80%, 60%, ${0.4 + amplitudeFactor * 0.3})`);
+          coreGradient.addColorStop(1, 'hsla(240, 60%, 40%, 0)');
+        }
+        
+        ctx.fillStyle = coreGradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, coreRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       ctx.restore();
 
       // Draw particles with trails and 3D effects
       particlesRef.current.forEach((particle, index) => {
-        const speedFactor = isPlaying ? 1 : 0.3;
-        const audioInfluence = 1 + amplitudeFactor * 2;
+        const speedFactor = isPlaying ? 1.5 : 0.1;
+        const audioInfluence = isPlaying ? 1 + amplitudeFactor * 3 : 0.5;
         
         particle.x += particle.velocity.x * speedFactor * audioInfluence;
         particle.y += particle.velocity.y * speedFactor * audioInfluence;

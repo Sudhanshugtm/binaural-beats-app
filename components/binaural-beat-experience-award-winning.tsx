@@ -23,10 +23,10 @@ interface FrequencyPreset {
 }
 
 const FREQUENCY_PRESETS: FrequencyPreset[] = [
-  { name: "Delta", frequency: 2, category: "Deep Sleep", description: "Deep sleep, relaxation", icon: "🌙", color: "from-indigo-500 to-purple-600" },
-  { name: "Theta", frequency: 6, category: "REM & Dreams", description: "REM sleep, meditation", icon: "✨", color: "from-purple-500 to-pink-600" },
-  { name: "Alpha", frequency: 10, category: "Relaxed Focus", description: "Relaxation, focus", icon: "🧘", color: "from-blue-500 to-cyan-600" },
-  { name: "Beta", frequency: 20, category: "Alert Focus", description: "Concentration, alertness", icon: "⚡", color: "from-orange-500 to-red-600" },
+  { name: "Delta", frequency: 2, category: "Deep Sleep", description: "Deep sleep, relaxation", icon: "🌙", color: "from-violet-400 via-purple-500 to-indigo-600" },
+  { name: "Theta", frequency: 6, category: "REM & Dreams", description: "REM sleep, meditation", icon: "✨", color: "from-pink-400 via-purple-500 to-violet-600" },
+  { name: "Alpha", frequency: 10, category: "Relaxed Focus", description: "Relaxation, focus", icon: "🧘", color: "from-cyan-400 via-blue-500 to-purple-600" },
+  { name: "Beta", frequency: 20, category: "Alert Focus", description: "Concentration, alertness", icon: "⚡", color: "from-orange-400 via-pink-500 to-red-500" },
 ];
 
 const SESSION_DURATIONS = [
@@ -64,7 +64,7 @@ export default function AwardWinningBinauralExperience() {
   );
 
   const currentPreset = FREQUENCY_PRESETS.find(p => p.frequency === beatFrequency) || 
-    { name: "Custom", category: "Custom", description: `${beatFrequency}Hz`, icon: "🎛️", color: "from-gray-500 to-gray-600" };
+    { name: "Custom", category: "Custom", description: `${beatFrequency}Hz`, icon: "🎛️", color: "from-violet-500 via-fuchsia-500 to-cyan-500" };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -195,48 +195,50 @@ export default function AwardWinningBinauralExperience() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Dynamic cheerful background */}
+      {/* Dynamic vibrant background */}
       <div className={`absolute inset-0 transition-all duration-1000 ${
         isDarkMode 
-          ? 'bg-gradient-to-br from-indigo-900 via-purple-900/30 to-pink-900/20' 
-          : 'bg-gradient-to-br from-blue-50 via-purple-50/50 to-pink-50/30'
+          ? 'bg-gradient-to-br from-purple-900 via-violet-800/60 to-fuchsia-900/40' 
+          : 'bg-gradient-to-br from-violet-100 via-purple-100/80 to-fuchsia-100/60'
       }`}>
         {/* Welcoming animated background orbs */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Primary cheerful orbs */}
-          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-30 animate-pulse ${
+          {/* Vibrant floating orbs */}
+          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-40 animate-pulse ${
             isPlaying 
-              ? (isDarkMode ? 'bg-gradient-to-r from-purple-400 to-pink-400' : 'bg-gradient-to-r from-blue-300 to-purple-300')
-              : (isDarkMode ? 'bg-purple-500/20' : 'bg-blue-400/20')
+              ? (isDarkMode ? 'bg-gradient-to-r from-fuchsia-500 via-purple-500 to-violet-600' : 'bg-gradient-to-r from-fuchsia-400 via-purple-400 to-violet-500')
+              : (isDarkMode ? 'bg-gradient-to-r from-purple-500/30 to-fuchsia-500/30' : 'bg-gradient-to-r from-purple-400/40 to-fuchsia-400/40')
           }`} style={{ 
             animationDuration: isPlaying ? `${2 + beatFrequency * 0.1}s` : '4s',
             transform: `scale(${isPlaying ? 1 + Math.sin(Date.now() * 0.001) * 0.1 : 1})`
           }} />
           
-          <div className={`absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl opacity-25 animate-pulse ${
+          <div className={`absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl opacity-35 animate-pulse ${
             isPlaying 
-              ? (isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-blue-400' : 'bg-gradient-to-r from-purple-300 to-pink-300')
-              : (isDarkMode ? 'bg-blue-500/20' : 'bg-purple-400/20')
+              ? (isDarkMode ? 'bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600' : 'bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500')
+              : (isDarkMode ? 'bg-gradient-to-r from-blue-500/25 to-cyan-500/25' : 'bg-gradient-to-r from-blue-400/35 to-cyan-400/35')
           }`} style={{ 
             animationDuration: isPlaying ? `${3 + beatFrequency * 0.15}s` : '6s',
             animationDelay: '1s'
           }} />
           
-          <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl opacity-15 animate-pulse ${
+          <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl opacity-25 animate-pulse ${
             isPlaying 
-              ? (isDarkMode ? 'bg-gradient-to-r from-pink-400 to-orange-400' : 'bg-gradient-to-r from-indigo-300 to-cyan-300')
-              : (isDarkMode ? 'bg-cyan-500/15' : 'bg-indigo-400/15')
+              ? (isDarkMode ? 'bg-gradient-to-r from-orange-500 via-pink-500 to-fuchsia-600' : 'bg-gradient-to-r from-orange-400 via-pink-400 to-fuchsia-500')
+              : (isDarkMode ? 'bg-gradient-to-r from-pink-500/20 to-orange-500/20' : 'bg-gradient-to-r from-pink-400/30 to-orange-400/30')
           }`} style={{ 
             animationDuration: isPlaying ? `${4 + beatFrequency * 0.2}s` : '8s',
             animationDelay: '2s'
           }} />
           
-          {/* Welcome sparkles */}
+          {/* Magical sparkles */}
           {!isPlaying && (
             <>
-              <div className="absolute top-1/3 left-1/3 w-3 h-3 bg-yellow-400 rounded-full animate-ping opacity-60" style={{ animationDelay: '1s' }} />
-              <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-pink-400 rounded-full animate-ping opacity-50" style={{ animationDelay: '2s' }} />
-              <div className="absolute bottom-1/3 left-2/3 w-4 h-4 bg-blue-400 rounded-full animate-ping opacity-40" style={{ animationDelay: '3s' }} />
+              <div className="absolute top-1/3 left-1/3 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-ping opacity-70" style={{ animationDelay: '1s' }} />
+              <div className="absolute top-2/3 right-1/3 w-3 h-3 bg-gradient-to-r from-fuchsia-400 to-pink-500 rounded-full animate-ping opacity-65" style={{ animationDelay: '2s' }} />
+              <div className="absolute bottom-1/3 left-2/3 w-5 h-5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-ping opacity-60" style={{ animationDelay: '3s' }} />
+              <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full animate-ping opacity-55" style={{ animationDelay: '4s' }} />
+              <div className="absolute bottom-1/2 right-1/4 w-3 h-3 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full animate-ping opacity-60" style={{ animationDelay: '5s' }} />
             </>
           )}
         </div>
@@ -349,11 +351,15 @@ export default function AwardWinningBinauralExperience() {
             <div className="space-y-6 animate-in fade-in duration-1000">
               {/* Welcome message */}
               <div className={`${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                <h1 className="text-3xl md:text-5xl font-light mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+                <h1 className="text-3xl md:text-5xl font-light mb-4 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent animate-pulse">
                   Welcome to Binaural Beats
                 </h1>
-                <p className={`text-lg md:text-xl font-light ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Choose your frequency and start your journey
+                <p className={`text-lg md:text-xl font-light bg-gradient-to-r ${
+                  isDarkMode 
+                    ? 'from-purple-300 via-pink-300 to-violet-300' 
+                    : 'from-purple-600 via-pink-600 to-violet-600'
+                } bg-clip-text text-transparent`}>
+                  Choose your frequency and start your magical journey ✨
                 </p>
               </div>
               
@@ -383,12 +389,20 @@ export default function AwardWinningBinauralExperience() {
               </div>
               
               {/* Custom frequency slider */}
-              <div className={`backdrop-blur-md rounded-2xl p-6 ${
-                isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-black/5 border border-black/10'
+              <div className={`backdrop-blur-md rounded-2xl p-6 border-2 ${
+                isDarkMode 
+                  ? 'bg-gradient-to-r from-purple-500/10 via-fuchsia-500/10 to-cyan-500/10 border-purple-500/20' 
+                  : 'bg-gradient-to-r from-purple-100/50 via-fuchsia-100/50 to-cyan-100/50 border-purple-300/30'
               }`}>
-                <div className={`text-center mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  <div className="text-2xl md:text-3xl font-light mb-1">{beatFrequency.toFixed(1)} Hz</div>
-                  <div className="text-sm opacity-75">Custom Frequency</div>
+                <div className="text-center mb-4">
+                  <div className={`text-2xl md:text-3xl font-light mb-1 bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent`}>
+                    {beatFrequency.toFixed(1)} Hz
+                  </div>
+                  <div className={`text-sm font-medium ${
+                    isDarkMode ? 'text-purple-300' : 'text-purple-600'
+                  }`}>
+                    Custom Frequency 🎛️
+                  </div>
                 </div>
                 <Slider
                   value={[beatFrequency]}

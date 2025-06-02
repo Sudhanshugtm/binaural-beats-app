@@ -3,7 +3,6 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ModeToggle } from "@/components/mode-toggle"
 import { Headphones, Menu, X } from 'lucide-react'
 
 export function MainNav() {
@@ -25,7 +24,6 @@ export function MainNav() {
                 Player
               </Button>
             </Link>
-            <ModeToggle />
           </nav>
           <Button
             variant="ghost"
@@ -46,7 +44,6 @@ export function MainNav() {
                 Player
               </Button>
             </Link>
-            <ModeToggle />
           </nav>
         </div>
       )}

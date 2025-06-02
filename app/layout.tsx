@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
-import { Header } from "@/components/header";
+import { LayoutWrapper } from "@/components/layout-wrapper";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,12 +31,9 @@ export default function RootLayout({
             <a href="#main-content" className="skip-to-content">
               Skip to content
             </a>
-            <div className="relative min-h-screen bg-background">
-              <Header />
-              <main id="main-content" tabIndex={-1}>
-                {children}
-              </main>
-            </div>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
             <Toaster />
           </TooltipProvider>
         </ThemeProvider>

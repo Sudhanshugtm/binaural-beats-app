@@ -334,7 +334,7 @@ export default function AwardWinningBinauralExperience() {
       <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-6">
         <div className="flex items-center space-x-3">
           <Sparkles className="w-6 h-6 text-purple-300" />
-          <h2 className="text-lg font-medium bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+          <h2 className="text-lg font-medium text-white/90">
             Binaural Beats Studio
           </h2>
         </div>
@@ -457,9 +457,7 @@ export default function AwardWinningBinauralExperience() {
             <div className="space-y-10 animate-in fade-in duration-1000">
               <div className="space-y-4">
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-wide text-white drop-shadow-2xl">
-                  <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent">
-                    Find Your Frequency
-                  </span>
+                  Find Your Frequency
                 </h1>
                 <p className="text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto leading-relaxed">
                   Discover the perfect binaural beats for your mind state and unlock new levels of focus, relaxation, and consciousness.
@@ -494,7 +492,7 @@ export default function AwardWinningBinauralExperience() {
                         <div className="text-xs opacity-70 leading-relaxed">{preset.description}</div>
                         <Badge variant="secondary" className={`transition-all duration-300 ${
                           beatFrequency === preset.frequency 
-                            ? 'bg-white/20 text-white animate-pulse' 
+                            ? 'bg-white/20 text-white' 
                             : 'bg-white/10 text-white/80 hover:bg-white/20'
                         }`}>
                           {preset.category}
@@ -517,7 +515,7 @@ export default function AwardWinningBinauralExperience() {
                     <Music className="w-5 h-5 text-white/70" />
                     <span className="text-white/70 font-medium">Custom Frequency</span>
                   </div>
-                  <div className={`text-3xl font-light text-white bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent`}>
+                  <div className="text-3xl font-light text-white">
                     {beatFrequency.toFixed(1)} Hz
                   </div>
                   <Slider
@@ -536,9 +534,7 @@ export default function AwardWinningBinauralExperience() {
             <div className="space-y-8 animate-in fade-in duration-500">
               <div className="text-center space-y-4">
                 <div className="text-8xl md:text-9xl font-ultralight text-white tracking-widest drop-shadow-2xl">
-                  <span className={`bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent animate-pulse`}>
-                    {beatFrequency.toFixed(1)}
-                  </span>
+                  {beatFrequency.toFixed(1)}
                 </div>
                 <div className="text-xl text-white/60 font-light">Hz</div>
                 <div className="flex items-center justify-center gap-3">
@@ -597,7 +593,7 @@ export default function AwardWinningBinauralExperience() {
                     : 'bg-white/20 hover:bg-white/30 border-white/30 hover:border-white/50'
                 }`}
               >
-                <div className={`transition-all duration-300 ${isPlaying ? 'animate-pulse' : ''}`}>
+                <div className="transition-all duration-300">
                   {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
                 </div>
               </Button>

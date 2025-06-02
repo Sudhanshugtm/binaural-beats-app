@@ -194,8 +194,8 @@ export default function AwardWinningBinauralExperience() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Dynamic vibrant bright background */}
-      <div className="absolute inset-0 transition-all duration-1000 bg-gradient-to-br from-violet-200 via-purple-200/90 to-fuchsia-200/70">
+      {/* Clean white background */}
+      <div className="absolute inset-0 transition-all duration-1000 bg-white">
         {/* Welcoming animated background orbs */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Bright vibrant floating orbs */}

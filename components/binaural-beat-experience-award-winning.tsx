@@ -253,14 +253,14 @@ export default function AwardWinningBinauralExperience() {
             <Button 
               variant="ghost" 
               size="sm"
-              className="backdrop-blur-md border-0 bg-white/20 hover:bg-white/30 text-gray-700 hover:text-gray-900"
+              className="border-2 bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white border-purple-300 shadow-lg"
             >
               <Settings className="w-5 h-5" />
             </Button>
           </SheetTrigger>
           <SheetContent 
             side="right" 
-            className="w-80 bg-white/95 border-purple-200 backdrop-blur-xl"
+            className="w-80 bg-gradient-to-b from-purple-50 to-pink-50 border-2 border-purple-300 shadow-2xl"
           >
             <div className="space-y-6 pt-6">
               <div>
@@ -307,10 +307,10 @@ export default function AwardWinningBinauralExperience() {
                     <Button
                       key={preset.name}
                       variant={beatFrequency === preset.frequency ? "default" : "ghost"}
-                      className={`justify-start h-auto p-3 ${
+                      className={`justify-start h-auto p-3 border ${
                         beatFrequency === preset.frequency
-                          ? `bg-gradient-to-r ${preset.color} text-white`
-                          : 'hover:bg-purple-50 text-gray-700'
+                          ? `bg-gradient-to-r ${preset.color} text-white border-white shadow-lg`
+                          : 'bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 text-gray-700 border-purple-200 hover:border-purple-300'
                       }`}
                       onClick={() => updateFrequency(preset.frequency)}
                     >
@@ -352,10 +352,10 @@ export default function AwardWinningBinauralExperience() {
                   <Button
                     key={preset.name}
                     variant="ghost"
-                    className={`h-auto p-4 md:p-6 backdrop-blur-md border ${
+                    className={`h-auto p-4 md:p-6 border-2 shadow-lg ${
                       beatFrequency === preset.frequency
-                        ? `bg-gradient-to-r ${preset.color} text-white border-white/20`
-                        : 'bg-white/20 hover:bg-white/30 text-gray-900 border-purple-200/30 hover:border-purple-300/50'
+                        ? `bg-gradient-to-r ${preset.color} text-white border-white shadow-xl`
+                        : 'bg-gradient-to-r from-white to-purple-50 hover:from-purple-100 hover:to-pink-100 text-gray-900 border-purple-300 hover:border-purple-400 hover:shadow-xl'
                     }`}
                     onClick={() => updateFrequency(preset.frequency)}
                   >
@@ -370,7 +370,7 @@ export default function AwardWinningBinauralExperience() {
               </div>
               
               {/* Custom frequency slider */}
-              <div className="backdrop-blur-md rounded-2xl p-6 border-2 bg-gradient-to-r from-purple-100/70 via-fuchsia-100/70 to-cyan-100/70 border-purple-300/40">
+              <div className="rounded-2xl p-6 border-2 bg-gradient-to-r from-purple-100 via-fuchsia-100 to-cyan-100 border-purple-400 shadow-xl">
                 <div className="text-center mb-4">
                   <div className={`text-2xl md:text-3xl font-light mb-1 bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent`}>
                     {beatFrequency.toFixed(1)} Hz
@@ -410,7 +410,7 @@ export default function AwardWinningBinauralExperience() {
               </div>
 
               {/* Enhanced timer display */}
-              <div className="backdrop-blur-md rounded-2xl p-4 bg-white/30 border border-purple-200/40">
+              <div className="rounded-2xl p-4 bg-gradient-to-r from-white to-purple-100 border-2 border-purple-400 shadow-xl">
                 <div className="text-3xl md:text-4xl font-mono tracking-wider font-bold text-gray-900">
                   {formatTime(timer)}
                 </div>
@@ -456,7 +456,7 @@ export default function AwardWinningBinauralExperience() {
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 z-30 p-3 md:p-6">
-        <Card className="backdrop-blur-xl border-0 bg-white/50 text-gray-900">
+        <Card className="border-2 bg-gradient-to-r from-white via-purple-50 to-pink-50 text-gray-900 border-purple-300 shadow-2xl">
           <CardContent className="p-3 md:p-6">
             <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:items-center md:justify-between">
               {/* Mode selector */}
@@ -476,8 +476,8 @@ export default function AwardWinningBinauralExperience() {
                       size="sm"
                       className={`text-xs h-7 px-2 md:h-8 md:px-3 ${
                         selectedDuration === duration.value
-                          ? `bg-gradient-to-r ${currentPreset.color}`
-                          : 'hover:bg-purple-100'
+                          ? `bg-gradient-to-r ${currentPreset.color} border-2 border-white shadow-lg`
+                          : 'bg-gradient-to-r from-purple-100 to-pink-100 hover:from-purple-200 hover:to-pink-200 border border-purple-300'
                       }`}
                       onClick={() => setSelectedDuration(duration.value)}
                     >
@@ -493,7 +493,7 @@ export default function AwardWinningBinauralExperience() {
                   variant="ghost"
                   size="sm"
                   onClick={toggleMute}
-                  className="p-1 md:p-2 hover:bg-purple-100"
+                  className="p-1 md:p-2 bg-gradient-to-r from-purple-100 to-pink-100 hover:from-purple-200 hover:to-pink-200 border border-purple-300 rounded-lg"
                 >
                   {isMuted ? (
                     <VolumeX className="w-4 h-4 md:w-5 md:h-5" />

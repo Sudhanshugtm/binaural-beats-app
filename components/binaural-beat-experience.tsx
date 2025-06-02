@@ -12,6 +12,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { BinauralBeats } from "@/components/BinauralBeats";
 import { NoiseGenerator } from "@/components/NoiseGenerator";
 import { createOmSound } from '@/utils/omSound';
+import { createNoise as createEnhancedNoise } from '@/utils/audioUtils';
+import { StereoEnhancer, PsychoacousticProcessor } from '@/utils/advancedAudioProcessors';
 
 // ------------------------------------------------------------------------------------
 //   PLACEHOLDER COMPONENTS
@@ -86,6 +88,97 @@ export function applyFadeInOut(channelData: Float32Array, sampleRate: number) {
       channelData[index] *= gain;
     }
   }
+}
+
+/**
+ * Enhanced binaural beat generator with premium audio quality
+ */
+export function createEnhancedBinauralBeats(
+  ctx: AudioContext, 
+  carrierFreq: number = 250, 
+  beatFreq: number = 10,
+  stereoWidth: number = 1.0
+) {
+  // Create oscillators for left and right channels
+  const leftOsc = ctx.createOscillator();
+  const rightOsc = ctx.createOscillator();
+  
+  // Enhanced frequencies with slight detuning for richer sound
+  leftOsc.frequency.setValueAtTime(carrierFreq - beatFreq / 2, ctx.currentTime);
+  rightOsc.frequency.setValueAtTime(carrierFreq + beatFreq / 2, ctx.currentTime);
+  
+  // Use sine waves for purest binaural effect
+  leftOsc.type = 'sine';
+  rightOsc.type = 'sine';
+  
+  // Create gain nodes for volume control and processing
+  const leftGain = ctx.createGain();
+  const rightGain = ctx.createGain();
+  const masterGain = ctx.createGain();
+  
+  // Create stereo panner for enhanced imaging
+  const stereoPanner = ctx.createStereoPanner();
+  
+  // Create a subtle low-pass filter to reduce harshness
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(8000, ctx.currentTime);
+  filter.Q.setValueAtTime(0.707, ctx.currentTime);
+  
+  // Create a compressor for dynamic range control
+  const compressor = ctx.createDynamicsCompressor();
+  compressor.threshold.setValueAtTime(-24, ctx.currentTime);
+  compressor.knee.setValueAtTime(30, ctx.currentTime);
+  compressor.ratio.setValueAtTime(4, ctx.currentTime);
+  compressor.attack.setValueAtTime(0.003, ctx.currentTime);
+  compressor.release.setValueAtTime(0.25, ctx.currentTime);
+  
+  // Set initial gains with smooth transitions
+  const initialGain = 0.3;
+  leftGain.gain.setValueAtTime(initialGain, ctx.currentTime);
+  rightGain.gain.setValueAtTime(initialGain, ctx.currentTime);
+  masterGain.gain.setValueAtTime(0.8, ctx.currentTime);
+  
+  // Connect the audio graph with enhanced processing
+  leftOsc.connect(leftGain);
+  rightOsc.connect(rightGain);
+  
+  // Create a merger to combine left and right channels
+  const merger = ctx.createChannelMerger(2);
+  leftGain.connect(merger, 0, 0);
+  rightGain.connect(merger, 0, 1);
+  
+  // Connect to processing chain
+  merger.connect(filter);
+  filter.connect(compressor);
+  compressor.connect(stereoPanner);
+  stereoPanner.connect(masterGain);
+  
+  // Enhanced frequency update function with smooth transitions
+  const updateFrequencies = (newCarrier: number, newBeat: number) => {
+    const now = ctx.currentTime;
+    const transitionTime = 0.1; // 100ms smooth transition
+    
+    leftOsc.frequency.exponentialRampToValueAtTime(newCarrier - newBeat / 2, now + transitionTime);
+    rightOsc.frequency.exponentialRampToValueAtTime(newCarrier + newBeat / 2, now + transitionTime);
+    
+    // Adjust filter frequency based on carrier for optimal psychoacoustic response
+    const filterFreq = Math.min(8000, newCarrier * 16);
+    filter.frequency.exponentialRampToValueAtTime(filterFreq, now + transitionTime);
+  };
+  
+  return {
+    leftOsc,
+    rightOsc,
+    leftGain,
+    rightGain,
+    masterGain,
+    stereoPanner,
+    filter,
+    compressor,
+    updateFrequencies,
+    destination: masterGain
+  };
 }
 
 /**
@@ -1668,15 +1761,12 @@ export default function BinauralBeatExperience() {
 
 
   // --------------------------------------------------------------------------------
-  //   CANVAS ANIMATION
+  //   ENHANCED AUDIO-REACTIVE CANVAS ANIMATION
   // --------------------------------------------------------------------------------
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Make sure the drawing buffer matches displayed size
-    // especially if you want a crisp circle.
-    // (You can tweak these to your preference)
     const dpr = window.devicePixelRatio || 1;
     canvas.width = 320 * dpr;
     canvas.height = 320 * dpr;
@@ -1686,106 +1776,319 @@ export default function BinauralBeatExperience() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Scale for HiDPI
     ctx.scale(dpr, dpr);
 
     const centerX = canvas.width / (2 * dpr);
     const centerY = canvas.height / (2 * dpr);
 
-    // We'll store some extra data for the burst effect
-    const particles: {
+    interface Particle {
       x: number;
       y: number;
       radius: number;
       color: string;
       vx: number;
       vy: number;
-    }[] = [];
+      life: number;
+      maxLife: number;
+      type: 'burst' | 'frequency' | 'ambient';
+      frequency?: number;
+    }
 
+    const particles: Particle[] = [];
+    const frequencyParticles: Particle[] = [];
+    const ambientParticles: Particle[] = [];
+    
     let burstCreated = false;
-
-    // Pulse for idle circle
     let pulsePhase = 0;
+    let frequencyVisualizationPhase = 0;
+    let audioData: Uint8Array | null = null;
 
+    // Get audio data for visualization
+    const getAudioData = () => {
+      if (analyserRef.current) {
+        if (!audioData) {
+          audioData = new Uint8Array(analyserRef.current.frequencyBinCount);
+        }
+        analyserRef.current.getByteFrequencyData(audioData);
+        return audioData;
+      }
+      return null;
+    };
+
+    // Create burst particles with enhanced effects
     const createBurstParticles = () => {
-      const particleCount = 50;
-      particles.length = 0; // Clear any old
+      const particleCount = 80;
+      particles.length = 0;
+      
       for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * 2 * Math.PI;
-        // Speed from 1 to 3
-        const speed = Math.random() * 2 + 1;
+        const speed = Math.random() * 3 + 1;
+        const maxLife = Math.random() * 100 + 50;
+        
         particles.push({
-          x: centerX,
-          y: centerY,
-          radius: Math.random() * 2 + 1,
-          color: `hsla(${Math.random() * 360}, 70%, 60%, 0.8)`,
+          x: centerX + (Math.random() - 0.5) * 20,
+          y: centerY + (Math.random() - 0.5) * 20,
+          radius: Math.random() * 3 + 1,
+          color: getParticleColor(audioMode),
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
+          life: maxLife,
+          maxLife,
+          type: 'burst'
         });
       }
     };
 
-    const drawIdleCircle = () => {
-      pulsePhase += 0.05;
-      // Pulse the radius between 12 and 14
-      const pulseRadius = 12 + Math.sin(pulsePhase) * 2;
+    // Create frequency-reactive particles
+    const createFrequencyParticles = () => {
+      const data = getAudioData();
+      if (!data || !isPlaying) return;
 
-      // Create a radial gradient for a nicer look
-      const gradient = ctx.createRadialGradient(
-        centerX,
-        centerY,
-        pulseRadius * 0.2,
-        centerX,
-        centerY,
-        pulseRadius * 1.2
+      // Create particles based on frequency data
+      for (let i = 0; i < Math.min(data.length, 32); i += 2) {
+        const amplitude = data[i] / 255;
+        if (amplitude > 0.1) {
+          const angle = (i / 32) * Math.PI * 2;
+          const distance = 50 + amplitude * 60;
+          
+          frequencyParticles.push({
+            x: centerX + Math.cos(angle) * distance,
+            y: centerY + Math.sin(angle) * distance,
+            radius: amplitude * 4 + 1,
+            color: getFrequencyColor(i, amplitude),
+            vx: Math.cos(angle) * amplitude * 2,
+            vy: Math.sin(angle) * amplitude * 2,
+            life: 30,
+            maxLife: 30,
+            type: 'frequency',
+            frequency: i
+          });
+        }
+      }
+    };
+
+    // Create ambient floating particles
+    const createAmbientParticles = () => {
+      if (ambientParticles.length < 20 && Math.random() < 0.1) {
+        ambientParticles.push({
+          x: Math.random() * 320,
+          y: Math.random() * 320,
+          radius: Math.random() * 2 + 0.5,
+          color: getAmbientColor(),
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          life: Math.random() * 200 + 100,
+          maxLife: 300,
+          type: 'ambient'
+        });
+      }
+    };
+
+    const getParticleColor = (mode: string) => {
+      switch (mode) {
+        case 'binaural':
+          return `hsla(${220 + Math.random() * 40}, 70%, ${60 + Math.random() * 20}%, 0.8)`;
+        case 'noise':
+          return `hsla(${280 + Math.random() * 40}, 60%, ${50 + Math.random() * 30}%, 0.7)`;
+        case 'om':
+          return `hsla(${30 + Math.random() * 60}, 80%, ${70 + Math.random() * 20}%, 0.9)`;
+        default:
+          return `hsla(${Math.random() * 360}, 70%, 60%, 0.8)`;
+      }
+    };
+
+    const getFrequencyColor = (frequency: number, amplitude: number) => {
+      const hue = (frequency / 32) * 240 + 120; // Green to blue spectrum
+      const saturation = 60 + amplitude * 40;
+      const lightness = 50 + amplitude * 30;
+      return `hsla(${hue}, ${saturation}%, ${lightness}%, ${amplitude * 0.8 + 0.2})`;
+    };
+
+    const getAmbientColor = () => {
+      const hue = 200 + Math.random() * 160;
+      return `hsla(${hue}, 40%, 60%, 0.3)`;
+    };
+
+    // Draw enhanced idle visualization
+    const drawIdleVisualization = () => {
+      pulsePhase += 0.03;
+      const pulseRadius = 15 + Math.sin(pulsePhase) * 5;
+      const secondaryRadius = 25 + Math.sin(pulsePhase * 1.3) * 3;
+
+      // Primary circle with audio-reactive colors
+      const primaryGradient = ctx.createRadialGradient(
+        centerX, centerY, pulseRadius * 0.1,
+        centerX, centerY, pulseRadius * 1.5
       );
-      gradient.addColorStop(0, "rgba(0, 123, 255, 1)");
-      gradient.addColorStop(1, "rgba(0, 123, 255, 0.1)");
+      primaryGradient.addColorStop(0, getParticleColor(audioMode));
+      primaryGradient.addColorStop(1, "rgba(0, 123, 255, 0.05)");
 
-      // Optional glow
-      ctx.shadowColor = "rgba(0, 123, 255, 0.6)";
-      ctx.shadowBlur = 10;
-
+      ctx.shadowColor = getParticleColor(audioMode);
+      ctx.shadowBlur = 15;
       ctx.beginPath();
       ctx.arc(centerX, centerY, pulseRadius, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
+      ctx.fillStyle = primaryGradient;
       ctx.fill();
 
-      // Reset shadow after use
+      // Secondary ring
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, secondaryRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = `hsla(${(pulsePhase * 20) % 360}, 60%, 70%, 0.4)`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
       ctx.shadowBlur = 0;
     };
 
-    const drawParticles = () => {
-      particles.forEach((p) => {
+    // Draw and update all particle systems
+    const updateAndDrawParticles = () => {
+      // Update burst particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
+        p.life--;
+        p.vx *= 0.98; // Gentle deceleration
+        p.vy *= 0.98;
 
-        // Bounce off edges if desired
-        if (p.x < 0 || p.x > 320) p.vx *= -1;
-        if (p.y < 0 || p.y > 320) p.vy *= -1;
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
 
+        const alpha = p.life / p.maxLife;
+        const size = p.radius * alpha;
+        
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      }
+
+      // Update frequency particles
+      for (let i = frequencyParticles.length - 1; i >= 0; i--) {
+        const p = frequencyParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+
+        if (p.life <= 0) {
+          frequencyParticles.splice(i, 1);
+          continue;
+        }
+
+        const alpha = Math.sin((p.life / p.maxLife) * Math.PI);
+        ctx.globalAlpha = alpha;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.fill();
-      });
+      }
+
+      // Update ambient particles
+      for (let i = ambientParticles.length - 1; i >= 0; i--) {
+        const p = ambientParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+
+        // Gentle floating motion
+        p.vx += (Math.random() - 0.5) * 0.1;
+        p.vy += (Math.random() - 0.5) * 0.1;
+        p.vx *= 0.95;
+        p.vy *= 0.95;
+
+        // Wrap around edges
+        if (p.x < 0) p.x = 320;
+        if (p.x > 320) p.x = 0;
+        if (p.y < 0) p.y = 320;
+        if (p.y > 320) p.y = 0;
+
+        if (p.life <= 0) {
+          ambientParticles.splice(i, 1);
+          continue;
+        }
+
+        const alpha = Math.sin((p.life / p.maxLife) * Math.PI) * 0.6;
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      }
+
+      ctx.globalAlpha = 1.0;
+    };
+
+    // Draw audio-reactive central visualization
+    const drawAudioReactiveCenter = () => {
+      const data = getAudioData();
+      if (!data) return;
+
+      frequencyVisualizationPhase += 0.02;
+      const avgAmplitude = data.reduce((sum, val) => sum + val, 0) / data.length / 255;
+      
+      // Central pulsing based on audio amplitude
+      const reactiveRadius = 20 + avgAmplitude * 30;
+      const centralGradient = ctx.createRadialGradient(
+        centerX, centerY, reactiveRadius * 0.2,
+        centerX, centerY, reactiveRadius * 1.3
+      );
+      
+      const hue = (frequencyVisualizationPhase * 30 + avgAmplitude * 120) % 360;
+      centralGradient.addColorStop(0, `hsla(${hue}, 80%, 70%, 0.9)`);
+      centralGradient.addColorStop(1, `hsla(${hue}, 60%, 40%, 0.1)`);
+
+      ctx.shadowColor = `hsla(${hue}, 80%, 70%, 0.6)`;
+      ctx.shadowBlur = 20 + avgAmplitude * 20;
+      
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, reactiveRadius, 0, Math.PI * 2);
+      ctx.fillStyle = centralGradient;
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+
+      // Frequency rings
+      for (let i = 0; i < Math.min(data.length, 16); i++) {
+        const amplitude = data[i] / 255;
+        const angle = (i / 16) * Math.PI * 2 + frequencyVisualizationPhase;
+        const radius = 60 + amplitude * 40;
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
+        
+        ctx.globalAlpha = amplitude * 0.8;
+        ctx.beginPath();
+        ctx.arc(x, y, 2 + amplitude * 4, 0, Math.PI * 2);
+        ctx.fillStyle = getFrequencyColor(i, amplitude);
+        ctx.fill();
+      }
+      
+      ctx.globalAlpha = 1.0;
     };
 
     const animate = () => {
-      ctx.clearRect(0, 0, 320, 320);
+      // Clear with slight trail effect for smoother visuals
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, 320, 320);
 
-      // If not playing, just show the pulsing circle
       if (!isPlaying) {
         burstCreated = false;
-        drawIdleCircle();
+        drawIdleVisualization();
+        createAmbientParticles();
+        updateAndDrawParticles();
       } else {
-        // If we just transitioned from not playing -> playing,
-        // create a new burst
         if (!burstCreated) {
           createBurstParticles();
           burstCreated = true;
         }
-        drawParticles();
+        
+        drawAudioReactiveCenter();
+        createFrequencyParticles();
+        createAmbientParticles();
+        updateAndDrawParticles();
       }
 
       animationFrameRef.current = requestAnimationFrame(animate);
@@ -1798,7 +2101,7 @@ export default function BinauralBeatExperience() {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isPlaying, isTransitioning]);
+  }, [isPlaying, isTransitioning, audioMode, beatFrequency]);
 
   // Future ad integration can be added here if needed
   

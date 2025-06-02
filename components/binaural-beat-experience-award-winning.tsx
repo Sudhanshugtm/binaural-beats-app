@@ -272,15 +272,6 @@ export default function AwardWinningBinauralExperience() {
           </h2>
         </div>
         
-        {/* Back button - always visible during session */}
-        {hasStartedSession && (
-          <button
-            onClick={resetSession}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-all duration-200 flex items-center gap-2"
-          >
-            ← Back to Selection
-          </button>
-        )}
         
         <Sheet open={showSettings} onOpenChange={setShowSettings}>
           <SheetTrigger asChild>
@@ -541,34 +532,46 @@ export default function AwardWinningBinauralExperience() {
           )}
 
           {/* Simple, clean control buttons */}
-          <div className="flex items-center justify-center gap-4 pt-8">
-            {/* Volume button */}
-            <button
-              onClick={toggleMute}
-              className="w-14 h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
-            >
-              {isMuted ? <VolumeX className="w-5 h-5 text-gray-600" /> : <Volume2 className="w-5 h-5 text-gray-600" />}
-            </button>
+          <div className="flex flex-col items-center gap-4 pt-8">
+            <div className="flex items-center justify-center gap-4">
+              {/* Volume button */}
+              <button
+                onClick={toggleMute}
+                className="w-14 h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
+              >
+                {isMuted ? <VolumeX className="w-5 h-5 text-gray-600" /> : <Volume2 className="w-5 h-5 text-gray-600" />}
+              </button>
+              
+              {/* Play/Pause button */}
+              <button
+                onClick={togglePlayPause}
+                className={`w-16 h-16 rounded-lg transition-all duration-200 flex items-center justify-center shadow-sm ${
+                  isPlaying
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                    : 'bg-blue-500 hover:bg-blue-600 text-white'
+                }`}
+              >
+                {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
+              </button>
+              
+              {/* Settings button */}
+              <button
+                onClick={() => setShowSettings(true)}
+                className="w-14 h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
+              >
+                <Settings className="w-5 h-5 text-gray-600" />
+              </button>
+            </div>
             
-            {/* Play/Pause button */}
-            <button
-              onClick={togglePlayPause}
-              className={`w-16 h-16 rounded-lg transition-all duration-200 flex items-center justify-center shadow-sm ${
-                isPlaying
-                  ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                  : 'bg-blue-500 hover:bg-blue-600 text-white'
-              }`}
-            >
-              {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
-            </button>
-            
-            {/* Settings button */}
-            <button
-              onClick={() => setShowSettings(true)}
-              className="w-14 h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
-            >
-              <Settings className="w-5 h-5 text-gray-600" />
-            </button>
+            {/* Back button - only visible during session */}
+            {hasStartedSession && (
+              <button
+                onClick={resetSession}
+                className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium"
+              >
+                ← Back to Selection
+              </button>
+            )}
           </div>
         </div>
       </div>

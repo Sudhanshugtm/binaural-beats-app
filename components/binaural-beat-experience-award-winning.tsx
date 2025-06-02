@@ -264,7 +264,7 @@ export default function AwardWinningBinauralExperience() {
       />
 
       {/* Top navigation bar */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-6">
+      <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-6 bg-white/80 backdrop-blur-sm border-b border-gray-200">
         <div className="flex items-center space-x-3">
           <Sparkles className="w-6 h-6 text-gray-600" />
           <h2 className="text-lg font-medium text-gray-700">
@@ -458,16 +458,16 @@ export default function AwardWinningBinauralExperience() {
               </div>
               
               {/* Custom frequency control */}
-              <Card className="p-8 backdrop-blur-xl bg-white/10 border border-white/20 max-w-md mx-auto hover:bg-white/15 transition-all duration-300">
+              <Card className="p-8 bg-white border border-gray-200 max-w-md mx-auto hover:bg-gray-50 transition-all duration-300 shadow-sm">
                 <div className="text-center space-y-4">
                   <div className="flex items-center justify-center gap-2 mb-4">
-                    <Music className="w-5 h-5 text-white/70" />
-                    <span className="text-white/70 font-medium">Custom Frequency</span>
+                    <Music className="w-5 h-5 text-gray-600" />
+                    <span className="text-gray-700 font-medium">Custom Frequency</span>
                   </div>
-                  <div className="text-3xl font-light text-white">
+                  <div className="text-3xl font-light text-gray-800">
                     {beatFrequency.toFixed(1)} Hz
                   </div>
-                  <div className="text-xs text-white/60 mb-2">
+                  <div className="text-xs text-gray-600 mb-2">
                     Slide to adjust beat frequency (1-40 Hz)
                   </div>
                   <Slider
@@ -489,51 +489,51 @@ export default function AwardWinningBinauralExperience() {
                 <div className="flex items-center justify-center gap-4">
                   <span className="text-4xl">{currentPreset.icon}</span>
                   <div>
-                    <h2 className="text-3xl md:text-4xl font-semibold text-white">{currentPreset.name}</h2>
-                    <p className="text-lg text-white/70">{currentPreset.description}</p>
+                    <h2 className="text-3xl md:text-4xl font-semibold text-gray-800">{currentPreset.name}</h2>
+                    <p className="text-lg text-gray-600">{currentPreset.description}</p>
                   </div>
                 </div>
                 
-                <Badge variant="secondary" className="bg-white/20 text-white border-white/30 px-4 py-2 text-lg">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 px-4 py-2 text-lg">
                   {currentPreset.category}
                 </Badge>
                 
                 {isPlaying ? (
-                  <div className="text-white/60 text-sm flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <div className="text-gray-600 text-sm flex items-center justify-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     Playing binaural beats
                   </div>
                 ) : (
-                  <div className="text-white/60 text-sm">
+                  <div className="text-gray-600 text-sm">
                     Session paused
                   </div>
                 )}
               </div>
 
               {/* Session progress */}
-              <Card className="p-6 backdrop-blur-xl bg-white/10 border border-white/20 max-w-sm mx-auto">
+              <Card className="p-6 bg-white border border-gray-200 max-w-sm mx-auto shadow-sm">
                 <div className="text-center space-y-3">
                   <div className="flex items-center justify-center gap-2">
-                    <Timer className="w-5 h-5 text-white/70" />
-                    <span className="text-white/70 font-medium">Session Progress</span>
+                    <Timer className="w-5 h-5 text-gray-600" />
+                    <span className="text-gray-700 font-medium">Session Progress</span>
                   </div>
-                  <div className="text-3xl font-mono text-white">
+                  <div className="text-3xl font-mono text-gray-800">
                     {formatTime(timer)}
                   </div>
-                  <div className="w-full bg-white/20 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-full h-2">
                     <div 
                       className={`h-2 rounded-full transition-all duration-1000 bg-gradient-to-r ${currentPreset.color}`}
                       style={{ width: `${(timer / selectedDuration) * 100}%` }}
                     />
                   </div>
-                  <div className="text-sm text-white/60">
+                  <div className="text-sm text-gray-600">
                     {formatTime(selectedDuration - timer)} remaining
                   </div>
                 </div>
               </Card>
               
               {/* Quick frequency adjustment */}
-              <div className="flex items-center justify-center gap-2 text-white/60 text-sm">
+              <div className="flex items-center justify-center gap-2 text-gray-600 text-sm">
                 <span>Beat frequency:</span>
                 <span className="font-mono">{beatFrequency.toFixed(1)}Hz</span>
               </div>

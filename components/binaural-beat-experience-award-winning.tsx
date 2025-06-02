@@ -618,43 +618,36 @@ export default function AwardWinningBinauralExperience() {
 
           {/* Enhanced control buttons with ripple effects */}
           <div className="flex items-center justify-center gap-4 pt-8">
-            <Button
-              variant="ghost"
-              size="lg"
+            {/* Volume button */}
+            <button
               onClick={toggleMute}
-              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center"
-              style={{ color: isMuted ? '#fca5a5' : 'white' }}
+              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center text-white cursor-pointer text-2xl"
             >
-              {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
-            </Button>
+              {isMuted ? '🔇' : '🔊'}
+            </button>
             
             {/* Stop button - only show during session */}
             {hasStartedSession && (
-              <Button
-                variant="ghost"
-                size="lg"
+              <button
                 onClick={resetSession}
-                className="w-14 h-14 rounded-full bg-white/10 hover:bg-red-500/20 border border-white/20 hover:border-red-400/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center"
-                style={{ color: 'white' }}
+                className="w-14 h-14 rounded-full bg-white/10 hover:bg-red-500/20 border border-white/20 hover:border-red-400/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center text-white cursor-pointer text-xl"
               >
-                <Square className="w-5 h-5" />
-              </Button>
+                ⏹️
+              </button>
             )}
             
+            {/* Play/Pause button */}
             <div className="relative">
-              <Button
-                size="lg"
+              <button
                 onClick={togglePlayPause}
-                className={`w-20 h-20 rounded-full text-white border-2 transition-all duration-500 transform hover:scale-110 active:scale-95 btn-interactive relative overflow-hidden ${
+                className={`w-20 h-20 rounded-full text-white border-2 transition-all duration-500 transform hover:scale-110 active:scale-95 relative overflow-hidden flex items-center justify-center text-3xl cursor-pointer ${
                   isPlaying
                     ? `bg-gradient-to-r ${currentPreset.color} border-white/30 shadow-2xl animate-glow`
                     : 'bg-white/20 hover:bg-white/30 border-white/30 hover:border-white/50'
                 }`}
               >
-                <div className="transition-all duration-300">
-                  {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
-                </div>
-              </Button>
+                {isPlaying ? '⏸️' : '▶️'}
+              </button>
               
               {/* Ripple effect when playing */}
               {isPlaying && (
@@ -664,9 +657,10 @@ export default function AwardWinningBinauralExperience() {
               )}
             </div>
             
+            {/* Settings button */}
             <button
               onClick={() => setShowSettings(true)}
-              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center text-white cursor-pointer"
+              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center text-white cursor-pointer text-2xl"
             >
               ⚙️
             </button>

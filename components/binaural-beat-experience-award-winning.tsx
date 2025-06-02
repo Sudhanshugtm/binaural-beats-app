@@ -226,16 +226,14 @@ export default function AwardWinningBinauralExperience() {
             animationDelay: '2s'
           }} />
           
-          {/* Magical sparkles */}
-          {!isPlaying && (
-            <>
-              <div className="absolute top-1/3 left-1/3 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-ping opacity-70" style={{ animationDelay: '1s' }} />
-              <div className="absolute top-2/3 right-1/3 w-3 h-3 bg-gradient-to-r from-fuchsia-400 to-pink-500 rounded-full animate-ping opacity-65" style={{ animationDelay: '2s' }} />
-              <div className="absolute bottom-1/3 left-2/3 w-5 h-5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-ping opacity-60" style={{ animationDelay: '3s' }} />
-              <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full animate-ping opacity-55" style={{ animationDelay: '4s' }} />
-              <div className="absolute bottom-1/2 right-1/4 w-3 h-3 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full animate-ping opacity-60" style={{ animationDelay: '5s' }} />
-            </>
-          )}
+          {/* Magical sparkles - always visible */}
+          <div className={`${isPlaying ? 'opacity-40' : 'opacity-70'} transition-opacity duration-1000`}>
+            <div className="absolute top-1/3 left-1/3 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-ping" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-2/3 right-1/3 w-3 h-3 bg-gradient-to-r from-fuchsia-400 to-pink-500 rounded-full animate-ping" style={{ animationDelay: '2s' }} />
+            <div className="absolute bottom-1/3 left-2/3 w-5 h-5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-ping" style={{ animationDelay: '3s' }} />
+            <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full animate-ping" style={{ animationDelay: '4s' }} />
+            <div className="absolute bottom-1/2 right-1/4 w-3 h-3 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full animate-ping" style={{ animationDelay: '5s' }} />
+          </div>
         </div>
       </div>
 
@@ -394,9 +392,7 @@ export default function AwardWinningBinauralExperience() {
             <div className="space-y-6 animate-in fade-in duration-500">
               {/* Dynamic frequency display */}
               <div className="relative text-gray-900">
-                <div className={`text-6xl md:text-8xl lg:text-9xl font-extralight tracking-wider mb-2 transition-all duration-300 ${
-                  isPlaying ? 'animate-pulse' : ''
-                }`} style={{
+                <div className={`text-6xl md:text-8xl lg:text-9xl font-extralight tracking-wider mb-2 transition-all duration-300`} style={{
                   textShadow: isPlaying ? `0 0 30px ${currentPreset.color.includes('purple') ? '#a855f7' : '#3b82f6'}` : 'none'
                 }}>
                   {beatFrequency.toFixed(1)}
@@ -438,11 +434,9 @@ export default function AwardWinningBinauralExperience() {
           <Button
             onClick={isPlaying ? stopAudio : startAudio}
             size="lg"
-            className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-r ${currentPreset.color} hover:scale-105 transform transition-all duration-300 shadow-2xl ${
-              isPlaying ? 'animate-pulse' : 'hover:shadow-3xl'
-            }`}
+            className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-r ${currentPreset.color} hover:scale-105 transform transition-all duration-300 shadow-2xl hover:shadow-3xl`}
             style={{
-              boxShadow: isPlaying ? `0 0 40px ${currentPreset.color.includes('purple') ? '#a855f7' : '#3b82f6'}60` : undefined
+              boxShadow: isPlaying ? `0 0 20px ${currentPreset.color.includes('purple') ? '#a855f7' : '#3b82f6'}40` : undefined
             }}
           >
             {isPlaying ? (

@@ -613,15 +613,12 @@ export default function AwardWinningBinauralExperience() {
               )}
             </div>
             
-            <Button
-              variant="ghost"
-              size="lg"
+            <button
               onClick={() => setShowSettings(true)}
-              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center"
-              style={{ color: 'white' }}
+              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center text-white cursor-pointer"
             >
-              <Settings className="w-6 h-6" />
-            </Button>
+              ⚙️
+            </button>
           </div>
         </div>
       </div>

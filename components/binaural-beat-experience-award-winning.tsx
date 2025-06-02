@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Volume2, VolumeX, Play, Pause, Settings, Timer, Music, Brain, Waves, MoreHorizontal, Heart, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, Play, Pause, Settings, Timer, Music, Brain, Waves, MoreHorizontal, Heart, Sparkles, Headphones } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,8 +26,8 @@ const FREQUENCY_PRESETS: FrequencyPreset[] = [
   { 
     name: "Deep Sleep", 
     frequency: 2, 
-    category: "Bedtime", 
-    description: "Fall asleep fast & stay asleep", 
+    category: "Delta (2Hz)", 
+    description: "Promotes deep, restorative sleep", 
     icon: "🌙", 
     color: "from-violet-400 via-purple-500 to-indigo-600",
     gradient: "from-violet-500/20 to-indigo-600/20"
@@ -35,8 +35,8 @@ const FREQUENCY_PRESETS: FrequencyPreset[] = [
   { 
     name: "Dream State", 
     frequency: 6, 
-    category: "Creativity", 
-    description: "Vivid dreams & deep meditation", 
+    category: "Theta (6Hz)", 
+    description: "Enhances creativity & meditation", 
     icon: "✨", 
     color: "from-pink-400 via-purple-500 to-violet-600",
     gradient: "from-pink-500/20 to-violet-600/20"
@@ -44,8 +44,8 @@ const FREQUENCY_PRESETS: FrequencyPreset[] = [
   { 
     name: "Calm Focus", 
     frequency: 10, 
-    category: "Relaxation", 
-    description: "Stress relief & gentle concentration", 
+    category: "Alpha (10Hz)", 
+    description: "Relaxed awareness & light focus", 
     icon: "🧘", 
     color: "from-cyan-400 via-blue-500 to-purple-600",
     gradient: "from-cyan-500/20 to-purple-600/20"
@@ -53,8 +53,8 @@ const FREQUENCY_PRESETS: FrequencyPreset[] = [
   { 
     name: "Sharp Focus", 
     frequency: 20, 
-    category: "Productivity", 
-    description: "Peak alertness & mental clarity", 
+    category: "Beta (20Hz)", 
+    description: "Active concentration & alertness", 
     icon: "⚡", 
     color: "from-orange-400 via-pink-500 to-red-500",
     gradient: "from-orange-500/20 to-red-500/20"
@@ -137,17 +137,16 @@ export default function AwardWinningBinauralExperience() {
 
       const baseFrequency = 250;
       
+      // Left ear gets base frequency, right ear gets base + beat frequency
       oscillatorLeftRef.current.frequency.setValueAtTime(baseFrequency, ctx.currentTime);
       oscillatorRightRef.current.frequency.setValueAtTime(baseFrequency + beatFrequency, ctx.currentTime);
 
-      const splitter = ctx.createChannelSplitter(2);
+      // Create separate channels for true binaural effect
       const merger = ctx.createChannelMerger(2);
-
-      oscillatorLeftRef.current.connect(splitter);
-      oscillatorRightRef.current.connect(splitter);
       
-      splitter.connect(merger, 0, 0);
-      splitter.connect(merger, 1, 1);
+      // Connect left oscillator to left channel (0), right oscillator to right channel (1)
+      oscillatorLeftRef.current.connect(merger, 0, 0);
+      oscillatorRightRef.current.connect(merger, 0, 1);
       
       merger.connect(gainNodeRef.current);
       gainNodeRef.current.connect(analyserRef.current);
@@ -462,6 +461,12 @@ export default function AwardWinningBinauralExperience() {
                 <p className="text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto leading-relaxed">
                   Discover the perfect binaural beats for your mind state and unlock new levels of focus, relaxation, and consciousness.
                 </p>
+                
+                {/* Headphones requirement notice */}
+                <div className="flex items-center justify-center gap-2 text-white/70 text-sm bg-white/10 backdrop-blur-md rounded-full px-4 py-2 border border-white/20 max-w-fit mx-auto">
+                  <Headphones className="w-4 h-4" />
+                  <span>Headphones required for binaural effect</span>
+                </div>
               </div>
               
               {/* Enhanced frequency preset cards with animations */}

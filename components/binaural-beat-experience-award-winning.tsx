@@ -1,9 +1,9 @@
 // ABOUTME: Award-winning immersive binaural beats experience with stunning visual interface
-// ABOUTME: Features 3D-like visualizations, premium UI controls, and professional audio processing
+// ABOUTME: Features modern UI design, dynamic visualizations, and premium audio processing
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Volume2, VolumeX, Play, Pause, Settings, Timer, Music, Brain, Waves, MoreHorizontal } from 'lucide-react';
+import { Volume2, VolumeX, Play, Pause, Settings, Timer, Music, Brain, Waves, MoreHorizontal, Heart, Sparkles } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,13 +19,46 @@ interface FrequencyPreset {
   description: string;
   icon: string;
   color: string;
+  gradient: string;
 }
 
 const FREQUENCY_PRESETS: FrequencyPreset[] = [
-  { name: "Delta", frequency: 2, category: "Deep Sleep", description: "Deep sleep, relaxation", icon: "🌙", color: "from-violet-400 via-purple-500 to-indigo-600" },
-  { name: "Theta", frequency: 6, category: "REM & Dreams", description: "REM sleep, meditation", icon: "✨", color: "from-pink-400 via-purple-500 to-violet-600" },
-  { name: "Alpha", frequency: 10, category: "Relaxed Focus", description: "Relaxation, focus", icon: "🧘", color: "from-cyan-400 via-blue-500 to-purple-600" },
-  { name: "Beta", frequency: 20, category: "Alert Focus", description: "Concentration, alertness", icon: "⚡", color: "from-orange-400 via-pink-500 to-red-500" },
+  { 
+    name: "Delta", 
+    frequency: 2, 
+    category: "Deep Sleep", 
+    description: "Deep restorative sleep", 
+    icon: "🌙", 
+    color: "from-violet-400 via-purple-500 to-indigo-600",
+    gradient: "from-violet-500/20 to-indigo-600/20"
+  },
+  { 
+    name: "Theta", 
+    frequency: 6, 
+    category: "REM & Dreams", 
+    description: "REM sleep, vivid dreams", 
+    icon: "✨", 
+    color: "from-pink-400 via-purple-500 to-violet-600",
+    gradient: "from-pink-500/20 to-violet-600/20"
+  },
+  { 
+    name: "Alpha", 
+    frequency: 10, 
+    category: "Relaxed Focus", 
+    description: "Calm focused state", 
+    icon: "🧘", 
+    color: "from-cyan-400 via-blue-500 to-purple-600",
+    gradient: "from-cyan-500/20 to-purple-600/20"
+  },
+  { 
+    name: "Beta", 
+    frequency: 20, 
+    category: "Alert Focus", 
+    description: "Active concentration", 
+    icon: "⚡", 
+    color: "from-orange-400 via-pink-500 to-red-500",
+    gradient: "from-orange-500/20 to-red-500/20"
+  },
 ];
 
 const SESSION_DURATIONS = [
@@ -51,7 +84,6 @@ export default function AwardWinningBinauralExperience() {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Always use bright, vibrant mode for award-winning experience
   const isDarkMode = false;
 
   const canvasRef = useAudioVisualization(
@@ -63,7 +95,14 @@ export default function AwardWinningBinauralExperience() {
   );
 
   const currentPreset = FREQUENCY_PRESETS.find(p => p.frequency === beatFrequency) || 
-    { name: "Custom", category: "Custom", description: `${beatFrequency}Hz`, icon: "🎛️", color: "from-violet-500 via-fuchsia-500 to-cyan-500" };
+    { 
+      name: "Custom", 
+      category: "Custom", 
+      description: `${beatFrequency}Hz`, 
+      icon: "🎛️", 
+      color: "from-violet-500 via-fuchsia-500 to-cyan-500",
+      gradient: "from-violet-500/20 to-cyan-500/20"
+    };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -101,64 +140,68 @@ export default function AwardWinningBinauralExperience() {
       oscillatorLeftRef.current.frequency.setValueAtTime(baseFrequency, ctx.currentTime);
       oscillatorRightRef.current.frequency.setValueAtTime(baseFrequency + beatFrequency, ctx.currentTime);
 
+      const splitter = ctx.createChannelSplitter(2);
       const merger = ctx.createChannelMerger(2);
-      oscillatorLeftRef.current.connect(merger, 0, 0);
-      oscillatorRightRef.current.connect(merger, 0, 1);
+
+      oscillatorLeftRef.current.connect(splitter);
+      oscillatorRightRef.current.connect(splitter);
+      
+      splitter.connect(merger, 0, 0);
+      splitter.connect(merger, 1, 1);
       
       merger.connect(gainNodeRef.current);
       gainNodeRef.current.connect(analyserRef.current);
-      gainNodeRef.current.connect(ctx.destination);
+      analyserRef.current.connect(ctx.destination);
 
-      gainNodeRef.current.gain.setValueAtTime(0, ctx.currentTime);
-      gainNodeRef.current.gain.linearRampToValueAtTime(isMuted ? 0 : volume, ctx.currentTime + 0.1);
+      gainNodeRef.current.gain.setValueAtTime(isMuted ? 0 : volume, ctx.currentTime);
 
       oscillatorLeftRef.current.start();
       oscillatorRightRef.current.start();
     }
-
-    setIsPlaying(true);
-    
-    if (timerIntervalRef.current) {
-      clearInterval(timerIntervalRef.current);
-    }
-    
-    timerIntervalRef.current = setInterval(() => {
-      setTimer(prev => {
-        if (prev >= selectedDuration) {
-          stopAudio();
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 1000);
   };
 
   const stopAudio = () => {
-    if (oscillatorLeftRef.current && oscillatorRightRef.current && gainNodeRef.current) {
-      gainNodeRef.current.gain.linearRampToValueAtTime(0, audioContextRef.current!.currentTime + 0.1);
-      
-      setTimeout(() => {
-        oscillatorLeftRef.current?.stop();
-        oscillatorRightRef.current?.stop();
-        oscillatorLeftRef.current = null;
-        oscillatorRightRef.current = null;
-        gainNodeRef.current = null;
-        analyserRef.current = null;
-      }, 100);
+    if (oscillatorLeftRef.current) {
+      oscillatorLeftRef.current.stop();
+      oscillatorLeftRef.current = null;
     }
-
-    setIsPlaying(false);
+    if (oscillatorRightRef.current) {
+      oscillatorRightRef.current.stop();
+      oscillatorRightRef.current = null;
+    }
     if (timerIntervalRef.current) {
       clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = null;
     }
   };
 
-  const updateFrequency = (newFreq: number) => {
-    setBeatFrequency(newFreq);
+  const togglePlayPause = async () => {
+    if (isPlaying) {
+      stopAudio();
+      setIsPlaying(false);
+      setTimer(0);
+    } else {
+      await startAudio();
+      setIsPlaying(true);
+      timerIntervalRef.current = setInterval(() => {
+        setTimer(prev => {
+          if (prev >= selectedDuration) {
+            stopAudio();
+            setIsPlaying(false);
+            return 0;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    }
+  };
+
+  const updateFrequency = (newFrequency: number) => {
+    setBeatFrequency(newFrequency);
     if (oscillatorRightRef.current && audioContextRef.current) {
+      const baseFrequency = 250;
       oscillatorRightRef.current.frequency.setValueAtTime(
-        250 + newFreq,
+        baseFrequency + newFrequency,
         audioContextRef.current.currentTime
       );
     }
@@ -166,16 +209,20 @@ export default function AwardWinningBinauralExperience() {
 
   const updateVolume = (newVolume: number) => {
     setVolume(newVolume);
-    if (gainNodeRef.current && audioContextRef.current && !isMuted) {
-      gainNodeRef.current.gain.setValueAtTime(newVolume, audioContextRef.current.currentTime);
+    if (gainNodeRef.current && audioContextRef.current) {
+      gainNodeRef.current.gain.setValueAtTime(
+        isMuted ? 0 : newVolume,
+        audioContextRef.current.currentTime
+      );
     }
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
     if (gainNodeRef.current && audioContextRef.current) {
       gainNodeRef.current.gain.setValueAtTime(
-        isMuted ? volume : 0,
+        newMutedState ? 0 : volume,
         audioContextRef.current.currentTime
       );
     }
@@ -184,91 +231,139 @@ export default function AwardWinningBinauralExperience() {
   useEffect(() => {
     return () => {
       stopAudio();
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
     };
   }, []);
 
-  const progress = selectedDuration > 0 ? (timer / selectedDuration) * 100 : 0;
-
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Clean white background */}
-      <div className="absolute inset-0 transition-all duration-1000 bg-white">
-        {/* Welcoming animated background orbs */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Bright vibrant floating orbs */}
-          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-50 animate-pulse ${
-            isPlaying 
-              ? 'bg-gradient-to-r from-fuchsia-400 via-purple-400 to-violet-500'
-              : 'bg-gradient-to-r from-purple-400/50 to-fuchsia-400/50'
-          }`} style={{ 
-            animationDuration: isPlaying ? `${2 + beatFrequency * 0.1}s` : '4s',
-            transform: `scale(${isPlaying ? 1 + Math.sin(Date.now() * 0.001) * 0.1 : 1})`
-          }} />
-          
-          <div className={`absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl opacity-45 animate-pulse ${
-            isPlaying 
-              ? 'bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500'
-              : 'bg-gradient-to-r from-blue-400/45 to-cyan-400/45'
-          }`} style={{ 
-            animationDuration: isPlaying ? `${3 + beatFrequency * 0.15}s` : '6s',
-            animationDelay: '1s'
-          }} />
-          
-          <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl opacity-35 animate-pulse ${
-            isPlaying 
-              ? 'bg-gradient-to-r from-orange-400 via-pink-400 to-fuchsia-500'
-              : 'bg-gradient-to-r from-pink-400/40 to-orange-400/40'
-          }`} style={{ 
-            animationDuration: isPlaying ? `${4 + beatFrequency * 0.2}s` : '8s',
-            animationDelay: '2s'
-          }} />
-          
-          {/* Magical sparkles - always visible */}
-          <div className={`${isPlaying ? 'opacity-40' : 'opacity-70'} transition-opacity duration-1000`}>
-            <div className="absolute top-1/3 left-1/3 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-ping" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-2/3 right-1/3 w-3 h-3 bg-gradient-to-r from-fuchsia-400 to-pink-500 rounded-full animate-ping" style={{ animationDelay: '2s' }} />
-            <div className="absolute bottom-1/3 left-2/3 w-5 h-5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-ping" style={{ animationDelay: '3s' }} />
-            <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full animate-ping" style={{ animationDelay: '4s' }} />
-            <div className="absolute bottom-1/2 right-1/4 w-3 h-3 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full animate-ping" style={{ animationDelay: '5s' }} />
+      {/* Dynamic animated background with floating orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Main gradient orbs that react to audio */}
+        <div className={`absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-3xl transition-all duration-1000 ${
+          isPlaying 
+            ? `bg-gradient-to-r ${currentPreset.color} opacity-30`
+            : 'bg-gradient-to-r from-purple-400/20 to-fuchsia-400/20 opacity-20'
+        }`} style={{ 
+          animationDuration: isPlaying ? `${2 + beatFrequency * 0.1}s` : '4s',
+          animation: isPlaying ? 'pulse 2s ease-in-out infinite' : 'pulse 4s ease-in-out infinite'
+        }} />
+        
+        <div className={`absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl transition-all duration-1000 ${
+          isPlaying 
+            ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 opacity-25'
+            : 'bg-gradient-to-r from-blue-400/15 to-cyan-400/15 opacity-15'
+        }`} style={{ 
+          animationDuration: isPlaying ? `${3 + beatFrequency * 0.15}s` : '6s',
+          animationDelay: '1s',
+          animation: isPlaying ? 'pulse 3s ease-in-out infinite' : 'pulse 6s ease-in-out infinite'
+        }} />
+        
+        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-3xl transition-all duration-1000 ${
+          isPlaying 
+            ? 'bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-600 opacity-20'
+            : 'bg-gradient-to-r from-pink-400/10 to-indigo-400/10 opacity-10'
+        }`} style={{ 
+          animationDuration: isPlaying ? `${4 + beatFrequency * 0.2}s` : '8s',
+          animationDelay: '2s',
+          animation: isPlaying ? 'pulse 4s ease-in-out infinite' : 'pulse 8s ease-in-out infinite'
+        }} />
+        
+        {/* Enhanced floating sparkle particles with varied sizes and colors */}
+        {[...Array(12)].map((_, i) => {
+          const colors = [
+            'from-white to-yellow-300',
+            'from-purple-300 to-pink-300',
+            'from-cyan-300 to-blue-300',
+            'from-green-300 to-teal-300',
+            'from-orange-300 to-red-300'
+          ];
+          const sizes = ['w-1 h-1', 'w-2 h-2', 'w-3 h-3'];
+          return (
+            <div
+              key={i}
+              className={`absolute ${sizes[i % 3]} bg-gradient-to-r ${colors[i % colors.length]} rounded-full animate-ping transition-opacity duration-1000 ${
+                isPlaying ? 'opacity-70' : 'opacity-40'
+              }`}
+              style={{
+                top: `${10 + (i * 7)}%`,
+                left: `${5 + (i * 8)}%`,
+                animationDelay: `${i * 0.4}s`,
+                animationDuration: `${1.5 + (i * 0.2)}s`
+              }}
+            />
+          );
+        })}
+        
+        {/* Orbital rings when playing */}
+        {isPlaying && (
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-white/10 rounded-full animate-orbit"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-white/5 rounded-full animate-orbit" style={{ animationDirection: 'reverse', animationDuration: '30s' }}></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border border-white/3 rounded-full animate-orbit" style={{ animationDuration: '40s' }}></div>
           </div>
-        </div>
+        )}
+        
+        {/* Dynamic frequency wave indicators */}
+        {isPlaying && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className={`absolute w-1 bg-gradient-to-t ${currentPreset.color} opacity-30 animate-wave`}
+                style={{
+                  height: `${20 + (i * 5)}%`,
+                  left: `${10 + (i * 15)}%`,
+                  bottom: '20%',
+                  animationDelay: `${i * 0.2}s`,
+                  animationDuration: `${1 + beatFrequency * 0.05}s`
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Main visualization canvas */}
+      {/* Audio visualization canvas */}
       <canvas
-        id="visualizer"
-        className="absolute inset-0 w-full h-full z-10"
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full z-10 pointer-events-none"
         style={{ background: 'transparent' }}
       />
 
-      {/* Minimal header with settings */}
-      <div className="absolute top-4 right-4 z-20">
+      {/* Top navigation bar */}
+      <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-6">
+        <div className="flex items-center space-x-3">
+          <Sparkles className="w-6 h-6 text-purple-300" />
+          <h2 className="text-lg font-medium bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+            Binaural Beats Studio
+          </h2>
+        </div>
+        
         <Sheet open={showSettings} onOpenChange={setShowSettings}>
           <SheetTrigger asChild>
             <Button 
               variant="ghost" 
               size="sm"
-              className="border-2 bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white border-purple-300 shadow-lg"
+              className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white shadow-lg transition-all duration-300"
             >
               <Settings className="w-5 h-5" />
             </Button>
           </SheetTrigger>
           <SheetContent 
             side="right" 
-            className="w-80 bg-gradient-to-b from-purple-50 to-pink-50 border-2 border-purple-300 shadow-2xl"
+            className="w-80 bg-white/95 backdrop-blur-xl border-l border-white/30 shadow-2xl"
           >
             <div className="space-y-6 pt-6">
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-gray-900">
+                <h3 className="text-lg font-semibold mb-4 text-gray-900 flex items-center gap-2">
+                  <Settings className="w-5 h-5" />
                   Audio Settings
                 </h3>
                 
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700">
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                      <Volume2 className="w-4 h-4" />
                       Volume: {Math.round(volume * 100)}%
                     </Label>
                     <Slider
@@ -280,8 +375,9 @@ export default function AwardWinningBinauralExperience() {
                     />
                   </div>
 
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700">
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                      <Waves className="w-4 h-4" />
                       Beat Frequency: {beatFrequency}Hz
                     </Label>
                     <Slider
@@ -297,28 +393,53 @@ export default function AwardWinningBinauralExperience() {
               </div>
 
               <div>
-                <h4 className="text-sm font-semibold mb-3 text-gray-700">
+                <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                  <Brain className="w-4 h-4" />
                   Quick Presets
                 </h4>
-                <div className="grid grid-cols-1 gap-2">
+                <div className="grid grid-cols-1 gap-3">
                   {FREQUENCY_PRESETS.map((preset) => (
                     <Button
                       key={preset.name}
-                      variant={beatFrequency === preset.frequency ? "default" : "ghost"}
-                      className={`justify-start h-auto p-3 border ${
+                      variant="ghost"
+                      className={`justify-start h-auto p-4 rounded-xl transition-all duration-300 ${
                         beatFrequency === preset.frequency
-                          ? `bg-gradient-to-r ${preset.color} text-white border-white shadow-lg`
-                          : 'bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 text-gray-700 border-purple-200 hover:border-purple-300'
+                          ? `bg-gradient-to-r ${preset.color} text-white shadow-lg transform scale-105`
+                          : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 hover:border-gray-300'
                       }`}
                       onClick={() => updateFrequency(preset.frequency)}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">{preset.icon}</span>
-                        <div className="text-left">
+                      <div className="flex items-center gap-3 w-full">
+                        <span className="text-xl">{preset.icon}</span>
+                        <div className="text-left flex-1">
                           <div className="font-medium">{preset.name}</div>
                           <div className="text-xs opacity-75">{preset.description}</div>
                         </div>
+                        <div className="text-sm font-mono">{preset.frequency}Hz</div>
                       </div>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                  <Timer className="w-4 h-4" />
+                  Session Duration
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {SESSION_DURATIONS.map((duration) => (
+                    <Button
+                      key={duration.value}
+                      variant="ghost"
+                      className={`${
+                        selectedDuration === duration.value
+                          ? 'bg-purple-100 text-purple-700 border-2 border-purple-300'
+                          : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200'
+                      } transition-all duration-200`}
+                      onClick={() => setSelectedDuration(duration.value)}
+                    >
+                      {duration.label}
                     </Button>
                   ))}
                 </div>
@@ -328,189 +449,177 @@ export default function AwardWinningBinauralExperience() {
         </Sheet>
       </div>
 
-      {/* Central welcoming interface */}
-      <div className="absolute inset-0 z-30 flex items-center justify-center px-4">
-        <div className="text-center space-y-6 md:space-y-8 max-w-sm md:max-w-none">
+      {/* Main content area */}
+      <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
+        <div className="text-center space-y-8 max-w-4xl">
           {!isPlaying ? (
-            /* Welcome state */
-            <div className="space-y-6 animate-in fade-in duration-1000">
-              {/* Welcome message */}
-              <div className="text-gray-900">
-                <h1 className="text-3xl md:text-5xl font-light mb-4 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent animate-pulse">
-                  Welcome to Binaural Beats
+            /* Welcome state with modern design */
+            <div className="space-y-10 animate-in fade-in duration-1000">
+              <div className="space-y-4">
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-wide text-white drop-shadow-2xl">
+                  <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent">
+                    Find Your Frequency
+                  </span>
                 </h1>
-                <p className="text-lg md:text-xl font-light bg-gradient-to-r from-purple-600 via-pink-600 to-violet-600 bg-clip-text text-transparent">
-                  Choose your frequency and start your magical journey ✨
+                <p className="text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto leading-relaxed">
+                  Discover the perfect binaural beats for your mind state and unlock new levels of focus, relaxation, and consciousness.
                 </p>
               </div>
               
-              {/* Frequency preset cards */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-8">
-                {FREQUENCY_PRESETS.map((preset) => (
-                  <Button
+              {/* Enhanced frequency preset cards with animations */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                {FREQUENCY_PRESETS.map((preset, index) => (
+                  <div
                     key={preset.name}
-                    variant="ghost"
-                    className={`h-auto p-4 md:p-6 border-2 shadow-lg ${
-                      beatFrequency === preset.frequency
-                        ? `bg-gradient-to-r ${preset.color} text-white border-white shadow-xl`
-                        : 'bg-gradient-to-r from-white to-purple-50 hover:from-purple-100 hover:to-pink-100 text-gray-900 border-purple-300 hover:border-purple-400 hover:shadow-xl'
+                    className={`group cursor-pointer transform transition-all duration-500 hover:scale-105 card-hover ${
+                      beatFrequency === preset.frequency ? 'scale-105 animate-glow' : ''
                     }`}
                     onClick={() => updateFrequency(preset.frequency)}
+                    style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className="text-center space-y-2">
-                      <div className="text-2xl">{preset.icon}</div>
-                      <div className="font-medium">{preset.name}</div>
-                      <div className="text-sm opacity-75">{preset.frequency}Hz</div>
-                      <div className="text-xs opacity-60">{preset.description}</div>
-                    </div>
-                  </Button>
+                    <Card className={`p-6 h-full backdrop-blur-xl border transition-all duration-300 btn-interactive relative overflow-hidden ${
+                      beatFrequency === preset.frequency
+                        ? `bg-gradient-to-br ${preset.color} text-white border-white/30 shadow-2xl animate-breathe`
+                        : 'bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40'
+                    }`}>
+                      {/* Floating icon animation */}
+                      <div className="text-center space-y-3">
+                        <div className={`text-3xl mb-2 ${isPlaying && beatFrequency === preset.frequency ? 'animate-float' : ''}`}>
+                          {preset.icon}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-lg tracking-wide">{preset.name}</div>
+                          <div className="text-sm opacity-80 font-mono">{preset.frequency}Hz</div>
+                        </div>
+                        <div className="text-xs opacity-70 leading-relaxed">{preset.description}</div>
+                        <Badge variant="secondary" className={`transition-all duration-300 ${
+                          beatFrequency === preset.frequency 
+                            ? 'bg-white/20 text-white animate-pulse' 
+                            : 'bg-white/10 text-white/80 hover:bg-white/20'
+                        }`}>
+                          {preset.category}
+                        </Badge>
+                      </div>
+                      
+                      {/* Shimmer effect on hover */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+                      </div>
+                    </Card>
+                  </div>
                 ))}
               </div>
               
-              {/* Custom frequency slider */}
-              <div className="rounded-2xl p-6 border-2 bg-gradient-to-r from-purple-100 via-fuchsia-100 to-cyan-100 border-purple-400 shadow-xl">
-                <div className="text-center mb-4">
-                  <div className={`text-2xl md:text-3xl font-light mb-1 bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent`}>
+              {/* Custom frequency control */}
+              <Card className="p-8 backdrop-blur-xl bg-white/10 border border-white/20 max-w-md mx-auto">
+                <div className="text-center space-y-4">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <Music className="w-5 h-5 text-white/70" />
+                    <span className="text-white/70 font-medium">Custom Frequency</span>
+                  </div>
+                  <div className={`text-3xl font-light text-white bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent`}>
                     {beatFrequency.toFixed(1)} Hz
                   </div>
-                  <div className="text-sm font-medium text-purple-600">
-                    Custom Frequency 🎛️
-                  </div>
+                  <Slider
+                    value={[beatFrequency]}
+                    onValueChange={([value]) => updateFrequency(value)}
+                    min={1}
+                    max={40}
+                    step={0.5}
+                    className="w-full mt-4"
+                  />
                 </div>
-                <Slider
-                  value={[beatFrequency]}
-                  onValueChange={([value]) => updateFrequency(value)}
-                  min={1}
-                  max={40}
-                  step={0.5}
-                  className="w-full"
-                />
-              </div>
+              </Card>
             </div>
           ) : (
-            /* Playing state */
-            <div className="space-y-6 animate-in fade-in duration-500">
-              {/* Dynamic frequency display */}
-              <div className="relative text-gray-900">
-                <div className={`text-6xl md:text-8xl lg:text-9xl font-extralight tracking-wider mb-2 transition-all duration-300`} style={{
-                  textShadow: isPlaying ? `0 0 30px ${currentPreset.color.includes('purple') ? '#a855f7' : '#3b82f6'}` : 'none'
-                }}>
-                  {beatFrequency.toFixed(1)}
+            /* Playing state with enhanced visuals */
+            <div className="space-y-8 animate-in fade-in duration-500">
+              <div className="text-center space-y-4">
+                <div className="text-8xl md:text-9xl font-ultralight text-white tracking-widest drop-shadow-2xl">
+                  <span className={`bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent animate-pulse`}>
+                    {beatFrequency.toFixed(1)}
+                  </span>
                 </div>
-                <div className="text-lg md:text-xl font-light tracking-widest text-gray-600">
-                  Hz
-                </div>
-                <div className={`text-base md:text-lg font-medium mt-2 bg-gradient-to-r ${currentPreset.color} bg-clip-text text-transparent`}>
-                  {currentPreset.name}
+                <div className="text-xl text-white/60 font-light">Hz</div>
+                <div className="flex items-center justify-center gap-3">
+                  <span className="text-2xl">{currentPreset.icon}</span>
+                  <div className="text-lg text-white/80 font-medium">{currentPreset.name}</div>
+                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+                    {currentPreset.category}
+                  </Badge>
                 </div>
               </div>
 
               {/* Enhanced timer display */}
-              <div className="rounded-2xl p-4 bg-gradient-to-r from-white to-purple-100 border-2 border-purple-400 shadow-xl">
-                <div className="text-3xl md:text-4xl font-mono tracking-wider font-bold text-gray-900">
-                  {formatTime(timer)}
+              <Card className="p-6 backdrop-blur-xl bg-white/10 border border-white/20 max-w-sm mx-auto">
+                <div className="text-center space-y-3">
+                  <div className="flex items-center justify-center gap-2">
+                    <Timer className="w-5 h-5 text-white/70" />
+                    <span className="text-white/70 font-medium">Session Progress</span>
+                  </div>
+                  <div className="text-3xl font-mono text-white">
+                    {formatTime(timer)}
+                  </div>
+                  <div className="w-full bg-white/20 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-1000 bg-gradient-to-r ${currentPreset.color}`}
+                      style={{ width: `${(timer / selectedDuration) * 100}%` }}
+                    />
+                  </div>
+                  <div className="text-sm text-white/60">
+                    {formatTime(selectedDuration - timer)} remaining
+                  </div>
                 </div>
-                <div className="text-sm md:text-base mt-1 text-gray-600">
-                  of {formatTime(selectedDuration)}
-                </div>
-              </div>
-
-              {/* Enhanced progress bar */}
-              <div className="w-64 md:w-80 mx-auto">
-                <div className="w-full h-2 md:h-3 rounded-full bg-purple-200">
-                  <div 
-                    className={`h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${currentPreset.color} shadow-lg`}
-                    style={{ 
-                      width: `${progress}%`,
-                      boxShadow: `0 0 20px ${currentPreset.color.includes('purple') ? '#a855f7' : '#3b82f6'}40`
-                    }}
-                  />
-                </div>
-              </div>
+              </Card>
             </div>
           )}
 
-          {/* Play/pause control */}
-          <Button
-            onClick={isPlaying ? stopAudio : startAudio}
-            size="lg"
-            className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-r ${currentPreset.color} hover:scale-105 transform transition-all duration-300 shadow-2xl hover:shadow-3xl`}
-            style={{
-              boxShadow: isPlaying ? `0 0 20px ${currentPreset.color.includes('purple') ? '#a855f7' : '#3b82f6'}40` : undefined
-            }}
-          >
-            {isPlaying ? (
-              <Pause className="w-8 h-8 md:w-10 md:h-10 text-white" />
-            ) : (
-              <Play className="w-8 h-8 md:w-10 md:h-10 text-white ml-1" />
-            )}
-          </Button>
-        </div>
-      </div>
-
-      {/* Bottom controls */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 p-3 md:p-6">
-        <Card className="border-2 bg-gradient-to-r from-white via-purple-50 to-pink-50 text-gray-900 border-purple-300 shadow-2xl">
-          <CardContent className="p-3 md:p-6">
-            <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:items-center md:justify-between">
-              {/* Mode selector */}
-              <div className="flex items-center justify-center md:justify-start gap-2">
-                <Waves className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
-                <span className="text-xs md:text-sm font-medium">Binaural</span>
+          {/* Enhanced control buttons with ripple effects */}
+          <div className="flex items-center justify-center gap-6 pt-8">
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={toggleMute}
+              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40 transition-all duration-300 btn-interactive hover:shadow-lg"
+            >
+              <div className={`transition-all duration-300 ${isMuted ? 'animate-pulse text-red-300' : ''}`}>
+                {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
               </div>
-
-              {/* Session duration */}
-              <div className="flex items-center justify-center gap-2">
-                <Timer className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
-                <div className="flex gap-1">
-                  {SESSION_DURATIONS.map((duration) => (
-                    <Button
-                      key={duration.value}
-                      variant={selectedDuration === duration.value ? "default" : "ghost"}
-                      size="sm"
-                      className={`text-xs h-7 px-2 md:h-8 md:px-3 ${
-                        selectedDuration === duration.value
-                          ? `bg-gradient-to-r ${currentPreset.color} border-2 border-white shadow-lg`
-                          : 'bg-gradient-to-r from-purple-100 to-pink-100 hover:from-purple-200 hover:to-pink-200 border border-purple-300'
-                      }`}
-                      onClick={() => setSelectedDuration(duration.value)}
-                    >
-                      {duration.label}
-                    </Button>
-                  ))}
+            </Button>
+            
+            <div className="relative">
+              <Button
+                size="lg"
+                onClick={togglePlayPause}
+                className={`w-20 h-20 rounded-full text-white border-2 transition-all duration-500 transform hover:scale-110 active:scale-95 btn-interactive relative overflow-hidden ${
+                  isPlaying
+                    ? `bg-gradient-to-r ${currentPreset.color} border-white/30 shadow-2xl animate-glow`
+                    : 'bg-white/20 hover:bg-white/30 border-white/30 hover:border-white/50'
+                }`}
+              >
+                <div className={`transition-all duration-300 ${isPlaying ? 'animate-pulse' : ''}`}>
+                  {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
                 </div>
-              </div>
-
-              {/* Volume control */}
-              <div className="flex items-center justify-center md:justify-end gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleMute}
-                  className="p-1 md:p-2 bg-gradient-to-r from-purple-100 to-pink-100 hover:from-purple-200 hover:to-pink-200 border border-purple-300 rounded-lg"
-                >
-                  {isMuted ? (
-                    <VolumeX className="w-4 h-4 md:w-5 md:h-5" />
-                  ) : (
-                    <Volume2 className="w-4 h-4 md:w-5 md:h-5" />
-                  )}
-                </Button>
-                <div className="w-20 md:w-24">
-                  <Slider
-                    value={[isMuted ? 0 : volume]}
-                    onValueChange={([value]) => {
-                      setIsMuted(false);
-                      updateVolume(value);
-                    }}
-                    max={1}
-                    step={0.01}
-                    className="w-full"
-                  />
+              </Button>
+              
+              {/* Ripple effect when playing */}
+              {isPlaying && (
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className={`absolute inset-0 rounded-full border-2 border-white/30 animate-ripple bg-gradient-to-r ${currentPreset.color} opacity-30`}></div>
                 </div>
-              </div>
+              )}
             </div>
-          </CardContent>
-        </Card>
+            
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={() => setShowSettings(true)}
+              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40 transition-all duration-300 btn-interactive hover:shadow-lg"
+            >
+              <Settings className="w-6 h-6 hover:animate-spin" style={{ animationDuration: '2s' }} />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

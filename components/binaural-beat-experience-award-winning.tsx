@@ -254,93 +254,7 @@ export default function AwardWinningBinauralExperience() {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Dynamic animated background with floating orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Main gradient orbs that react to audio */}
-        <div className={`absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-3xl transition-all duration-1000 ${
-          isPlaying 
-            ? `bg-gradient-to-r ${currentPreset.color} opacity-30`
-            : 'bg-gradient-to-r from-purple-400/20 to-fuchsia-400/20 opacity-20'
-        }`} style={{ 
-          animationDuration: isPlaying ? `${2 + beatFrequency * 0.1}s` : '4s',
-          animation: isPlaying ? 'pulse 2s ease-in-out infinite' : 'pulse 4s ease-in-out infinite'
-        }} />
-        
-        <div className={`absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl transition-all duration-1000 ${
-          isPlaying 
-            ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 opacity-25'
-            : 'bg-gradient-to-r from-blue-400/15 to-cyan-400/15 opacity-15'
-        }`} style={{ 
-          animationDuration: isPlaying ? `${3 + beatFrequency * 0.15}s` : '6s',
-          animationDelay: '1s',
-          animation: isPlaying ? 'pulse 3s ease-in-out infinite' : 'pulse 6s ease-in-out infinite'
-        }} />
-        
-        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-3xl transition-all duration-1000 ${
-          isPlaying 
-            ? 'bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-600 opacity-20'
-            : 'bg-gradient-to-r from-pink-400/10 to-indigo-400/10 opacity-10'
-        }`} style={{ 
-          animationDuration: isPlaying ? `${4 + beatFrequency * 0.2}s` : '8s',
-          animationDelay: '2s',
-          animation: isPlaying ? 'pulse 4s ease-in-out infinite' : 'pulse 8s ease-in-out infinite'
-        }} />
-        
-        {/* Enhanced floating sparkle particles with varied sizes and colors */}
-        {[...Array(12)].map((_, i) => {
-          const colors = [
-            'from-white to-yellow-300',
-            'from-purple-300 to-pink-300',
-            'from-cyan-300 to-blue-300',
-            'from-green-300 to-teal-300',
-            'from-orange-300 to-red-300'
-          ];
-          const sizes = ['w-1 h-1', 'w-2 h-2', 'w-3 h-3'];
-          return (
-            <div
-              key={i}
-              className={`absolute ${sizes[i % 3]} bg-gradient-to-r ${colors[i % colors.length]} rounded-full animate-ping transition-opacity duration-1000 ${
-                isPlaying ? 'opacity-70' : 'opacity-40'
-              }`}
-              style={{
-                top: `${10 + (i * 7)}%`,
-                left: `${5 + (i * 8)}%`,
-                animationDelay: `${i * 0.4}s`,
-                animationDuration: `${1.5 + (i * 0.2)}s`
-              }}
-            />
-          );
-        })}
-        
-        {/* Orbital rings when playing */}
-        {isPlaying && (
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-white/10 rounded-full animate-orbit"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-white/5 rounded-full animate-orbit" style={{ animationDirection: 'reverse', animationDuration: '30s' }}></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border border-white/3 rounded-full animate-orbit" style={{ animationDuration: '40s' }}></div>
-          </div>
-        )}
-        
-        {/* Dynamic frequency wave indicators */}
-        {isPlaying && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className={`absolute w-1 bg-gradient-to-t ${currentPreset.color} opacity-30 animate-wave`}
-                style={{
-                  height: `${20 + (i * 5)}%`,
-                  left: `${10 + (i * 15)}%`,
-                  bottom: '20%',
-                  animationDelay: `${i * 0.2}s`,
-                  animationDuration: `${1 + beatFrequency * 0.05}s`
-                }}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+    <div className="relative min-h-screen w-full overflow-hidden bg-gray-50">
 
       {/* Audio visualization canvas */}
       <canvas
@@ -352,11 +266,21 @@ export default function AwardWinningBinauralExperience() {
       {/* Top navigation bar */}
       <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-6">
         <div className="flex items-center space-x-3">
-          <Sparkles className="w-6 h-6 text-purple-300" />
-          <h2 className="text-lg font-medium text-white/90">
+          <Sparkles className="w-6 h-6 text-gray-600" />
+          <h2 className="text-lg font-medium text-gray-700">
             Binaural Beats Studio
           </h2>
         </div>
+        
+        {/* Back button - always visible during session */}
+        {hasStartedSession && (
+          <button
+            onClick={resetSession}
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-all duration-200 flex items-center gap-2"
+          >
+            ← Back to Selection
+          </button>
+        )}
         
         <Sheet open={showSettings} onOpenChange={setShowSettings}>
           <SheetTrigger asChild>
@@ -475,15 +399,15 @@ export default function AwardWinningBinauralExperience() {
             /* Welcome state with modern design */
             <div className="space-y-10 animate-in fade-in duration-1000">
               <div className="space-y-4">
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-wide text-white drop-shadow-2xl">
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-wide text-gray-800">
                   Find Your Frequency
                 </h1>
-                <p className="text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto leading-relaxed">
+                <p className="text-lg md:text-xl text-gray-600 font-light max-w-2xl mx-auto leading-relaxed">
                   Discover the perfect binaural beats for your mind state and unlock new levels of focus, relaxation, and consciousness.
                 </p>
                 
                 {/* Headphones requirement notice */}
-                <div className="flex items-center justify-center gap-2 text-white/70 text-sm bg-white/10 backdrop-blur-md rounded-full px-4 py-2 border border-white/20 max-w-fit mx-auto">
+                <div className="flex items-center justify-center gap-2 text-gray-600 text-sm bg-blue-50 rounded-lg px-4 py-2 border border-blue-200 max-w-fit mx-auto">
                   <Headphones className="w-4 h-4" />
                   <span>Headphones required for binaural effect</span>
                 </div>
@@ -500,10 +424,10 @@ export default function AwardWinningBinauralExperience() {
                     onClick={() => updateFrequency(preset.frequency)}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <Card className={`p-6 h-full backdrop-blur-xl border transition-all duration-300 btn-interactive relative overflow-hidden ${
+                    <Card className={`p-6 h-full border transition-all duration-300 relative overflow-hidden cursor-pointer ${
                       beatFrequency === preset.frequency
-                        ? `bg-gradient-to-br ${preset.color} text-white border-white/30 shadow-2xl animate-breathe`
-                        : 'bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40'
+                        ? 'bg-blue-50 border-blue-300 shadow-lg text-gray-800'
+                        : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-md text-gray-700'
                     }`}>
                       {/* Floating icon animation */}
                       <div className="text-center space-y-3">
@@ -517,8 +441,8 @@ export default function AwardWinningBinauralExperience() {
                         <div className="text-xs opacity-70 leading-relaxed px-2">{preset.description}</div>
                         <Badge variant="secondary" className={`transition-all duration-300 ${
                           beatFrequency === preset.frequency 
-                            ? 'bg-white/30 text-white shadow-lg' 
-                            : 'bg-white/10 text-white/80 hover:bg-white/20'
+                            ? 'bg-blue-100 text-blue-800 border-blue-200' 
+                            : 'bg-gray-100 text-gray-600 border-gray-200'
                         }`}>
                           {preset.category}
                         </Badge>
@@ -616,53 +540,34 @@ export default function AwardWinningBinauralExperience() {
             </div>
           )}
 
-          {/* Enhanced control buttons with ripple effects */}
+          {/* Simple, clean control buttons */}
           <div className="flex items-center justify-center gap-4 pt-8">
             {/* Volume button */}
             <button
               onClick={toggleMute}
-              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center text-white cursor-pointer text-2xl"
+              className="w-14 h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
             >
-              {isMuted ? '🔇' : '🔊'}
+              {isMuted ? <VolumeX className="w-5 h-5 text-gray-600" /> : <Volume2 className="w-5 h-5 text-gray-600" />}
             </button>
             
-            {/* Stop button - only show during session */}
-            {hasStartedSession && (
-              <button
-                onClick={resetSession}
-                className="w-14 h-14 rounded-full bg-white/10 hover:bg-red-500/20 border border-white/20 hover:border-red-400/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center text-white cursor-pointer text-xl"
-              >
-                ⏹️
-              </button>
-            )}
-            
             {/* Play/Pause button */}
-            <div className="relative">
-              <button
-                onClick={togglePlayPause}
-                className={`w-20 h-20 rounded-full text-white border-2 transition-all duration-500 transform hover:scale-110 active:scale-95 relative overflow-hidden flex items-center justify-center text-3xl cursor-pointer ${
-                  isPlaying
-                    ? `bg-gradient-to-r ${currentPreset.color} border-white/30 shadow-2xl animate-glow`
-                    : 'bg-white/20 hover:bg-white/30 border-white/30 hover:border-white/50'
-                }`}
-              >
-                {isPlaying ? '⏸️' : '▶️'}
-              </button>
-              
-              {/* Ripple effect when playing */}
-              {isPlaying && (
-                <div className="absolute inset-0 pointer-events-none">
-                  <div className={`absolute inset-0 rounded-full border-2 border-white/30 animate-ripple bg-gradient-to-r ${currentPreset.color} opacity-30`}></div>
-                </div>
-              )}
-            </div>
+            <button
+              onClick={togglePlayPause}
+              className={`w-16 h-16 rounded-lg transition-all duration-200 flex items-center justify-center shadow-sm ${
+                isPlaying
+                  ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                  : 'bg-blue-500 hover:bg-blue-600 text-white'
+              }`}
+            >
+              {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
+            </button>
             
             {/* Settings button */}
             <button
               onClick={() => setShowSettings(true)}
-              className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-lg flex items-center justify-center text-white cursor-pointer text-2xl"
+              className="w-14 h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
             >
-              ⚙️
+              <Settings className="w-5 h-5 text-gray-600" />
             </button>
           </div>
         </div>

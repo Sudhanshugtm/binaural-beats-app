@@ -2149,270 +2149,347 @@ export default function BinauralBeatExperience() {
   }, [beatFrequency, audioMode, isPlaying]);
 
   // --------------------------------------------------------------------------------
-  //   RENDER
+  //   AWARD-WINNING IMMERSIVE RENDER
   // --------------------------------------------------------------------------------
   return (
-    <>
-      <Card className="w-full max-w-[95vw] sm:max-w-xl mx-auto bg-white/90 dark:bg-gray-800/95 backdrop-blur-md shadow-lg">
-        <CardContent className="p-6 space-y-6">
+    <div className="relative min-h-screen w-full overflow-hidden bg-black">
+      {/* Dynamic Atmospheric Background */}
+      <div className="absolute inset-0">
+        {/* Base gradient that adapts to audio mode */}
+        <div className={`absolute inset-0 transition-all duration-2000 ease-in-out ${
+          audioMode === 'binaural' ? 'bg-gradient-to-br from-purple-900/20 via-blue-900/10 to-purple-900/20' :
+          audioMode === 'noise' ? 'bg-gradient-to-br from-gray-900/30 via-slate-800/20 to-gray-900/30' :
+          'bg-gradient-to-br from-amber-900/20 via-orange-900/10 to-amber-900/20'
+        }`} />
+        
+        {/* Animated mesh gradient */}
+        <div className="absolute inset-0 opacity-30">
+          <div className={`absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl transition-all duration-3000 ${
+            audioMode === 'binaural' ? 'bg-blue-500/20 animate-pulse' :
+            audioMode === 'noise' ? 'bg-slate-500/20 animate-bounce' :
+            'bg-orange-500/20 animate-ping'
+          }`} />
+          <div className={`absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl transition-all duration-3000 delay-1000 ${
+            audioMode === 'binaural' ? 'bg-purple-500/20 animate-pulse' :
+            audioMode === 'noise' ? 'bg-gray-500/20 animate-bounce' :
+            'bg-amber-500/20 animate-ping'
+          }`} />
+          <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full blur-3xl transition-all duration-3000 delay-2000 ${
+            audioMode === 'binaural' ? 'bg-indigo-500/20 animate-pulse' :
+            audioMode === 'noise' ? 'bg-zinc-500/20 animate-bounce' :
+            'bg-yellow-500/20 animate-ping'
+          }`} />
+        </div>
+        
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10 [mask-image:radial-gradient(ellipse_at_center,transparent_30%,black_70%)]" />
+      </div>
 
-          {/* Canvas Visualization */}
-          <div className="flex justify-center mb-6">
+      {/* Central Visualization Area */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-8">
+        
+        {/* Main Audio Visualization */}
+        <div className="relative mb-16">
+          {/* Outer glow ring */}
+          <div className={`absolute inset-0 rounded-full transition-all duration-1000 ${
+            isPlaying ? 'shadow-[0_0_100px_rgba(139,69,255,0.3)]' : 'shadow-[0_0_50px_rgba(139,69,255,0.1)]'
+          } ${
+            audioMode === 'binaural' ? 'shadow-purple-500/30' :
+            audioMode === 'noise' ? 'shadow-slate-500/30' :
+            'shadow-orange-500/30'
+          }`} />
+          
+          {/* Canvas container with enhanced styling */}
+          <div className="relative">
             <canvas
               ref={canvasRef}
               id="visualizer"
-              className="rounded-md mx-auto"
+              className={`rounded-full transition-all duration-700 ${
+                isPlaying ? 'scale-110 brightness-110' : 'scale-100 brightness-75'
+              } filter backdrop-blur-sm`}
+              style={{ 
+                width: '320px', 
+                height: '320px',
+                boxShadow: `inset 0 0 60px rgba(0,0,0,0.5), 0 0 40px ${
+                  audioMode === 'binaural' ? 'rgba(139,69,255,0.2)' :
+                  audioMode === 'noise' ? 'rgba(100,116,139,0.2)' :
+                  'rgba(255,165,0,0.2)'
+                }`
+              }}
             />
-          </div>
-
-          {/* Mobile Controls */}
-          <div className="md:hidden flex items-center justify-between mb-6">
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={isPlaying ? stopAudio : startAudio}
-              className="h-12 w-12"
-            >
-              {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-            </Button>
-            <div className="text-base font-medium">
-              {formatTime(timer)} / {formatTime(selectedDuration)}
+            
+            {/* Center play/pause overlay */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <button
+                onClick={isPlaying ? stopAudio : startAudio}
+                className={`w-20 h-20 rounded-full backdrop-blur-md transition-all duration-300 
+                  border border-white/20 hover:border-white/40 hover:scale-110 group
+                  ${isPlaying ? 'bg-black/20 hover:bg-black/30' : 'bg-white/10 hover:bg-white/20'}
+                `}
+              >
+                {isPlaying ? (
+                  <Pause className="w-10 h-10 text-white mx-auto group-hover:scale-110 transition-transform" />
+                ) : (
+                  <Play className="w-10 h-10 text-white mx-auto ml-1 group-hover:scale-110 transition-transform" />
+                )}
+              </button>
             </div>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="h-12 w-12">
-                  <MoreHorizontal className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px] overflow-y-auto">
-                <div className="space-y-6 py-6">
-                  <h2 className="text-lg font-semibold">Settings</h2>
-                  {/* Mute Button */}
-                  <div className="flex justify-end">
-                    <Button variant="ghost" size="icon" onClick={handleMuteToggle} className="h-12 w-12">
-                      {isMuted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
-                    </Button>
-                  </div>
+          </div>
+          
+          {/* Frequency display */}
+          {audioMode === 'binaural' && (
+            <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
+              <div className="text-3xl font-light text-white/90 mb-2">
+                {beatFrequency.toFixed(1)} <span className="text-lg text-white/60">Hz</span>
+              </div>
+              <div className="text-sm text-white/60 uppercase tracking-widest">
+                {getBeatCategory(beatFrequency)} Wave
+              </div>
+            </div>
+          )}
+        </div>
 
-                  {/* Duration */}
-                  <div className="space-y-4">
-                    <Label className="text-base font-medium block text-gray-700 dark:text-gray-200">Duration</Label>
-                    <div className="flex flex-wrap gap-3">
-                      {TIME_PRESETS.map((preset) => (
-                        <Button
-                          key={preset.label}
-                          variant={selectedDuration === preset.duration ? "default" : "secondary"}
-                          size="sm"
-                          onClick={() => handleDurationSelect(preset.duration)}
-                          className={`text-base px-4 py-2 h-auto ${
-                            selectedDuration === preset.duration
-                              ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                              : "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                          }`}
-                        >
-                          {preset.label}
-                        </Button>
-                      ))}
-                      <Button
-                        variant={isCustomDuration ? "default" : "secondary"}
-                        size="sm"
-                        onClick={handleCustomDurationSelect}
-                        className={`text-base px-4 py-2 h-auto ${
-                          isCustomDuration
-                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                            : "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                        }`}
-                      >
-                        Custom
-                      </Button>
-                    </div>
-                    {isCustomDuration && (
-                      <div className="mt-4 space-y-2">
-                        <Slider
-                          id="customDuration"
-                          min={1}
-                          max={120}
-                          step={1}
-                          value={[Math.floor(customDuration / 60)]}
-                          onValueChange={(value) => handleCustomDurationChange(value)}
-                          className="w-full h-2"
-                        />
-                        <Label htmlFor="customDuration" className="text-base font-medium block text-gray-700 dark:text-gray-200">
-                          Custom Duration: {Math.floor(customDuration / 60)} minutes
-                        </Label>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Audio Mode: Binaural vs Noise vs OM */}
-                  <div className="space-y-4">
-                    <Label className="text-base font-medium block text-gray-700 dark:text-gray-200">Audio Mode</Label>
-                    <RadioGroup
-                      defaultValue="binaural"
-                      value={audioMode}
-                      onValueChange={(value) => handleAudioModeChange(value as AudioMode)}
-                      className="flex flex-col space-y-2"
+        {/* Floating Control Panels */}
+        <div className="relative w-full max-w-6xl mx-auto">
+          
+          {/* Left Panel - Audio Mode & Settings */}
+          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 hidden lg:block">
+            <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-6 space-y-6 min-w-[200px]">
+              
+              {/* Audio Mode Selection */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-medium text-white/80 uppercase tracking-wider">Mode</h3>
+                <div className="space-y-2">
+                  {[
+                    { value: 'binaural', label: 'Binaural', icon: '🧠' },
+                    { value: 'noise', label: 'Ambient', icon: '🌊' },
+                    { value: 'om', label: 'Meditation', icon: '🕉️' }
+                  ].map((mode) => (
+                    <button
+                      key={mode.value}
+                      onClick={() => setAudioMode(mode.value as any)}
+                      className={`w-full px-4 py-3 rounded-xl text-left transition-all duration-300 border ${
+                        audioMode === mode.value
+                          ? 'bg-white/20 border-white/30 text-white shadow-lg'
+                          : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20'
+                      }`}
                     >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="binaural" id="binaural-mobile" className="border-gray-400 dark:border-gray-500" />
-                        <Label htmlFor="binaural-mobile" className="text-base text-gray-700 dark:text-gray-200">
-                          Binaural Beats
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="noise" id="noise-mobile" className="border-gray-400 dark:border-gray-500" />
-                        <Label htmlFor="noise-mobile" className="text-base text-gray-700 dark:text-gray-200">
-                          Noise
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="om" id="om-mobile" className="border-gray-400 dark:border-gray-500" />
-                        <Label htmlFor="om-mobile" className="text-base text-gray-700 dark:text-gray-200">
-                          OM Sound
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  {/* Noise Type (if in Noise mode) */}
-                  {audioMode === "noise" && (
-                    <NoiseGenerator noiseType={noiseType} setNoiseType={handleNoiseTypeChange} />
-                  )}
-
-                  {/* Binaural Beat Slider & Presets */}
-                  {audioMode === "binaural" && (
-                    <BinauralBeats
-                      beatFrequency={beatFrequency}
-                      setBeatFrequency={setBeatFrequency}
-                      currentPreset={currentPreset}
-                      setCurrentPreset={setCurrentPreset}
-                    />
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-
-          {/* Desktop Controls */}
-          <div className="hidden md:block space-y-6">
-            {/* Play / Pause + Timer + Mute */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4">
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  onClick={isPlaying ? stopAudio : startAudio}
-                  className="h-12 w-12"
-                >
-                  {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-                </Button>
-                <div className="text-base font-medium">
-                  {formatTime(timer)} / {formatTime(selectedDuration)}
+                      <span className="mr-3 text-lg">{mode.icon}</span>
+                      {mode.label}
+                    </button>
+                  ))}
                 </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={handleMuteToggle} className="h-12 w-12">
-                {isMuted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
-              </Button>
-            </div>
 
-            {/* Duration */}
-            <div className="space-y-4">
-              <Label className="text-base font-medium block text-gray-700 dark:text-gray-200">Duration</Label>
-              <div className="flex flex-wrap gap-3">
-                {TIME_PRESETS.map((preset) => (
-                  <Button
-                    key={preset.label}
-                    variant={selectedDuration === preset.duration ? "default" : "secondary"}
-                    size="sm"
-                    onClick={() => handleDurationSelect(preset.duration)}
-                    className={`text-base px-4 py-2 h-auto ${
-                      selectedDuration === preset.duration
-                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                        : "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                    }`}
-                  >
-                    {preset.label}
-                  </Button>
-                ))}
-                <Button
-                  variant={isCustomDuration ? "default" : "secondary"}
-                  size="sm"
-                  onClick={handleCustomDurationSelect}
-                  className={`text-base px-4 py-2 h-auto ${
-                    isCustomDuration
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  }`}
-                >
-                  Custom
-                </Button>
-              </div>
-              {isCustomDuration && (
-                <div className="mt-4 space-y-2">
-                  <Slider
-                    id="customDuration"
-                    min={1}
-                    max={120}
-                    step={1}
-                    value={[Math.floor(customDuration / 60)]}
-                    onValueChange={(value) => handleCustomDurationChange(value)}
-                    className="w-full h-2"
-                  />
-                  <Label htmlFor="customDuration" className="text-base font-medium block text-gray-700 dark:text-gray-200">
-                    Custom Duration: {Math.floor(customDuration / 60)} minutes
-                  </Label>
+              {/* Noise Type Selection */}
+              {audioMode === 'noise' && (
+                <div className="space-y-4">
+                  <h3 className="text-sm font-medium text-white/80 uppercase tracking-wider">Sound</h3>
+                  <NoiseGenerator noiseType={noiseType} setNoiseType={handleNoiseTypeChange} />
                 </div>
               )}
             </div>
+          </div>
 
-            {/* Audio Mode: Binaural vs Noise vs OM */}
-            <div className="space-y-4">
-              <Label className="text-base font-medium block text-gray-700 dark:text-gray-200">Audio Mode</Label>
-              <RadioGroup
-                defaultValue="binaural"
-                value={audioMode}
-                onValueChange={(value) => handleAudioModeChange(value as AudioMode)}
-                className="flex flex-wrap gap-4"
+          {/* Right Panel - Session Controls */}
+          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 hidden lg:block">
+            <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-6 space-y-6 min-w-[200px]">
+              
+              {/* Timer Display */}
+              <div className="text-center space-y-2">
+                <div className="text-4xl font-light text-white tabular-nums">
+                  {formatTime(timer)}
+                </div>
+                <div className="text-sm text-white/60">
+                  / {formatTime(selectedDuration)}
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-1">
+                  <div 
+                    className="bg-gradient-to-r from-purple-400 to-blue-400 h-1 rounded-full transition-all duration-300"
+                    style={{ width: `${((selectedDuration - timer) / selectedDuration) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Duration Selection */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-medium text-white/80 uppercase tracking-wider">Session</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {TIME_PRESETS.map((preset) => (
+                    <button
+                      key={preset.label}
+                      onClick={() => handleDurationSelect(preset.duration)}
+                      className={`px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
+                        selectedDuration === preset.duration
+                          ? 'bg-white/20 text-white border border-white/30'
+                          : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Volume Control */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-white/80 uppercase tracking-wider">Audio</h3>
+                  <button
+                    onClick={handleMuteToggle}
+                    className="p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200"
+                  >
+                    {isMuted ? (
+                      <VolumeX className="w-4 h-4 text-white/70" />
+                    ) : (
+                      <Volume2 className="w-4 h-4 text-white/70" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Control Panel */}
+        <div className="lg:hidden fixed bottom-4 left-4 right-4">
+          <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-4 space-y-4">
+            {/* Mobile Timer and Controls */}
+            <div className="flex items-center justify-between">
+              <div className="text-white/90 font-mono text-lg">
+                {formatTime(timer)}
+              </div>
+              
+              {/* Audio Mode Toggle */}
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => setAudioMode('binaural')}
+                  className={`p-2 rounded-lg text-xs ${audioMode === 'binaural' ? 'bg-purple-500/30 text-white' : 'bg-white/10 text-white/60'}`}
+                >
+                  🧠
+                </button>
+                <button
+                  onClick={() => setAudioMode('noise')}
+                  className={`p-2 rounded-lg text-xs ${audioMode === 'noise' ? 'bg-gray-500/30 text-white' : 'bg-white/10 text-white/60'}`}
+                >
+                  🌊
+                </button>
+                <button
+                  onClick={() => setAudioMode('om')}
+                  className={`p-2 rounded-lg text-xs ${audioMode === 'om' ? 'bg-orange-500/30 text-white' : 'bg-white/10 text-white/60'}`}
+                >
+                  🕉️
+                </button>
+              </div>
+              
+              <button
+                onClick={handleMuteToggle}
+                className="p-2 rounded-lg bg-white/10 border border-white/20"
               >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="binaural" id="binaural" className="border-gray-400 dark:border-gray-500" />
-                  <Label htmlFor="binaural" className="text-base text-gray-700 dark:text-gray-200">
-                    Binaural Beats
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="noise" id="noise" className="border-gray-400 dark:border-gray-500" />
-                  <Label htmlFor="noise" className="text-base text-gray-700 dark:text-gray-200">
-                    Noise
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="om" id="om" className="border-gray-400 dark:border-gray-500" />
-                  <Label htmlFor="om" className="text-base text-gray-700 dark:text-gray-200">
-                    OM Sound
-                  </Label>
-                </div>
-              </RadioGroup>
+                {isMuted ? (
+                  <VolumeX className="w-5 h-5 text-white/70" />
+                ) : (
+                  <Volume2 className="w-5 h-5 text-white/70" />
+                )}
+              </button>
             </div>
 
-            {/* Noise Type (if in Noise mode) */}
-            {audioMode === "noise" && (
-              <NoiseGenerator noiseType={noiseType} setNoiseType={handleNoiseTypeChange} />
+            {/* Quick Duration Controls */}
+            <div className="flex space-x-2 overflow-x-auto">
+              {TIME_PRESETS.slice(0, 4).map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => handleDurationSelect(preset.duration)}
+                  className={`px-3 py-1 rounded-lg text-sm whitespace-nowrap ${
+                    selectedDuration === preset.duration
+                      ? 'bg-white/20 text-white border border-white/30'
+                      : 'bg-white/5 text-white/70 border border-white/10'
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Mobile Frequency Controls */}
+            {audioMode === 'binaural' && (
+              <div className="flex space-x-2 overflow-x-auto">
+                {[
+                  { freq: 2, label: 'Delta' },
+                  { freq: 6, label: 'Theta' },
+                  { freq: 10, label: 'Alpha' },
+                  { freq: 20, label: 'Beta' }
+                ].map((preset) => (
+                  <button
+                    key={preset.freq}
+                    onClick={() => {
+                      setBeatFrequency(preset.freq);
+                      setCurrentPreset(preset.label.toLowerCase());
+                    }}
+                    className={`px-3 py-2 rounded-lg text-sm whitespace-nowrap border ${
+                      Math.abs(beatFrequency - preset.freq) < 0.1
+                        ? 'bg-purple-500/30 border-white/30 text-white'
+                        : 'bg-white/5 border-white/10 text-white/70'
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
             )}
 
-            {/* Binaural Beat Slider & Presets */}
-            {audioMode === "binaural" && (
+            {/* Mobile Noise Type */}
+            {audioMode === 'noise' && (
+              <div className="overflow-x-auto">
+                <NoiseGenerator noiseType={noiseType} setNoiseType={handleNoiseTypeChange} />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Panel - Frequency Control (Desktop) */}
+        {audioMode === 'binaural' && (
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-2xl hidden lg:block">
+            <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+              
+              {/* Frequency Presets */}
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                {[
+                  { freq: 2, label: 'Delta', desc: 'Deep Sleep', color: 'from-blue-500 to-indigo-600' },
+                  { freq: 6, label: 'Theta', desc: 'REM & Dreams', color: 'from-purple-500 to-blue-500' },
+                  { freq: 10, label: 'Alpha', desc: 'Relaxed Focus', color: 'from-green-500 to-blue-500' },
+                  { freq: 20, label: 'Beta', desc: 'Alert Focus', color: 'from-yellow-500 to-orange-500' }
+                ].map((preset) => (
+                  <button
+                    key={preset.freq}
+                    onClick={() => {
+                      setBeatFrequency(preset.freq);
+                      setCurrentPreset(preset.label.toLowerCase());
+                    }}
+                    className={`p-4 rounded-xl border transition-all duration-300 ${
+                      Math.abs(beatFrequency - preset.freq) < 0.1
+                        ? `bg-gradient-to-br ${preset.color} border-white/30 text-white shadow-lg scale-105`
+                        : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:scale-102'
+                    }`}
+                  >
+                    <div className="text-lg font-semibold">{preset.label}</div>
+                    <div className="text-xs opacity-75">{preset.desc}</div>
+                    <div className="text-sm font-mono mt-1">{preset.freq}Hz</div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Custom Frequency Slider */}
               <BinauralBeats
                 beatFrequency={beatFrequency}
                 setBeatFrequency={setBeatFrequency}
                 currentPreset={currentPreset}
                 setCurrentPreset={setCurrentPreset}
               />
-            )}
-
+            </div>
           </div>
-        </CardContent>
-      </Card>
-    </>
+        )}
+      </div>
+    </div>
   );
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { LayoutWrapper } from "@/components/layout-wrapper";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,15 +21,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <TooltipProvider>
-          <a href="#main-content" className="skip-to-content">
-            Skip to content
-          </a>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
-          <Toaster />
-        </TooltipProvider>
+        <ErrorBoundary>
+          <TooltipProvider>
+            <a href="#main-content" className="skip-to-content">
+              Skip to content
+            </a>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+            <Toaster />
+          </TooltipProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

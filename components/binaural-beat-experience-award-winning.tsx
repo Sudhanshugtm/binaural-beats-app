@@ -11,6 +11,15 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAudioVisualization } from "@/hooks/use-audio-visualization";
+import ParticleSystem from "@/components/ParticleSystem";
+import GeometricShapes from "@/components/GeometricShapes";
+import GlassmorphismOrbs from "@/components/GlassmorphismOrbs";
+import AudioLoadingState from "@/components/AudioLoadingState";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import PremiumControls from "@/components/PremiumControls";
+import ImmersiveMode from "@/components/ImmersiveMode";
+import WebGLVisualizer from "@/components/WebGLVisualizer";
 
 interface FrequencyPreset {
   name: string;
@@ -77,6 +86,12 @@ export default function AwardWinningBinauralExperience() {
   const [selectedDuration, setSelectedDuration] = useState(15 * 60);
   const [showSettings, setShowSettings] = useState(false);
   const [hasStartedSession, setHasStartedSession] = useState(false);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [showPremiumControls, setShowPremiumControls] = useState(false);
+  const [isImmersiveMode, setIsImmersiveMode] = useState(false);
+  const [useWebGLVisuals, setUseWebGLVisuals] = useState(true);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorLeftRef = useRef<OscillatorNode | null>(null);
@@ -114,14 +129,17 @@ export default function AwardWinningBinauralExperience() {
   const startAudio = async () => {
     if (typeof window === "undefined") return;
 
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-    }
-    const ctx = audioContextRef.current;
+    setIsAudioLoading(true);
 
-    if (ctx.state === "suspended") {
-      await ctx.resume();
-    }
+    try {
+      if (!audioContextRef.current) {
+        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+      const ctx = audioContextRef.current;
+
+      if (ctx.state === "suspended") {
+        await ctx.resume();
+      }
 
     if (!oscillatorLeftRef.current || !oscillatorRightRef.current) {
       oscillatorLeftRef.current = ctx.createOscillator();
@@ -158,6 +176,13 @@ export default function AwardWinningBinauralExperience() {
       oscillatorLeftRef.current.start();
       oscillatorRightRef.current.start();
     }
+    
+      setIsInitialized(true);
+    } catch (error) {
+      console.error('Failed to initialize audio:', error);
+    } finally {
+      setIsAudioLoading(false);
+    }
   };
 
   const stopAudio = () => {
@@ -189,6 +214,7 @@ export default function AwardWinningBinauralExperience() {
         gainNodeRef.current.gain.setValueAtTime(0, audioContextRef.current.currentTime);
       }
       setIsPlaying(false);
+      setStatusMessage('Binaural beats session paused');
       if (timerIntervalRef.current) {
         clearInterval(timerIntervalRef.current);
         timerIntervalRef.current = null;
@@ -202,11 +228,13 @@ export default function AwardWinningBinauralExperience() {
       }
       setIsPlaying(true);
       setHasStartedSession(true);
+      setStatusMessage(`Binaural beats session started at ${beatFrequency}Hz`);
       timerIntervalRef.current = setInterval(() => {
         setTimer(prev => {
           if (prev >= selectedDuration) {
             stopAudio();
             setIsPlaying(false);
+            setStatusMessage('Session completed');
             return 0;
           }
           return prev + 1;
@@ -217,6 +245,8 @@ export default function AwardWinningBinauralExperience() {
 
   const updateFrequency = (newFrequency: number) => {
     setBeatFrequency(newFrequency);
+    const preset = FREQUENCY_PRESETS.find(p => p.frequency === newFrequency);
+    setStatusMessage(`Frequency changed to ${newFrequency}Hz${preset ? ` - ${preset.name}` : ''}`);
     if (oscillatorRightRef.current && audioContextRef.current) {
       const baseFrequency = 250;
       oscillatorRightRef.current.frequency.setValueAtTime(
@@ -239,6 +269,7 @@ export default function AwardWinningBinauralExperience() {
   const toggleMute = () => {
     const newMutedState = !isMuted;
     setIsMuted(newMutedState);
+    setStatusMessage(newMutedState ? 'Audio muted' : 'Audio unmuted');
     if (gainNodeRef.current && audioContextRef.current) {
       gainNodeRef.current.gain.setValueAtTime(
         newMutedState ? 0 : volume,
@@ -254,22 +285,74 @@ export default function AwardWinningBinauralExperience() {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gray-50">
+    <ErrorBoundary>
+      <AudioLoadingState 
+        isVisible={isAudioLoading} 
+        onComplete={() => setIsAudioLoading(false)}
+      />
+      
+      {/* Screen reader live region for status announcements */}
+      <div 
+        aria-live="polite" 
+        aria-atomic="true" 
+        className="sr-only"
+        role="status"
+      >
+        {statusMessage}
+      </div>
+      
+      <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-50 via-purple-50/30 to-blue-50/50">
 
-      {/* Audio visualization canvas */}
+      {/* Immersive particle system background */}
+      <ParticleSystem
+        isPlaying={isPlaying}
+        beatFrequency={beatFrequency}
+        volume={volume}
+        className="z-5"
+      />
+
+      {/* Glassmorphism floating orbs */}
+      <GlassmorphismOrbs
+        isPlaying={isPlaying}
+        beatFrequency={beatFrequency}
+        volume={volume}
+        className="z-6"
+      />
+
+      {/* Morphing geometric shapes */}
+      <GeometricShapes
+        isPlaying={isPlaying}
+        beatFrequency={beatFrequency}
+        volume={volume}
+        className="z-8"
+      />
+
+      {/* Advanced WebGL Visualization Layer */}
+      {useWebGLVisuals && (
+        <WebGLVisualizer
+          isPlaying={isPlaying}
+          beatFrequency={beatFrequency}
+          volume={volume}
+          audioContext={audioContextRef.current}
+          analyser={analyserRef.current}
+          className="absolute inset-0 w-full h-full z-15 pointer-events-none"
+        />
+      )}
+
+      {/* Fallback Audio visualization canvas */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full z-10 pointer-events-none"
+        className={`absolute inset-0 w-full h-full z-10 pointer-events-none ${useWebGLVisuals ? 'opacity-30' : 'opacity-100'}`}
         style={{ background: 'transparent' }}
       />
 
       {/* Top navigation bar */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-6 bg-white/80 backdrop-blur-sm border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-          <Sparkles className="w-6 h-6 text-gray-600" />
-          <h2 className="text-lg font-medium text-gray-700">
+      <header className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-4 md:p-6 bg-white/80 backdrop-blur-sm border-b border-gray-200">
+        <div className="flex items-center space-x-2 md:space-x-3">
+          <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-gray-600" aria-hidden="true" />
+          <h1 className="text-base md:text-lg font-medium text-gray-700 truncate">
             Binaural Beats Studio
-          </h2>
+          </h1>
         </div>
         
         
@@ -285,7 +368,7 @@ export default function AwardWinningBinauralExperience() {
           </SheetTrigger>
           <SheetContent 
             side="right" 
-            className="w-80 bg-white/95 backdrop-blur-xl border-l border-white/30 shadow-2xl"
+            className="w-full sm:w-80 bg-white/95 backdrop-blur-xl border-l border-white/30 shadow-2xl"
           >
             <div className="space-y-6 pt-6">
               <div>
@@ -378,22 +461,48 @@ export default function AwardWinningBinauralExperience() {
                   ))}
                 </div>
               </div>
+
+              <div>
+                <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  Visual Effects
+                </h4>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                    <span className="text-sm text-gray-700">WebGL Visualizations</span>
+                  </div>
+                  <Button
+                    variant={useWebGLVisuals ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setUseWebGLVisuals(!useWebGLVisuals)}
+                    className="h-8 px-3"
+                  >
+                    {useWebGLVisuals ? "On" : "Off"}
+                  </Button>
+                </div>
+              </div>
             </div>
           </SheetContent>
         </Sheet>
-      </div>
+      </header>
 
       {/* Main content area */}
-      <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
-        <div className="text-center space-y-8 max-w-4xl">
+      <main 
+        id="main-content" 
+        className="absolute inset-0 z-20 flex items-center justify-center px-4 sm:px-6 pt-20 pb-6"
+        role="main"
+        aria-label="Binaural beats player interface"
+      >
+        <div className="text-center space-y-6 md:space-y-8 max-w-4xl w-full">
           {!hasStartedSession ? (
             /* Welcome state with modern design */
             <div className="space-y-10 animate-in fade-in duration-1000">
               <div className="space-y-4">
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-wide text-gray-800">
+                <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light tracking-wide text-gray-800 px-2">
                   Find Your Frequency
-                </h1>
-                <p className="text-lg md:text-xl text-gray-600 font-light max-w-2xl mx-auto leading-relaxed">
+                </h2>
+                <p className="text-base sm:text-lg md:text-xl text-gray-600 font-light max-w-2xl mx-auto leading-relaxed px-4">
                   Discover the perfect binaural beats for your mind state and unlock new levels of focus, relaxation, and consciousness.
                 </p>
                 
@@ -405,17 +514,27 @@ export default function AwardWinningBinauralExperience() {
               </div>
               
               {/* Enhanced frequency preset cards with animations */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+              <section aria-label="Frequency presets" className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 px-2">
                 {FREQUENCY_PRESETS.map((preset, index) => (
                   <div
                     key={preset.name}
-                    className={`group cursor-pointer transform transition-all duration-500 hover:scale-105 card-hover ${
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Select ${preset.name} frequency: ${preset.frequency}Hz - ${preset.description}`}
+                    aria-pressed={beatFrequency === preset.frequency}
+                    className={`group cursor-pointer transform transition-all duration-500 hover:scale-105 card-hover focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg ${
                       beatFrequency === preset.frequency ? 'scale-105 animate-glow' : ''
                     }`}
                     onClick={() => updateFrequency(preset.frequency)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        updateFrequency(preset.frequency);
+                      }
+                    }}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <Card className={`p-6 h-full border transition-all duration-300 relative overflow-hidden cursor-pointer ${
+                    <Card className={`p-4 sm:p-6 h-full border transition-all duration-300 relative overflow-hidden cursor-pointer ${
                       beatFrequency === preset.frequency
                         ? 'bg-blue-50 border-blue-300 shadow-lg text-gray-800'
                         : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-md text-gray-700'
@@ -426,10 +545,10 @@ export default function AwardWinningBinauralExperience() {
                           {preset.icon}
                         </div>
                         <div>
-                          <div className="font-semibold text-lg tracking-wide">{preset.name}</div>
-                          <div className="text-sm opacity-80 font-mono">{preset.frequency}Hz</div>
+                          <div className="font-semibold text-base sm:text-lg tracking-wide">{preset.name}</div>
+                          <div className="text-xs sm:text-sm opacity-80 font-mono">{preset.frequency}Hz</div>
                         </div>
-                        <div className="text-xs opacity-70 leading-relaxed px-2">{preset.description}</div>
+                        <div className="text-xs opacity-70 leading-relaxed px-1 sm:px-2">{preset.description}</div>
                         <Badge variant="secondary" className={`transition-all duration-300 ${
                           beatFrequency === preset.frequency 
                             ? 'bg-blue-100 text-blue-800 border-blue-200' 
@@ -446,19 +565,19 @@ export default function AwardWinningBinauralExperience() {
                     </Card>
                   </div>
                 ))}
-              </div>
+              </section>
               
               {/* Custom frequency control */}
-              <Card className="p-8 bg-white border border-gray-200 max-w-md mx-auto hover:bg-gray-50 transition-all duration-300 shadow-sm">
-                <div className="text-center space-y-4">
+              <Card className="p-4 sm:p-6 lg:p-8 bg-white border border-gray-200 max-w-md mx-auto hover:bg-gray-50 transition-all duration-300 shadow-sm">
+                <div className="text-center space-y-3 sm:space-y-4">
                   <div className="flex items-center justify-center gap-2 mb-4">
                     <Music className="w-5 h-5 text-gray-600" />
                     <span className="text-gray-700 font-medium">Custom Frequency</span>
                   </div>
-                  <div className="text-3xl font-light text-gray-800">
+                  <div className="text-2xl sm:text-3xl font-light text-gray-800">
                     {beatFrequency.toFixed(1)} Hz
                   </div>
-                  <div className="text-xs text-gray-600 mb-2">
+                  <div className="text-xs text-gray-600 mb-2 px-2">
                     Slide to adjust beat frequency (1-40 Hz)
                   </div>
                   <Slider
@@ -468,20 +587,21 @@ export default function AwardWinningBinauralExperience() {
                     max={40}
                     step={0.5}
                     className="w-full mt-4"
+                    aria-label={`Adjust binaural beat frequency. Current value: ${beatFrequency.toFixed(1)} Hz`}
                   />
                 </div>
               </Card>
             </div>
           ) : (
             /* Session active state - much more meaningful */
-            <div className="space-y-8 animate-in fade-in duration-500">
+            <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-500">
               {/* Main session info */}
-              <div className="text-center space-y-6">
-                <div className="flex items-center justify-center gap-4">
-                  <span className="text-4xl">{currentPreset.icon}</span>
-                  <div>
-                    <h2 className="text-3xl md:text-4xl font-semibold text-gray-800">{currentPreset.name}</h2>
-                    <p className="text-lg text-gray-600">{currentPreset.description}</p>
+              <div className="text-center space-y-4 sm:space-y-6 px-2">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                  <span className="text-3xl sm:text-4xl">{currentPreset.icon}</span>
+                  <div className="text-center sm:text-left">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">{currentPreset.name}</h2>
+                    <p className="text-base sm:text-lg text-gray-600">{currentPreset.description}</p>
                   </div>
                 </div>
                 
@@ -502,7 +622,7 @@ export default function AwardWinningBinauralExperience() {
               </div>
 
               {/* Session progress */}
-              <Card className="p-6 bg-white border border-gray-200 max-w-sm mx-auto shadow-sm">
+              <Card className="p-4 sm:p-6 bg-white border border-gray-200 max-w-sm mx-auto shadow-sm">
                 <div className="text-center space-y-3">
                   <div className="flex items-center justify-center gap-2">
                     <Timer className="w-5 h-5 text-gray-600" />
@@ -532,49 +652,107 @@ export default function AwardWinningBinauralExperience() {
           )}
 
           {/* Simple, clean control buttons */}
-          <div className="flex flex-col items-center gap-4 pt-8">
-            <div className="flex items-center justify-center gap-4">
+          <section aria-label="Audio controls" className="flex flex-col items-center gap-4 pt-6 sm:pt-8">
+            <div role="group" aria-label="Primary controls" className="flex items-center justify-center gap-3 sm:gap-4">
               {/* Volume button */}
               <button
                 onClick={toggleMute}
-                className="w-14 h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
+                aria-label={isMuted ? "Unmute audio" : "Mute audio"}
+                aria-pressed={isMuted}
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center shadow-sm touch-target"
               >
-                {isMuted ? <VolumeX className="w-5 h-5 text-gray-600" /> : <Volume2 className="w-5 h-5 text-gray-600" />}
+                {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />}
               </button>
               
               {/* Play/Pause button */}
               <button
                 onClick={togglePlayPause}
-                className={`w-16 h-16 rounded-lg transition-all duration-200 flex items-center justify-center shadow-sm ${
+                aria-label={isPlaying ? "Pause binaural beats session" : "Start binaural beats session"}
+                aria-pressed={isPlaying}
+                className={`w-14 h-14 sm:w-16 sm:h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-500 transition-all duration-200 flex items-center justify-center shadow-sm touch-target ${
                   isPlaying
                     ? 'bg-blue-500 hover:bg-blue-600 text-white'
                     : 'bg-blue-500 hover:bg-blue-600 text-white'
                 }`}
               >
-                {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
+                {isPlaying ? <Pause className="w-5 h-5 sm:w-6 sm:h-6" /> : <Play className="w-5 h-5 sm:w-6 sm:h-6 ml-0.5" />}
               </button>
               
               {/* Settings button */}
               <button
                 onClick={() => setShowSettings(true)}
-                className="w-14 h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
+                aria-label="Open audio settings"
+                aria-expanded={showSettings}
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center shadow-sm touch-target"
               >
-                <Settings className="w-5 h-5 text-gray-600" />
+                <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
               </button>
             </div>
             
             {/* Back button - only visible during session */}
             {hasStartedSession && (
-              <button
-                onClick={resetSession}
-                className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium"
-              >
-                ← Back to Selection
-              </button>
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <button
+                  onClick={() => setShowPremiumControls(!showPremiumControls)}
+                  className="px-6 py-3 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 touch-target"
+                >
+                  ⚡ Premium Controls
+                </button>
+                
+                <button
+                  onClick={() => setIsImmersiveMode(true)}
+                  className="px-6 py-3 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 touch-target"
+                >
+                  🌌 Immersive Mode
+                </button>
+                
+                <button
+                  onClick={resetSession}
+                  aria-label="Stop session and return to frequency selection"
+                  className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 touch-target"
+                >
+                  ← Back to Selection
+                </button>
+              </div>
             )}
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
+      
+      {/* Premium Controls Panel */}
+      {showPremiumControls && hasStartedSession && (
+        <div className="absolute bottom-6 right-6 z-40 max-w-md">
+          <PremiumControls
+            isPlaying={isPlaying}
+            volume={volume}
+            isMuted={isMuted}
+            beatFrequency={beatFrequency}
+            timer={timer}
+            sessionDuration={selectedDuration}
+            onTogglePlay={togglePlayPause}
+            onToggleMute={toggleMute}
+            onVolumeChange={updateVolume}
+            onFrequencyChange={updateFrequency}
+            onReset={resetSession}
+          />
+        </div>
+      )}
+      
+      {/* Immersive Mode */}
+      <ImmersiveMode
+        isOpen={isImmersiveMode}
+        onClose={() => setIsImmersiveMode(false)}
+        isPlaying={isPlaying}
+        volume={volume}
+        isMuted={isMuted}
+        beatFrequency={beatFrequency}
+        timer={timer}
+        sessionDuration={selectedDuration}
+        onTogglePlay={togglePlayPause}
+        onToggleMute={toggleMute}
+        onVolumeChange={updateVolume}
+      />
     </div>
+    </ErrorBoundary>
   );
 }

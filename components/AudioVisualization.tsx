@@ -86,12 +86,6 @@ export function AudioVisualization({ isPlaying, frequency, mode }: AudioVisualiz
           ))}
         </div>
         
-        {/* Frequency label */}
-        <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
-          <div className={`text-xs font-bold bg-gradient-to-r ${getModeColor(mode)} bg-clip-text text-transparent`}>
-            {frequency}Hz Binaural
-          </div>
-        </div>
       </div>
     </div>
   );

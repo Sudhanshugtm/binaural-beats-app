@@ -25,12 +25,13 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   title: "Mindful Focus | Binaural Beats",
   description: "Find your center and cultivate peaceful awareness with calming binaural beat soundscapes designed for mindful productivity and deep focus",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({

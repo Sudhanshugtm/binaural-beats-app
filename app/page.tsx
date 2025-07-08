@@ -52,7 +52,7 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-8 sm:px-12 lg:px-16">
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-8 sm:px-12 lg:px-16 pt-24">
         <div className="container-zen-narrow text-center space-zen-3xl pt-8">
           
           {/* Welcome Section */}
@@ -69,13 +69,7 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Mindfulness Quote */}
-            <div className="py-16">
-              <blockquote className="text-lg text-muted-foreground italic max-w-xl mx-auto leading-relaxed tracking-wide mb-6">
-                "In the midst of movement and chaos, keep stillness inside of you."
-              </blockquote>
-              <cite className="text-sm text-muted-foreground/70 block font-light tracking-wider">— Deepak Chopra</cite>
-            </div>
+            
           </div>
 
           {/* Call to Action */}

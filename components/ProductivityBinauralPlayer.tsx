@@ -10,7 +10,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { AudioVisualization } from "./AudioVisualization";
-import { OnboardingFlow } from "./OnboardingFlow";
+import Link from "next/link";
+
 import { ModeType } from "../lib/recommendations";
 import AmbientFloatingElements from "./AmbientFloatingElements";
 
@@ -83,12 +84,7 @@ export default function ProductivityBinauralPlayer() {
   const [sessionProgress, setSessionProgress] = useState(0);
   const [totalFocusTime, setTotalFocusTime] = useState(127); // minutes today
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return !localStorage.getItem('focusbeats-onboarding-completed');
-    }
-    return false;
-  });
+  
   
   // Elegant auto-fade controls state
   const [controlsVisible, setControlsVisible] = useState(true);
@@ -444,16 +440,7 @@ export default function ProductivityBinauralPlayer() {
   }, [isPlaying]);
 
 
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('focusbeats-onboarding-completed', 'true');
-    }
-  };
-
-  if (showOnboarding) {
-    return <OnboardingFlow onComplete={handleOnboardingComplete} />;
-  }
+  
 
   return (
     <div className="min-h-screen bg-morning-dew ambient-bg serene-overlay mobile-safe-area relative">
@@ -469,7 +456,7 @@ export default function ProductivityBinauralPlayer() {
         {!selectedMode ? (
           <div className="space-zen-3xl">
             {/* Gentle Welcome */}
-            <div className="text-center py-16">
+            <div className="text-center py-8">
               <h1 className="font-heading text-3xl md:text-4xl font-light text-foreground mb-8 tracking-wide leading-tight">
                 Choose Your Practice
               </h1>
@@ -489,7 +476,7 @@ export default function ProductivityBinauralPlayer() {
                 {WORK_MODES.map((mode) => (
                   <Card
                     key={mode.id}
-                    className="group p-12 cursor-pointer transition-all duration-700 border-0 shadow-none hover:shadow-lg bg-gradient-to-br from-white/80 to-slate-50/60 hover:from-white/95 hover:to-blue-50/30 backdrop-blur-sm rounded-3xl touch-target transform hover:scale-[1.02] animate-gentle-sway relative"
+                    className="group p-12 cursor-pointer transition-all duration-700 border-0 shadow-none hover:shadow-lg bg-gradient-to-br from-background/90 to-accent/60 hover:from-background/95 hover:to-accent/80 backdrop-blur-sm rounded-3xl touch-target transform hover:scale-[1.02] relative"
                     onClick={() => handleModeSelect(mode)}
                     role="button"
                     tabIndex={0}
@@ -516,21 +503,21 @@ export default function ProductivityBinauralPlayer() {
           <div className="container-zen-narrow space-zen-3xl">
             {/* Active Session */}
             <Card 
-              className={`p-zen-lg border-0 shadow-sm bg-white/70 backdrop-blur-sm rounded-3xl ${isPlaying ? 'meditation-focus animate-forest-breeze' : ''} ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
+              className={`p-8 border-0 shadow-sm bg-white/70 backdrop-blur-sm rounded-3xl ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               data-testid="session-container"
             >
-              <div className="text-center mb-20">
-                <div className="mb-16">
-                  <div className="text-6xl mb-10">{selectedMode.icon}</div>
-                  <h2 className="font-heading text-2xl font-light text-foreground mb-8 tracking-wide leading-tight">{selectedMode.name}</h2>
+              <div className="text-center mb-8">
+                <div className="mb-6">
+                  <div className="text-4xl mb-4">{selectedMode.icon}</div>
+                  <h2 className="font-heading text-xl font-light text-foreground mb-4 tracking-wide leading-tight">{selectedMode.name}</h2>
                   <p className="text-muted-foreground font-light leading-relaxed tracking-wide px-4">{selectedMode.description}</p>
                 </div>
                 
                 {/* Audio Visualization */}
-                <div className={`py-8 relative ${isPlaying ? 'animate-zen-bloom' : ''}`}>
+                <div className="py-8 relative">
                   <AudioVisualization 
                     isPlaying={isPlaying}
                     frequency={selectedMode.frequency}
@@ -538,15 +525,15 @@ export default function ProductivityBinauralPlayer() {
                   />
                   {/* Subtle pulsing ambient circle around visualization */}
                   {isPlaying && (
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border border-primary/20 animate-gentle-pulse pointer-events-none" />
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border border-primary/20 pointer-events-none" />
                   )}
                 </div>
               </div>
 
               {/* Timer Display - Central Focus */}
-              <div className="text-center mb-20">
-                <div className="relative mb-12">
-                  <div className="font-heading text-8xl font-light text-foreground/80 mb-8 tracking-wider leading-tight" aria-live="polite">
+              <div className="text-center mb-8">
+                <div className="relative mb-6">
+                  <div className="font-heading text-5xl font-light text-foreground/80 mb-4 tracking-wider leading-tight" aria-live="polite">
                     {formatTime(timeRemaining)}
                   </div>
                   <p className="text-lg text-muted-foreground font-light tracking-wide px-4">
@@ -572,7 +559,7 @@ export default function ProductivityBinauralPlayer() {
                 onFocus={handleControlsMouseEnter}
                 data-testid="audio-controls"
               >
-                <div className="flex items-center justify-center space-x-16 mb-20">
+                <div className="flex items-center justify-center space-x-12 mb-8">
                   {/* Essential controls always visible */}
                   <Button
                     variant="ghost"
@@ -632,30 +619,6 @@ export default function ProductivityBinauralPlayer() {
               </div>
             </Card>
 
-            {/* Secondary Controls with Session-aware Visibility */}
-            <div 
-              className={`text-center pt-12 transition-all duration-700 ${
-                isPlaying && !controlsVisible ? 'opacity-50' : 'opacity-100'
-              } ${isDeepFocusMode ? 'opacity-20' : ''}`}
-              data-testid="secondary-controls"
-            >
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  stopAudio();
-                  setIsPlaying(false);
-                  setSelectedMode(null);
-                  setTimeRemaining(0);
-                  setSessionProgress(0);
-                  setControlsVisible(true);
-                  exitDeepFocusMode();
-                }}
-                className="text-muted-foreground hover:text-foreground font-light px-8 py-4 transition-all duration-700 hover:scale-105 tracking-wide backdrop-blur-sm"
-              >
-                <ArrowLeft className="h-4 w-4 mr-3" />
-                Return to Practices
-              </Button>
-            </div>
           </div>
         )}
       </main>

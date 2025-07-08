@@ -629,15 +629,15 @@
 }
 
 .space-zen-xl {
-  @apply space-y-20;
+  @apply space-y-12;
 }
 
 .space-zen-2xl {
-  @apply space-y-24;
+  @apply space-y-16;
 }
 
 .space-zen-3xl {
-  @apply space-y-32;
+  @apply space-y-20;
 }
 
 /* Generous padding utilities for breathing room */

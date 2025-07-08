@@ -39,72 +39,72 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-6 sm:px-8">
-        <div className="max-w-4xl mx-auto text-center space-y-16">
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-8 sm:px-12 lg:px-16">
+        <div className="container-zen-narrow text-center space-zen-3xl">
           
           {/* Welcome Section */}
-          <div className="space-y-8">
-            <div className="space-y-6">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-800 leading-tight">
+          <div className="space-zen-xl">
+            <div className="space-zen-lg">
+              <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-light text-foreground/90 leading-tight tracking-wide mb-12">
                 Welcome to Your
                 <br />
-                <span className="text-slate-600">Moment of Focus</span>
+                <span className="text-muted-foreground">Mindful Practice</span>
               </h1>
               
-              <p className="text-xl sm:text-2xl text-gray-600 max-w-2xl mx-auto font-light leading-relaxed">
+              <p className="text-xl sm:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed tracking-wide">
                 Take a breath. Find your center. Let the gentle sounds guide you to clarity.
               </p>
             </div>
 
             {/* Mindfulness Quote */}
-            <div className="py-8">
-              <blockquote className="text-lg text-gray-500 italic max-w-xl mx-auto">
+            <div className="py-16">
+              <blockquote className="text-lg text-muted-foreground italic max-w-xl mx-auto leading-relaxed tracking-wide mb-6">
                 "In the midst of movement and chaos, keep stillness inside of you."
               </blockquote>
-              <cite className="text-sm text-gray-400 mt-2 block">— Deepak Chopra</cite>
+              <cite className="text-sm text-muted-foreground/70 block font-light tracking-wider">— Deepak Chopra</cite>
             </div>
           </div>
 
           {/* Call to Action */}
-          <div className="space-y-8">
+          <div className="space-zen-lg">
             <Button
               onClick={handleBeginSession}
               size="lg"
-              className="bg-slate-700 hover:bg-slate-800 text-white px-12 py-6 text-xl font-light rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-16 py-8 text-xl font-normal rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 tracking-wide mb-8"
             >
-              <Play className="w-6 h-6 mr-3" />
-              Begin Your Session
+              <Play className="w-6 h-6 mr-4" />
+              Begin Your Practice
             </Button>
             
-            <p className="text-gray-500 text-sm">
+            <p className="text-muted-foreground text-sm font-light tracking-wide mt-6">
               No distractions. No pressure. Just you and the sounds.
             </p>
           </div>
 
           {/* Simple Feature Highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-12">
-            <div className="text-center space-y-3">
-              <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-                <Headphones className="w-8 h-8 text-blue-600" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 pt-20">
+            <div className="text-center space-zen-sm">
+              <div className="w-20 h-20 mx-auto bg-accent rounded-full flex items-center justify-center mb-8">
+                <Headphones className="w-10 h-10 text-accent-foreground/70" />
               </div>
-              <h3 className="text-lg font-light text-gray-700">Pure Audio</h3>
-              <p className="text-sm text-gray-500">Clean, calming binaural beats</p>
+              <h3 className="font-heading text-lg font-light text-foreground tracking-wide mb-4">Pure Audio</h3>
+              <p className="text-sm text-muted-foreground font-light leading-relaxed px-4">Clean, calming binaural beats</p>
             </div>
             
-            <div className="text-center space-y-3">
-              <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-                <Heart className="w-8 h-8 text-green-600" />
+            <div className="text-center space-zen-sm">
+              <div className="w-20 h-20 mx-auto bg-secondary rounded-full flex items-center justify-center mb-8">
+                <Heart className="w-10 h-10 text-secondary-foreground/70" />
               </div>
-              <h3 className="text-lg font-light text-gray-700">Gentle Approach</h3>
-              <p className="text-sm text-gray-500">Designed for peaceful focus</p>
+              <h3 className="font-heading text-lg font-light text-foreground tracking-wide mb-4">Gentle Approach</h3>
+              <p className="text-sm text-muted-foreground font-light leading-relaxed px-4">Designed for peaceful focus</p>
             </div>
             
-            <div className="text-center space-y-3">
-              <div className="w-16 h-16 mx-auto bg-purple-100 rounded-full flex items-center justify-center">
-                <Play className="w-8 h-8 text-purple-600" />
+            <div className="text-center space-zen-sm">
+              <div className="w-20 h-20 mx-auto bg-muted rounded-full flex items-center justify-center mb-8">
+                <Play className="w-10 h-10 text-muted-foreground/70" />
               </div>
-              <h3 className="text-lg font-light text-gray-700">Instant Access</h3>
-              <p className="text-sm text-gray-500">Start whenever you're ready</p>
+              <h3 className="font-heading text-lg font-light text-foreground tracking-wide mb-4">Instant Access</h3>
+              <p className="text-sm text-muted-foreground font-light leading-relaxed px-4">Start whenever you're ready</p>
             </div>
           </div>
         </div>

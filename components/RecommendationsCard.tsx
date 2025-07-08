@@ -23,14 +23,14 @@ const modeIcons: Record<ModeType, JSX.Element> = {
 };
 
 const modeLabels: Record<ModeType, string> = {
-  deepWork: 'Deep Work',
-  creativeFlow: 'Creative Flow',
-  meetingMode: 'Meeting Mode',
-  relaxation: 'Relaxation',
-  sleep: 'Sleep',
-  energyBoost: 'Energy Boost',
-  memoryBoost: 'Memory Boost',
-  meditation: 'Meditation',
+  deepWork: 'Concentrated Mind',
+  creativeFlow: 'Creative Awareness',
+  meetingMode: 'Gentle Presence',
+  relaxation: 'Restorative Peace',
+  sleep: 'Restorative Peace',
+  energyBoost: 'Concentrated Mind',
+  memoryBoost: 'Learning Flow',
+  meditation: 'Mindful Intervals',
 };
 
 export function RecommendationsCard({ onModeSelect }: RecommendationsCardProps) {
@@ -71,7 +71,7 @@ export function RecommendationsCard({ onModeSelect }: RecommendationsCardProps) 
         <div className="flex items-center justify-center py-8">
           <RefreshCw className="w-6 h-6 text-blue-600 animate-spin" />
         </div>
-        <p className="text-center text-gray-600">Finding your perfect focus mode...</p>
+        <p className="text-center text-gray-600">Discovering your ideal practice...</p>
       </div>
     );
   }
@@ -81,12 +81,12 @@ export function RecommendationsCard({ onModeSelect }: RecommendationsCardProps) 
       <div className="">
         <div className="text-center py-8">
           <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No recommendations available</p>
+          <p className="text-gray-600">No practice suggestions available</p>
           <button
             onClick={handleRefresh}
-            className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            className="mt-4 px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-light transition-colors"
           >
-            Try Again
+            Refresh Suggestions
           </button>
         </div>
       </div>
@@ -98,10 +98,10 @@ export function RecommendationsCard({ onModeSelect }: RecommendationsCardProps) 
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={handleRefresh}
-          className="p-2 hover:bg-blue-100 rounded-lg transition-colors ml-auto"
-          aria-label="Refresh recommendations"
+          className="p-2 hover:bg-slate-100 rounded-lg transition-colors ml-auto"
+          aria-label="Refresh practice suggestions"
         >
-          <RefreshCw className="w-4 h-4 text-blue-600" />
+          <RefreshCw className="w-4 h-4 text-slate-600" />
         </button>
       </div>
 
@@ -110,10 +110,10 @@ export function RecommendationsCard({ onModeSelect }: RecommendationsCardProps) 
           <button
             key={`${recommendation.mode}-${index}`}
             onClick={() => handleModeSelect(recommendation.mode)}
-            className={`w-full p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-300 bg-gray-50 hover:border-blue-500 hover:bg-blue-50 ${index === 0 ? 'border-blue-500 bg-blue-50 shadow-md' : ''}`}
+            className={`w-full p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-300 bg-gray-50 hover:border-slate-400 hover:bg-slate-50 ${index === 0 ? 'border-slate-400 bg-slate-50 shadow-md' : ''}`}
           >
             <div className="flex items-center gap-4">
-              <div className="flex-shrink-0 text-blue-600">
+              <div className="flex-shrink-0 text-slate-600">
                 {modeIcons[recommendation.mode]}
               </div>
               <div className="flex-1 text-left">
@@ -133,9 +133,9 @@ export function RecommendationsCard({ onModeSelect }: RecommendationsCardProps) 
         <div className="mt-4 text-center">
           <button
             onClick={() => handleModeSelect(recommendations[0].mode)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+            className="bg-slate-600 hover:bg-slate-700 text-white font-light px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
           >
-            Start Recommended Session
+            Begin Suggested Practice
           </button>
         </div>
       )}

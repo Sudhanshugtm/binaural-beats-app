@@ -18,6 +18,40 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        'sans': ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'heading': ['var(--font-source-sans)', 'var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        'xs': ['var(--font-size-xs)', { lineHeight: 'var(--line-height-normal)' }],
+        'sm': ['var(--font-size-sm)', { lineHeight: 'var(--line-height-normal)' }],
+        'base': ['var(--font-size-base)', { lineHeight: 'var(--line-height-relaxed)' }],
+        'lg': ['var(--font-size-lg)', { lineHeight: 'var(--line-height-relaxed)' }],
+        'xl': ['var(--font-size-xl)', { lineHeight: 'var(--line-height-normal)' }],
+        '2xl': ['var(--font-size-2xl)', { lineHeight: 'var(--line-height-tight)' }],
+        '3xl': ['var(--font-size-3xl)', { lineHeight: 'var(--line-height-tight)' }],
+        '4xl': ['var(--font-size-4xl)', { lineHeight: 'var(--line-height-tight)' }],
+        '5xl': ['var(--font-size-5xl)', { lineHeight: 'var(--line-height-tight)' }],
+      },
+      fontWeight: {
+        'light': 'var(--font-weight-light)',
+        'normal': 'var(--font-weight-normal)',
+        'medium': 'var(--font-weight-medium)',
+        'semibold': 'var(--font-weight-semibold)',
+      },
+      lineHeight: {
+        'tight': 'var(--line-height-tight)',
+        'normal': 'var(--line-height-normal)',
+        'relaxed': 'var(--line-height-relaxed)',
+        'loose': 'var(--line-height-loose)',
+      },
+      letterSpacing: {
+        'tight': 'var(--letter-spacing-tight)',
+        'normal': 'var(--letter-spacing-normal)',
+        'wide': 'var(--letter-spacing-wide)',
+        'wider': 'var(--letter-spacing-wider)',
+        'widest': 'var(--letter-spacing-widest)',
+      },
       screens: {
         'xs': '475px',
       },

@@ -40,11 +40,11 @@ const STORAGE_KEYS = {
 } as const;
 
 const TIME_BASED_RECOMMENDATIONS: Record<TimeOfDay, { mode: ModeType; reason: string }> = {
-  morning: { mode: 'deepWork', reason: 'Perfect for morning focus and productivity' },
-  afternoon: { mode: 'creativeFlow', reason: 'Great for creative work in the afternoon' },
-  late_afternoon: { mode: 'meetingMode', reason: 'Ideal for meetings and collaboration in late afternoon' },
-  evening: { mode: 'relaxation', reason: 'Perfect for unwinding in the evening' },
-  night: { mode: 'sleep', reason: 'Designed for better sleep at night' }
+  morning: { mode: 'deepWork', reason: 'Morning clarity brings natural focus and awareness' },
+  afternoon: { mode: 'creativeFlow', reason: 'Afternoon energy flows beautifully into creative expression' },
+  late_afternoon: { mode: 'meetingMode', reason: 'Gentle presence suits the later hours perfectly' },
+  evening: { mode: 'relaxation', reason: 'Evening invites peaceful restoration and calm' },
+  night: { mode: 'sleep', reason: 'Night calls for deep rest and rejuvenation' }
 };
 
 export function getTimeOfDay(): TimeOfDay {
@@ -187,7 +187,7 @@ export function getPersonalizedRecommendations(): Recommendation[] {
   if (patterns.mostUsedMode && patterns.mostUsedMode !== timeBasedRec.mode) {
     recommendations.push({
       mode: patterns.mostUsedMode,
-      reason: 'Your most frequently used mode',
+      reason: 'Your most cherished practice',
       confidence: 0.8
     });
   }
@@ -197,7 +197,7 @@ export function getPersonalizedRecommendations(): Recommendation[] {
       !recommendations.some(r => r.mode === userPrefs.favoriteMode)) {
     recommendations.push({
       mode: userPrefs.favoriteMode,
-      reason: 'Your favorite mode',
+      reason: 'Your preferred practice',
       confidence: 0.85
     });
   }
@@ -235,17 +235,17 @@ export function getPersonalizedRecommendations(): Recommendation[] {
 
 function getModeDescription(mode: ModeType): string {
   const descriptions: Record<ModeType, string> = {
-    deepWork: 'Enhance focus and concentration',
-    creativeFlow: 'Boost creativity and innovative thinking',
-    meetingMode: 'Stay alert and engaged during meetings',
-    relaxation: 'Reduce stress and promote calm',
-    sleep: 'Improve sleep quality and duration',
-    energyBoost: 'Increase energy and motivation',
-    memoryBoost: 'Enhance memory and learning',
-    meditation: 'Deepen meditation practice'
+    deepWork: 'Cultivate deep stillness and sustained awareness',
+    creativeFlow: 'Open your mind to flowing inspiration',
+    meetingMode: 'Maintain gentle, present awareness',
+    relaxation: 'Find peaceful restoration and inner calm',
+    sleep: 'Embrace deep rest and natural rhythms',
+    energyBoost: 'Awaken natural vitality and clarity',
+    memoryBoost: 'Enhance mindful learning and retention',
+    meditation: 'Deepen your contemplative practice'
   };
   
-  return descriptions[mode] || 'Try something new';
+  return descriptions[mode] || 'Explore a new mindful practice';
 }
 
 export class RecommendationEngine {

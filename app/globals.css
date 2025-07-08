@@ -16,11 +16,11 @@
   :root {
     /* Nature-inspired calming backgrounds */
     --background: 40 20% 98%; /* Soft warm white with beige undertones */
-    --foreground: 20 15% 15%; /* Deep warm charcoal for readability */
+    --foreground: 20 15% 20%; /* Softened warm charcoal for peaceful reading */
     --card: 45 25% 96%; /* Warm off-white cards */
-    --card-foreground: 20 15% 15%;
+    --card-foreground: 20 15% 20%;
     --popover: 45 25% 96%;
-    --popover-foreground: 20 15% 15%;
+    --popover-foreground: 20 15% 20%;
     
     /* Calming sage green as primary - evokes nature and tranquility */
     --primary: 140 30% 35%; /* Muted sage green */
@@ -28,15 +28,15 @@
     
     /* Earthy secondary colors */
     --secondary: 35 25% 88%; /* Soft warm beige */
-    --secondary-foreground: 20 15% 25%;
+    --secondary-foreground: 20 15% 30%;
     
     /* Subtle muted colors for backgrounds */
     --muted: 40 15% 94%; /* Very light warm neutral */
-    --muted-foreground: 20 10% 40%; /* Muted text */
+    --muted-foreground: 20 10% 45%; /* Calming muted text */
     
     /* Soft accent colors */
     --accent: 160 20% 85%; /* Soft seafoam green */
-    --accent-foreground: 20 15% 25%;
+    --accent-foreground: 20 15% 30%;
     
     /* Gentle destructive colors */
     --destructive: 10 60% 55%; /* Muted terracotta red */
@@ -48,23 +48,45 @@
     --ring: 140 30% 35%; /* Sage green focus ring */
     --radius: 0.5rem;
     
-    /* Font size variables for better accessibility */
+    /* Comprehensive typography system for peaceful reading */
     --font-size-xs: 0.8125rem; /* 13px */
-    --font-size-sm: 0.9375rem; /* 15px instead of 14px */
-    --font-size-base: 1.0625rem; /* 17px instead of 16px */
-    --font-size-lg: 1.25rem;
-    --font-size-xl: 1.5rem;
-    --font-size-2xl: 1.75rem;
+    --font-size-sm: 0.9375rem; /* 15px - larger for better mobile reading */
+    --font-size-base: 1.0625rem; /* 17px - more comfortable base size */
+    --font-size-lg: 1.25rem; /* 20px */
+    --font-size-xl: 1.5rem; /* 24px */
+    --font-size-2xl: 1.875rem; /* 30px */
+    --font-size-3xl: 2.25rem; /* 36px */
+    --font-size-4xl: 3rem; /* 48px */
+    --font-size-5xl: 3.75rem; /* 60px */
+    
+    /* Peaceful font weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    
+    /* Line heights for comfortable reading */
+    --line-height-tight: 1.3;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.625;
+    --line-height-loose: 1.75;
+    
+    /* Letter spacing for tranquil typography */
+    --letter-spacing-tight: -0.025em;
+    --letter-spacing-normal: 0em;
+    --letter-spacing-wide: 0.025em;
+    --letter-spacing-wider: 0.05em;
+    --letter-spacing-widest: 0.1em;
   }
  
   .dark {
     /* Deep forest-inspired dark backgrounds */
     --background: 160 15% 8%; /* Deep forest green-black */
-    --foreground: 40 20% 92%; /* Warm off-white for readability */
+    --foreground: 40 20% 88%; /* Softer warm off-white for peaceful reading */
     --card: 160 12% 12%; /* Slightly lighter forest tone */
-    --card-foreground: 40 20% 92%;
+    --card-foreground: 40 20% 88%;
     --popover: 160 12% 12%;
-    --popover-foreground: 40 20% 92%;
+    --popover-foreground: 40 20% 88%;
     
     /* Gentle sage green for dark mode */
     --primary: 140 25% 55%; /* Lighter sage green for visibility */
@@ -72,19 +94,19 @@
     
     /* Warm earth tones for secondary */
     --secondary: 35 15% 18%; /* Dark warm brown */
-    --secondary-foreground: 40 20% 85%;
+    --secondary-foreground: 40 20% 82%;
     
     /* Subtle muted colors for dark mode */
     --muted: 160 10% 15%; /* Muted dark green */
-    --muted-foreground: 40 15% 70%; /* Lighter muted text */
+    --muted-foreground: 40 15% 65%; /* Calming lighter muted text */
     
     /* Soft accent for dark mode */
     --accent: 160 15% 18%; /* Soft dark green accent */
-    --accent-foreground: 40 20% 85%;
+    --accent-foreground: 40 20% 82%;
     
     /* Muted destructive for dark mode */
     --destructive: 10 45% 50%; /* Softer terracotta red */
-    --destructive-foreground: 40 20% 92%;
+    --destructive-foreground: 40 20% 88%;
     
     /* Subtle borders for dark mode */
     --border: 160 10% 20%; /* Subtle green-tinted border */
@@ -120,10 +142,77 @@
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
     font-size: var(--font-size-base);
-    line-height: 1.5;
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+    letter-spacing: var(--letter-spacing-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Peaceful heading typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-source-sans), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-weight: var(--font-weight-light);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-wide);
+    color: hsl(var(--foreground));
+  }
+  
+  h1 {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-light);
+    line-height: var(--line-height-tight);
+  }
+  
+  h2 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-light);
+  }
+  
+  h3 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-normal);
+  }
+  
+  h4 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-normal);
+  }
+  
+  h5 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  h6 {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  /* Peaceful paragraph styling */
+  p {
+    line-height: var(--line-height-relaxed);
+    color: hsl(var(--muted-foreground));
+  }
+  
+  /* Calm quote styling */
+  blockquote {
+    font-style: italic;
+    font-weight: var(--font-weight-light);
+    line-height: var(--line-height-relaxed);
+    letter-spacing: var(--letter-spacing-wide);
+    color: hsl(var(--muted-foreground));
+  }
+  
+  /* Button text should be readable but gentle */
+  button, .btn {
+    font-weight: var(--font-weight-normal);
+    letter-spacing: var(--letter-spacing-wide);
   }
   
   /* Improved focus styles for better accessibility */
@@ -149,6 +238,60 @@
   }
   .text-2xl {
     font-size: var(--font-size-2xl);
+  }
+  .text-3xl {
+    font-size: var(--font-size-3xl);
+  }
+  .text-4xl {
+    font-size: var(--font-size-4xl);
+  }
+  .text-5xl {
+    font-size: var(--font-size-5xl);
+  }
+  
+  /* Font weight utilities */
+  .font-light {
+    font-weight: var(--font-weight-light);
+  }
+  .font-normal {
+    font-weight: var(--font-weight-normal);
+  }
+  .font-medium {
+    font-weight: var(--font-weight-medium);
+  }
+  .font-semibold {
+    font-weight: var(--font-weight-semibold);
+  }
+  
+  /* Line height utilities */
+  .leading-tight {
+    line-height: var(--line-height-tight);
+  }
+  .leading-normal {
+    line-height: var(--line-height-normal);
+  }
+  .leading-relaxed {
+    line-height: var(--line-height-relaxed);
+  }
+  .leading-loose {
+    line-height: var(--line-height-loose);
+  }
+  
+  /* Letter spacing utilities */
+  .tracking-tight {
+    letter-spacing: var(--letter-spacing-tight);
+  }
+  .tracking-normal {
+    letter-spacing: var(--letter-spacing-normal);
+  }
+  .tracking-wide {
+    letter-spacing: var(--letter-spacing-wide);
+  }
+  .tracking-wider {
+    letter-spacing: var(--letter-spacing-wider);
+  }
+  .tracking-widest {
+    letter-spacing: var(--letter-spacing-widest);
   }
   
   /* Skip to content link for keyboard users */
@@ -452,4 +595,101 @@
     --background: 160 15% 8%;
     --foreground: 40 20% 92%;
   }
+}
+
+/* Zen-like spacing utilities for enhanced breathing room */
+.space-zen-xs {
+  @apply space-y-6;
+}
+
+.space-zen-sm {
+  @apply space-y-8;
+}
+
+.space-zen-md {
+  @apply space-y-12;
+}
+
+.space-zen-lg {
+  @apply space-y-16;
+}
+
+.space-zen-xl {
+  @apply space-y-20;
+}
+
+.space-zen-2xl {
+  @apply space-y-24;
+}
+
+.space-zen-3xl {
+  @apply space-y-32;
+}
+
+/* Generous padding utilities for breathing room */
+.p-zen-sm {
+  @apply p-8;
+}
+
+.p-zen-md {
+  @apply p-12;
+}
+
+.p-zen-lg {
+  @apply p-16;
+}
+
+.p-zen-xl {
+  @apply p-20;
+}
+
+.p-zen-2xl {
+  @apply p-24;
+}
+
+/* Generous margin utilities */
+.m-zen-sm {
+  @apply m-8;
+}
+
+.m-zen-md {
+  @apply m-12;
+}
+
+.m-zen-lg {
+  @apply m-16;
+}
+
+.m-zen-xl {
+  @apply m-20;
+}
+
+.m-zen-2xl {
+  @apply m-24;
+}
+
+/* Container spacing for zen layouts */
+.container-zen {
+  @apply max-w-6xl mx-auto px-8 sm:px-12 lg:px-16;
+}
+
+.container-zen-narrow {
+  @apply max-w-4xl mx-auto px-8 sm:px-12 lg:px-16;
+}
+
+.container-zen-wide {
+  @apply max-w-7xl mx-auto px-8 sm:px-12 lg:px-20;
+}
+
+/* Section spacing for zen layouts */
+.section-zen {
+  @apply py-16 sm:py-20 lg:py-24;
+}
+
+.section-zen-lg {
+  @apply py-20 sm:py-24 lg:py-32;
+}
+
+.section-zen-xl {
+  @apply py-24 sm:py-32 lg:py-40;
 }

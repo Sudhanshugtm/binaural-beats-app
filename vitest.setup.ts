@@ -1,5 +1,5 @@
 // ABOUTME: Vitest setup file for testing environment configuration
-// ABOUTME: Provides global test utilities and mocks for localStorage
+// ABOUTME: Provides global test utilities and mocks for localStorage, ResizeObserver, and other browser APIs
 
 import { vi } from 'vitest';
 import '@testing-library/jest-dom';
@@ -25,6 +25,20 @@ const localStorageMock = (() => {
 Object.defineProperty(global, 'localStorage', {
   value: localStorageMock,
 });
+
+// Mock ResizeObserver for Radix UI components
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
+// Mock IntersectionObserver for animations
+global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
 
 // Reset localStorage before each test
 beforeEach(() => {

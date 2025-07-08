@@ -191,8 +191,8 @@ export function AudioControls({ audioEngine, isPlaying, onSettingsChange }: Audi
               <Label className="mb-2 block">Background Noise</Label>
               <Select
                 value={settings.backgroundNoise || 'none'}
-                onValueChange={(value: AudioSettings['backgroundNoise']) => 
-                  updateSetting('backgroundNoise', value)
+                onValueChange={(value) => 
+                  updateSetting('backgroundNoise', value as AudioSettings['backgroundNoise'])
                 }
               >
                 <SelectTrigger>

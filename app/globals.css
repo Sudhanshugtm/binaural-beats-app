@@ -32,7 +32,7 @@
     
     /* Subtle muted colors for backgrounds */
     --muted: 40 15% 94%; /* Very light warm neutral */
-    --muted-foreground: 20 10% 45%; /* Calming muted text */
+    --muted-foreground: 20 15% 35%; /* Darker for better readability */
     
     /* Soft accent colors */
     --accent: 160 20% 85%; /* Soft seafoam green */
@@ -98,7 +98,7 @@
     
     /* Subtle muted colors for dark mode */
     --muted: 160 10% 15%; /* Muted dark green */
-    --muted-foreground: 40 15% 65%; /* Calming lighter muted text */
+    --muted-foreground: 40 15% 75%; /* Brighter for better readability */
     
     /* Soft accent for dark mode */
     --accent: 160 15% 18%; /* Soft dark green accent */

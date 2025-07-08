@@ -536,9 +536,9 @@ export default function ProductivityBinauralPlayer() {
                   >
                     <div className="text-center space-zen-sm">
                       <div className="text-5xl mb-8 transition-transform group-hover:scale-110 duration-500" role="img" aria-label={mode.name}>{mode.icon}</div>
-                      <h3 className="font-heading font-light text-xl text-foreground mb-6 tracking-wide leading-tight">{mode.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-8 font-light leading-relaxed px-2 tracking-wide">{mode.description}</p>
-                      <div className="text-xs text-muted-foreground/80 font-light bg-muted/50 py-3 px-6 rounded-full inline-block tracking-wide">{mode.duration} minutes of practice</div>
+                      <h3 className="font-heading font-medium text-xl text-foreground mb-6 tracking-wide leading-tight">{mode.name}</h3>
+                      <p className="text-sm text-foreground/70 mb-8 font-normal leading-relaxed px-2 tracking-wide">{mode.description}</p>
+                      <div className="text-xs text-foreground/60 font-medium bg-muted/50 py-3 px-6 rounded-full inline-block tracking-wide">{mode.duration} minutes of practice</div>
                     </div>
                   </Card>
                 ))}
@@ -558,8 +558,8 @@ export default function ProductivityBinauralPlayer() {
               <div className="text-center mb-8">
                 <div className="mb-6">
                   <div className="text-4xl mb-4">{selectedMode.icon}</div>
-                  <h2 className="font-heading text-xl font-light text-foreground mb-4 tracking-wide leading-tight">{selectedMode.name}</h2>
-                  <p className="text-muted-foreground font-light leading-relaxed tracking-wide px-4">{selectedMode.description}</p>
+                  <h2 className="font-heading text-xl font-medium text-foreground mb-4 tracking-wide leading-tight">{selectedMode.name}</h2>
+                  <p className="text-foreground/80 font-normal leading-relaxed tracking-wide px-4">{selectedMode.description}</p>
                 </div>
                 
                 {/* Audio Visualization */}
@@ -584,7 +584,7 @@ export default function ProductivityBinauralPlayer() {
                        aria-live="polite">
                     {formatTime(timeRemaining)}
                   </div>
-                  <p className="text-lg text-muted-foreground font-light tracking-wide px-4">
+                  <p className="text-lg text-foreground/70 font-normal tracking-wide px-4">
                     {isPlaying ? 'Practice session in progress' : 'Take a breath and begin'}
                   </p>
                 </div>

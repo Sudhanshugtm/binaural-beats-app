@@ -23,7 +23,7 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-morning-dew ambient-bg flex items-center justify-center relative">
+      <div className="min-h-screen bg-morning-dew ambient-bg flex items-center justify-center relative mobile-safe-area">
         <AmbientFloatingElements 
           density="minimal" 
           isPlaying={false}
@@ -35,7 +35,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-forest-mist ambient-bg serene-overlay relative overflow-hidden">
+    <div className="min-h-screen bg-forest-mist ambient-bg serene-overlay relative overflow-hidden mobile-safe-area">
       {/* Gentle animated background */}
       <ParticleSystem
         isPlaying={true}
@@ -53,7 +53,7 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-8 sm:px-12 lg:px-16">
-        <div className="container-zen-narrow text-center space-zen-3xl">
+        <div className="container-zen-narrow text-center space-zen-3xl pt-8">
           
           {/* Welcome Section */}
           <div className="space-zen-xl">

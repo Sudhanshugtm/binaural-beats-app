@@ -22,12 +22,26 @@ export interface Goal {
   type: 'daily' | 'weekly' | 'monthly';
   target: number;
   current: number;
-  unit: 'minutes' | 'sessions';
+  unit: 'minutes' | 'sessions' | 'streak';
   createdAt: number;
   description: string;
 }
 
-export interface UserGoal extends Goal {}
+export interface UserGoal extends Goal {
+  startDate?: Date;
+  endDate?: Date;
+  isActive?: boolean;
+  completed?: boolean;
+  completedAt?: Date;
+  insights?: {
+    efficiency?: number;
+    consistency?: number;
+    trajectory?: string;
+    onTrack?: boolean;
+    daysRemaining?: number;
+    recommendation?: string;
+  };
+}
 
 export interface WeeklyReport {
   totalSessions: number;

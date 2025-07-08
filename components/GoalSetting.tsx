@@ -26,7 +26,7 @@ import {
   Clock,
   Zap
 } from 'lucide-react';
-import { AnalyticsEngine, UserGoal } from '@/lib/analytics';
+import { AnalyticsService, UserGoal } from '@/lib/analytics';
 
 interface GoalFormData {
   type: 'daily' | 'weekly' | 'monthly';
@@ -88,9 +88,8 @@ const GOAL_TEMPLATES: GoalTemplate[] = [
 ];
 
 export default function GoalSetting() {
-  const [analytics] = useState(() => new AnalyticsEngine());
   const [goals, setGoals] = useState<UserGoal[]>([]);
-  const [goalProgress, setGoalProgress] = useState(analytics.getGoalProgress());
+  const [goalProgress, setGoalProgress] = useState<Record<string, number>>({});
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<UserGoal | null>(null);
@@ -120,13 +119,19 @@ export default function GoalSetting() {
 
   useEffect(() => {
     loadGoals();
-  }, [analytics]);
+  }, []);
 
   const loadGoals = () => {
     try {
-      const allGoals = analytics.getGoals();
-      setGoals(allGoals);
-      setGoalProgress(analytics.getGoalProgress());
+      const analyticsData = AnalyticsService.getData();
+      setGoals(analyticsData.goals || []);
+      
+      // Calculate goal progress
+      const progress: Record<string, number> = {};
+      (analyticsData.goals || []).forEach(goal => {
+        progress[goal.id] = goal.current || 0;
+      });
+      setGoalProgress(progress);
       setError(null);
     } catch (err) {
       setError('Unable to load goals');
@@ -178,12 +183,13 @@ export default function GoalSetting() {
         current: 0,
         unit: formData.unit,
         description: formData.description,
+        createdAt: Date.now(),
         startDate: new Date(),
         endDate: getGoalEndDate(formData.type),
         isActive: true
       };
 
-      analytics.setGoal(newGoal);
+      AnalyticsService.createGoal(newGoal);
       loadGoals();
       setIsCreateModalOpen(false);
       resetForm();
@@ -203,7 +209,7 @@ export default function GoalSetting() {
     }
 
     try {
-      analytics.updateGoal(editingGoal.id, {
+      AnalyticsService.updateGoal(editingGoal.id, {
         target: Number(formData.target),
         description: formData.description
       });
@@ -220,7 +226,7 @@ export default function GoalSetting() {
     if (!deletingGoal) return;
 
     try {
-      analytics.deleteGoal(deletingGoal.id);
+      AnalyticsService.deleteGoal(deletingGoal.id);
       loadGoals();
       setDeletingGoal(null);
     } catch (err) {
@@ -236,13 +242,14 @@ export default function GoalSetting() {
       current: 0,
       unit: template.unit,
       description: template.description,
+      createdAt: Date.now(),
       startDate: new Date(),
       endDate: getGoalEndDate(template.type),
       isActive: true
     };
 
     try {
-      analytics.setGoal(newGoal);
+      AnalyticsService.createGoal(newGoal);
       loadGoals();
       setIsTemplateModalOpen(false);
     } catch (err) {
@@ -566,7 +573,7 @@ export default function GoalSetting() {
 
                         {goal.insights && (
                           <Alert className={goal.insights.onTrack ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}>
-                            <AlertDescription className={getInsightColor(goal.insights.onTrack)}>
+                            <AlertDescription className={getInsightColor(goal.insights.onTrack ?? false)}>
                               <div className="flex items-center gap-2">
                                 <Badge 
                                   variant={goal.insights.onTrack ? 'default' : 'destructive'}

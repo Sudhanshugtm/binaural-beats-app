@@ -204,14 +204,14 @@ export default function WebGLVisualizer({
     if (!canvas) return false;
 
     try {
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      const gl = (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null;
       if (!gl) {
         setIsWebGLSupported(false);
         return false;
       }
 
-      glRef.current = gl as WebGLRenderingContext;
-      const program = createProgram(gl as WebGLRenderingContext);
+      glRef.current = gl;
+      const program = createProgram(gl);
       if (!program) return false;
 
       programRef.current = program;

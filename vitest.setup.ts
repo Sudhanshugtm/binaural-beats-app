@@ -1,4 +1,7 @@
+/// <reference types="vitest" />
 // ABOUTME: Vitest setup file for testing environment configuration
+// Provides global test utilities and mocks for localStorage, ResizeObserver, and other browser APIs
+import { beforeEach } from 'vitest';
 // ABOUTME: Provides global test utilities and mocks for localStorage, ResizeObserver, and other browser APIs
 
 import { vi } from 'vitest';

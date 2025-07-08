@@ -127,10 +127,12 @@ export function analyzeUsagePatterns(): UsagePatterns {
   });
   
   // Find most used mode
-  const mostUsedMode = Object.entries(totalUsageByMode).reduce(
-    (max, [mode, usage]) => usage > (totalUsageByMode[max as ModeType] || 0) ? mode : max,
-    null
-  ) as ModeType | null;
+  const mostUsedMode = (Object.entries(totalUsageByMode) as [ModeType, number][])
+    .reduce<ModeType | null>(
+      (max, [mode, usage]) =>
+        usage > (totalUsageByMode[max as ModeType] || 0) ? mode : max,
+      null
+    );
   
   // Calculate average session duration
   const totalDuration = usageData.reduce((sum, entry) => sum + entry.duration, 0);
@@ -146,10 +148,12 @@ export function analyzeUsagePatterns(): UsagePatterns {
       timeCounts[time] = (timeCounts[time] || 0) + 1;
     });
     
-    const preferredTime = Object.entries(timeCounts).reduce(
-      (max, [time, count]) => count > (timeCounts[max as TimeOfDay] || 0) ? time : max,
-      'morning'
-    ) as TimeOfDay;
+    const preferredTime = (Object.entries(timeCounts) as [TimeOfDay, number][]) // keys are TimeOfDay
+      .reduce<TimeOfDay>(
+        (max, [time, count]) =>
+          count > (timeCounts[max] || 0) ? time : max,
+        'morning'
+      );
     
     preferredTimeByMode[mode as ModeType] = preferredTime;
   });

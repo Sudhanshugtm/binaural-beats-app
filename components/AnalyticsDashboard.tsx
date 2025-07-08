@@ -19,10 +19,15 @@ interface AnalyticsDashboardProps {
 export function AnalyticsDashboard({ className }: AnalyticsDashboardProps) {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [showGoalForm, setShowGoalForm] = useState(false);
-  const [goalForm, setGoalForm] = useState({
-    type: 'daily' as const,
+  const [goalForm, setGoalForm] = useState<{
+    type: 'daily' | 'weekly' | 'monthly';
+    target: number;
+    unit: 'minutes';
+    description: string;
+  }>({
+    type: 'daily',
     target: 60,
-    unit: 'minutes' as const,
+    unit: 'minutes',
     description: ''
   });
 

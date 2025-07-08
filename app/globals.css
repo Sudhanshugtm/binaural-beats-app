@@ -14,25 +14,38 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 256 90% 45%; /* Improved contrast purple */
-    --primary-foreground: 0 0% 100%; /* Pure white for contrast */
-    --secondary: 210 40% 90%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 40% 30%; /* Darker for better contrast */
-    --accent: 210 40% 90%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 80%; /* Darker border for visibility */
-    --input: 214.3 31.8% 80%;
-    --ring: 256 90% 45%;
+    /* Nature-inspired calming backgrounds */
+    --background: 40 20% 98%; /* Soft warm white with beige undertones */
+    --foreground: 20 15% 15%; /* Deep warm charcoal for readability */
+    --card: 45 25% 96%; /* Warm off-white cards */
+    --card-foreground: 20 15% 15%;
+    --popover: 45 25% 96%;
+    --popover-foreground: 20 15% 15%;
+    
+    /* Calming sage green as primary - evokes nature and tranquility */
+    --primary: 140 30% 35%; /* Muted sage green */
+    --primary-foreground: 40 20% 98%; /* Soft warm white for contrast */
+    
+    /* Earthy secondary colors */
+    --secondary: 35 25% 88%; /* Soft warm beige */
+    --secondary-foreground: 20 15% 25%;
+    
+    /* Subtle muted colors for backgrounds */
+    --muted: 40 15% 94%; /* Very light warm neutral */
+    --muted-foreground: 20 10% 40%; /* Muted text */
+    
+    /* Soft accent colors */
+    --accent: 160 20% 85%; /* Soft seafoam green */
+    --accent-foreground: 20 15% 25%;
+    
+    /* Gentle destructive colors */
+    --destructive: 10 60% 55%; /* Muted terracotta red */
+    --destructive-foreground: 40 20% 98%;
+    
+    /* Subtle borders and inputs */
+    --border: 40 15% 85%; /* Soft neutral border */
+    --input: 40 15% 90%; /* Light input background */
+    --ring: 140 30% 35%; /* Sage green focus ring */
     --radius: 0.5rem;
     
     /* Font size variables for better accessibility */
@@ -45,25 +58,38 @@
   }
  
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 256 85% 65%; /* Brighter purple for dark mode */
-    --primary-foreground: 0 0% 0%; /* Pure black for contrast */
-    --secondary: 217.2 32.6% 25%; /* Lighter for visibility */
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 25%;
-    --muted-foreground: 215 20.2% 80%; /* Brighter for better contrast */
-    --accent: 217.2 32.6% 25%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 45%; /* Brighter red for visibility */
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 30%; /* Lighter border for visibility */
-    --input: 217.2 32.6% 30%;
-    --ring: 256 85% 65%;
+    /* Deep forest-inspired dark backgrounds */
+    --background: 160 15% 8%; /* Deep forest green-black */
+    --foreground: 40 20% 92%; /* Warm off-white for readability */
+    --card: 160 12% 12%; /* Slightly lighter forest tone */
+    --card-foreground: 40 20% 92%;
+    --popover: 160 12% 12%;
+    --popover-foreground: 40 20% 92%;
+    
+    /* Gentle sage green for dark mode */
+    --primary: 140 25% 55%; /* Lighter sage green for visibility */
+    --primary-foreground: 160 15% 8%; /* Dark background for contrast */
+    
+    /* Warm earth tones for secondary */
+    --secondary: 35 15% 18%; /* Dark warm brown */
+    --secondary-foreground: 40 20% 85%;
+    
+    /* Subtle muted colors for dark mode */
+    --muted: 160 10% 15%; /* Muted dark green */
+    --muted-foreground: 40 15% 70%; /* Lighter muted text */
+    
+    /* Soft accent for dark mode */
+    --accent: 160 15% 18%; /* Soft dark green accent */
+    --accent-foreground: 40 20% 85%;
+    
+    /* Muted destructive for dark mode */
+    --destructive: 10 45% 50%; /* Softer terracotta red */
+    --destructive-foreground: 40 20% 92%;
+    
+    /* Subtle borders for dark mode */
+    --border: 160 10% 20%; /* Subtle green-tinted border */
+    --input: 160 10% 18%; /* Dark input background */
+    --ring: 140 25% 55%; /* Sage green focus ring */
   }
   
   /* High contrast theme for accessibility */
@@ -74,19 +100,19 @@
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
-    --primary: 270 100% 40%;
+    --primary: 140 100% 25%; /* High contrast sage green */
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 90%;
     --secondary-foreground: 0 0% 0%;
     --muted: 0 0% 85%;
     --muted-foreground: 0 0% 0%;
-    --accent: 270 100% 40%;
+    --accent: 140 100% 25%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 100% 45%;
+    --destructive: 0 100% 35%; /* High contrast terracotta */
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 40%;
     --input: 0 0% 80%;
-    --ring: 270 100% 40%;
+    --ring: 140 100% 25%;
   }
 }
 
@@ -134,23 +160,30 @@
 .slider-thumb::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 28px; /* Larger for better touch target */
-  height: 28px; /* Larger for better touch target */
+  width: 32px; /* Larger for better touch target on mobile */
+  height: 32px; /* Larger for better touch target on mobile */
   background: hsl(var(--primary));
   cursor: pointer;
   border-radius: 50%;
-  border: 2px solid white; /* Border for better visibility */
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Shadow for depth and visibility */
+  border: 3px solid white; /* Thicker border for better visibility */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth and visibility */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slider-thumb::-webkit-slider-thumb:active {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .slider-thumb::-moz-range-thumb {
-  width: 28px; /* Larger for better touch target */
-  height: 28px; /* Larger for better touch target */
+  width: 32px; /* Larger for better touch target on mobile */
+  height: 32px; /* Larger for better touch target on mobile */
   background: hsl(var(--primary));
   cursor: pointer;
   border-radius: 50%;
-  border: 2px solid white; /* Border for better visibility */
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Shadow for depth and visibility */
+  border: 3px solid white; /* Thicker border for better visibility */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth and visibility */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Focus styles for slider */
@@ -185,8 +218,8 @@
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
-  50% { box-shadow: 0 0 30px rgba(168, 85, 247, 0.8), 0 0 60px rgba(168, 85, 247, 0.4); }
+  0%, 100% { box-shadow: 0 0 10px rgba(115, 148, 120, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(115, 148, 120, 0.8), 0 0 60px rgba(115, 148, 120, 0.4); }
 }
 
 @keyframes wave {
@@ -254,14 +287,14 @@
 
 /* Gradient text effects */
 .gradient-text {
-  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(45deg, #73947a 0%, #8b7355 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-vibrant {
-  background: linear-gradient(45deg, #a855f7, #ec4899, #06b6d4);
+  background: linear-gradient(45deg, #73947a, #9bb5a0, #b8c5a6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -353,12 +386,31 @@
   .touch-target {
     min-height: 44px;
     min-width: 44px;
+    touch-action: manipulation; /* Prevents zoom on double-tap */
   }
   
   /* Better mobile typography */
   .mobile-text {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%; /* Prevents automatic text resizing */
+  }
+  
+  /* Mobile-specific improvements */
+  body {
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+    touch-action: manipulation; /* Prevent zoom on buttons */
+  }
+  
+  /* Better spacing for mobile */
+  .space-y-8 > * + * {
+    margin-top: 1.5rem; /* Reduce from 2rem to 1.5rem on mobile */
+  }
+  
+  /* Mobile button improvements */
+  button, .btn, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 }
 
@@ -397,7 +449,7 @@
 /* Dark mode preferences */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 160 15% 8%;
+    --foreground: 40 20% 92%;
   }
 }

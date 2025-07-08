@@ -1,5 +1,5 @@
 // ABOUTME: RecommendationsCard component for displaying personalized binaural beat mode suggestions
-// ABOUTME: Shows time-based and usage-pattern recommendations with confidence indicators
+// ABOUTME: Shows time-based and usage-pattern recommendations based on user preferences
 
 'use client';
 
@@ -63,112 +63,64 @@ export function RecommendationsCard({ onModeSelect }: RecommendationsCardProps) 
     loadRecommendations();
   };
 
-  const getConfidenceStyle = (confidence: number) => {
-    if (confidence >= 0.8) {
-      return 'border-blue-500 bg-blue-50 dark:bg-blue-950';
-    } else if (confidence >= 0.6) {
-      return 'border-green-500 bg-green-50 dark:bg-green-950';
-    } else {
-      return 'border-gray-300 bg-gray-50 dark:bg-gray-800';
-    }
-  };
 
-  const getConfidenceIndicator = (confidence: number) => {
-    const percentage = Math.round(confidence * 100);
-    const dots = Math.round(confidence * 3);
-    
-    return (
-      <div className="flex items-center gap-1">
-        <div className="flex gap-1">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className={`w-2 h-2 rounded-full ${
-                i <= dots ? 'bg-blue-500' : 'bg-gray-300'
-              }`}
-            />
-          ))}
-        </div>
-        <span className="text-xs text-gray-500">{percentage}%</span>
-      </div>
-    );
-  };
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Recommended for You
-          </h3>
-          <RefreshCw className="w-4 h-4 text-gray-400 animate-spin" />
+      <div className="">
+        <div className="flex items-center justify-center py-8">
+          <RefreshCw className="w-6 h-6 text-blue-600 animate-spin" />
         </div>
-        <p className="text-gray-600 dark:text-gray-300">Loading recommendations...</p>
+        <p className="text-center text-gray-600">Finding your perfect focus mode...</p>
       </div>
     );
   }
 
   if (recommendations.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Recommended for You
-          </h3>
+      <div className="">
+        <div className="text-center py-8">
+          <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-600">No recommendations available</p>
           <button
             onClick={handleRefresh}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            aria-label="Refresh recommendations"
+            className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
           >
-            <RefreshCw className="w-4 h-4 text-gray-500" />
+            Try Again
           </button>
         </div>
-        <p className="text-gray-600 dark:text-gray-300">No recommendations available</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
+    <div className="">
       <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Recommended for You
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            Based on your preferences and time of day
-          </p>
-        </div>
         <button
           onClick={handleRefresh}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+          className="p-2 hover:bg-blue-100 rounded-lg transition-colors ml-auto"
           aria-label="Refresh recommendations"
         >
-          <RefreshCw className="w-4 h-4 text-gray-500" />
+          <RefreshCw className="w-4 h-4 text-blue-600" />
         </button>
       </div>
 
       <div className="space-y-3">
-        {recommendations.map((recommendation, index) => (
+        {recommendations.slice(0, 3).map((recommendation, index) => (
           <button
             key={`${recommendation.mode}-${index}`}
             onClick={() => handleModeSelect(recommendation.mode)}
-            className={`w-full p-4 rounded-lg border-2 transition-all duration-200 hover:scale-105 hover:shadow-md ${getConfidenceStyle(
-              recommendation.confidence
-            )}`}
+            className={`w-full p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-300 bg-gray-50 hover:border-blue-500 hover:bg-blue-50 ${index === 0 ? 'border-blue-500 bg-blue-50 shadow-md' : ''}`}
           >
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 text-blue-600 dark:text-blue-400">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 text-blue-600">
                 {modeIcons[recommendation.mode]}
               </div>
               <div className="flex-1 text-left">
-                <div className="flex items-center justify-between mb-1">
-                  <h4 className="font-medium text-gray-900 dark:text-white">
-                    {modeLabels[recommendation.mode]}
-                  </h4>
-                  {getConfidenceIndicator(recommendation.confidence)}
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
+                <h4 className="font-bold text-gray-900 mb-1">
+                  {modeLabels[recommendation.mode]}
+                </h4>
+                <p className="text-sm text-gray-600 leading-relaxed">
                   {recommendation.reason}
                 </p>
               </div>
@@ -177,11 +129,16 @@ export function RecommendationsCard({ onModeSelect }: RecommendationsCardProps) 
         ))}
       </div>
 
-      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          Recommendations update based on your usage patterns and time of day
-        </p>
-      </div>
+      {recommendations.length > 0 && (
+        <div className="mt-4 text-center">
+          <button
+            onClick={() => handleModeSelect(recommendations[0].mode)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            Start Recommended Session
+          </button>
+        </div>
+      )}
     </div>
   );
 }

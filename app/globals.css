@@ -16,11 +16,11 @@
   :root {
     /* Nature-inspired calming backgrounds */
     --background: 40 20% 98%; /* Soft warm white with beige undertones */
-    --foreground: 20 15% 20%; /* Softened warm charcoal for peaceful reading */
+    --foreground: 20 20% 15%; /* Much darker for better readability */
     --card: 45 25% 96%; /* Warm off-white cards */
-    --card-foreground: 20 15% 20%;
+    --card-foreground: 20 20% 15%; /* Much darker for better readability */
     --popover: 45 25% 96%;
-    --popover-foreground: 20 15% 20%;
+    --popover-foreground: 20 20% 15%;
     
     /* Calming sage green as primary - evokes nature and tranquility */
     --primary: 140 30% 35%; /* Muted sage green */
@@ -32,7 +32,7 @@
     
     /* Subtle muted colors for backgrounds */
     --muted: 40 15% 94%; /* Very light warm neutral */
-    --muted-foreground: 20 15% 35%; /* Darker for better readability */
+    --muted-foreground: 20 20% 20%; /* Much darker for proper contrast */
     
     /* Soft accent colors */
     --accent: 160 20% 85%; /* Soft seafoam green */

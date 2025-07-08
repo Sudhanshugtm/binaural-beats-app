@@ -58,13 +58,13 @@ export default function Home() {
           {/* Welcome Section */}
           <div className="space-zen-xl">
             <div className="space-zen-lg">
-              <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-light text-foreground/90 leading-tight tracking-wide mb-12">
+              <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-semibold text-gray-800 leading-tight tracking-wide mb-12">
                 Welcome to Your
                 <br />
-                <span className="text-muted-foreground">Mindful Practice</span>
+                <span className="text-gray-700">Mindful Practice</span>
               </h1>
               
-              <p className="text-xl sm:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed tracking-wide">
+              <p className="text-xl sm:text-2xl text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide">
                 Take a breath. Find your center. Let the gentle sounds guide you to clarity.
               </p>
             </div>
@@ -83,7 +83,7 @@ export default function Home() {
               Begin Your Practice
             </Button>
             
-            <p className="text-muted-foreground text-sm font-light tracking-wide mt-6">
+            <p className="text-gray-600 text-sm font-medium tracking-wide mt-6">
               No distractions. No pressure. Just you and the sounds.
             </p>
           </div>
@@ -94,24 +94,24 @@ export default function Home() {
               <div className="w-20 h-20 mx-auto bg-accent rounded-full flex items-center justify-center mb-8">
                 <Headphones className="w-10 h-10 text-accent-foreground/70" />
               </div>
-              <h3 className="font-heading text-lg font-light text-foreground tracking-wide mb-4">Pure Audio</h3>
-              <p className="text-sm text-muted-foreground font-light leading-relaxed px-4">Clean, calming binaural beats</p>
+              <h3 className="font-heading text-lg font-semibold text-gray-800 tracking-wide mb-4">Pure Audio</h3>
+              <p className="text-sm text-gray-600 font-medium leading-relaxed px-4">Clean, calming binaural beats</p>
             </div>
             
             <div className="text-center space-zen-sm">
               <div className="w-20 h-20 mx-auto bg-secondary rounded-full flex items-center justify-center mb-8">
                 <Heart className="w-10 h-10 text-secondary-foreground/70" />
               </div>
-              <h3 className="font-heading text-lg font-light text-foreground tracking-wide mb-4">Gentle Approach</h3>
-              <p className="text-sm text-muted-foreground font-light leading-relaxed px-4">Designed for peaceful focus</p>
+              <h3 className="font-heading text-lg font-semibold text-gray-800 tracking-wide mb-4">Gentle Approach</h3>
+              <p className="text-sm text-gray-600 font-medium leading-relaxed px-4">Designed for peaceful focus</p>
             </div>
             
             <div className="text-center space-zen-sm">
               <div className="w-20 h-20 mx-auto bg-muted rounded-full flex items-center justify-center mb-8">
-                <Play className="w-10 h-10 text-muted-foreground/70" />
+                <Play className="w-10 h-10 text-gray-600" />
               </div>
-              <h3 className="font-heading text-lg font-light text-foreground tracking-wide mb-4">Instant Access</h3>
-              <p className="text-sm text-muted-foreground font-light leading-relaxed px-4">Start whenever you're ready</p>
+              <h3 className="font-heading text-lg font-semibold text-gray-800 tracking-wide mb-4">Instant Access</h3>
+              <p className="text-sm text-gray-600 font-medium leading-relaxed px-4">Start whenever you're ready</p>
             </div>
           </div>
         </div>

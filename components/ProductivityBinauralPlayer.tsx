@@ -503,10 +503,10 @@ export default function ProductivityBinauralPlayer() {
           <div className="space-zen-3xl">
             {/* Gentle Welcome */}
             <div className="text-center py-8">
-              <h1 className="font-heading text-3xl md:text-4xl font-light text-foreground mb-8 tracking-wide leading-tight">
+              <h1 className="font-heading text-3xl md:text-4xl font-semibold text-gray-800 mb-8 tracking-wide leading-tight">
                 Choose Your Practice
               </h1>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed tracking-wide">
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide">
                 Select a mindful practice to cultivate your inner awareness
               </p>
             </div>
@@ -514,8 +514,8 @@ export default function ProductivityBinauralPlayer() {
             {/* Mindfulness Practices */}
             <div className="space-zen-2xl">
               <div className="text-center mb-20">
-                <h2 className="font-heading text-xl font-light text-muted-foreground mb-8 tracking-wide">Mindfulness Practices</h2>
-                <div className="w-20 h-0.5 bg-border mx-auto"></div>
+                <h2 className="font-heading text-xl font-semibold text-gray-700 mb-8 tracking-wide">Mindfulness Practices</h2>
+                <div className="w-20 h-0.5 bg-gray-300 mx-auto"></div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
@@ -536,9 +536,9 @@ export default function ProductivityBinauralPlayer() {
                   >
                     <div className="text-center space-zen-sm">
                       <div className="text-5xl mb-8 transition-transform group-hover:scale-110 duration-500" role="img" aria-label={mode.name}>{mode.icon}</div>
-                      <h3 className="font-heading font-medium text-xl text-foreground mb-6 tracking-wide leading-tight">{mode.name}</h3>
-                      <p className="text-sm text-foreground/70 mb-8 font-normal leading-relaxed px-2 tracking-wide">{mode.description}</p>
-                      <div className="text-xs text-foreground/60 font-medium bg-muted/50 py-3 px-6 rounded-full inline-block tracking-wide">{mode.duration} minutes of practice</div>
+                      <h3 className="font-heading font-semibold text-xl text-gray-800 mb-6 tracking-wide leading-tight">{mode.name}</h3>
+                      <p className="text-sm text-gray-600 mb-8 font-medium leading-relaxed px-2 tracking-wide">{mode.description}</p>
+                      <div className="text-xs text-gray-700 font-semibold bg-white/80 py-3 px-6 rounded-full inline-block tracking-wide border border-gray-200">{mode.duration} minutes of practice</div>
                     </div>
                   </Card>
                 ))}
@@ -558,8 +558,8 @@ export default function ProductivityBinauralPlayer() {
               <div className="text-center mb-8">
                 <div className="mb-6">
                   <div className="text-4xl mb-4">{selectedMode.icon}</div>
-                  <h2 className="font-heading text-xl font-medium text-foreground mb-4 tracking-wide leading-tight">{selectedMode.name}</h2>
-                  <p className="text-foreground/80 font-normal leading-relaxed tracking-wide px-4">{selectedMode.description}</p>
+                  <h2 className="font-heading text-xl font-semibold text-gray-800 mb-4 tracking-wide leading-tight">{selectedMode.name}</h2>
+                  <p className="text-gray-600 font-medium leading-relaxed tracking-wide px-4">{selectedMode.description}</p>
                 </div>
                 
                 {/* Audio Visualization */}
@@ -579,12 +579,12 @@ export default function ProductivityBinauralPlayer() {
               {/* Timer Display - Central Focus */}
               <div className="text-center mb-8">
                 <div className="relative mb-6">
-                  <div className="font-mono text-6xl font-normal text-foreground/90 mb-4 tracking-wide leading-none tabular-nums drop-shadow-sm" 
+                  <div className="font-mono text-6xl font-semibold text-gray-800 mb-4 tracking-wide leading-none tabular-nums drop-shadow-sm" 
                        style={{ fontVariantNumeric: 'tabular-nums' }}
                        aria-live="polite">
                     {formatTime(timeRemaining)}
                   </div>
-                  <p className="text-lg text-foreground/70 font-normal tracking-wide px-4">
+                  <p className="text-lg text-gray-600 font-medium tracking-wide px-4">
                     {isPlaying ? 'Practice session in progress' : 'Take a breath and begin'}
                   </p>
                 </div>

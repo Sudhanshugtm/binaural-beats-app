@@ -522,7 +522,7 @@ export default function ProductivityBinauralPlayer() {
                 {WORK_MODES.map((mode) => (
                   <Card
                     key={mode.id}
-                    className="group p-12 cursor-pointer card-micro glow-subtle card-focus border-0 shadow-none hover:shadow-lg bg-gradient-to-br from-background/90 to-accent/60 hover:from-background/95 hover:to-accent/80 backdrop-blur-sm rounded-3xl touch-target relative"
+                    className="group p-8 cursor-pointer card-micro glow-subtle card-focus bg-white hover:bg-gray-50 border-2 border-gray-100 hover:border-primary/30 shadow-md hover:shadow-xl rounded-2xl touch-target relative transition-all duration-300"
                     onClick={() => handleModeSelect(mode)}
                     role="button"
                     tabIndex={0}
@@ -538,7 +538,7 @@ export default function ProductivityBinauralPlayer() {
                       <div className="text-5xl mb-8 transition-transform group-hover:scale-110 duration-500" role="img" aria-label={mode.name}>{mode.icon}</div>
                       <h3 className="font-heading font-semibold text-xl text-gray-800 mb-6 tracking-wide leading-tight">{mode.name}</h3>
                       <p className="text-sm text-gray-600 mb-8 font-medium leading-relaxed px-2 tracking-wide">{mode.description}</p>
-                      <div className="text-xs text-gray-700 font-semibold bg-white/80 py-3 px-6 rounded-full inline-block tracking-wide border border-gray-200">{mode.duration} minutes of practice</div>
+                      <div className="text-xs text-primary-foreground font-semibold bg-primary/90 py-3 px-6 rounded-full inline-block tracking-wide shadow-sm">{mode.duration} minutes of practice</div>
                     </div>
                   </Card>
                 ))}
@@ -549,7 +549,7 @@ export default function ProductivityBinauralPlayer() {
           <div className="container-zen-narrow space-zen-3xl">
             {/* Active Session */}
             <Card 
-              className={`p-8 border-0 shadow-sm bg-white/70 backdrop-blur-sm rounded-3xl ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
+              className={`p-8 bg-white border-2 border-gray-100 shadow-lg rounded-2xl ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}

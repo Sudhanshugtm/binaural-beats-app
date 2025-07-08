@@ -44,8 +44,8 @@ export function Header() {
             <div className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-background to-muted rounded-full shadow-inner">
               <Waves className="w-6 h-6 text-primary" />
             </div>
-            <span className={`text-xl font-light tracking-wider ${
-              isScrolled ? 'text-primary' : 'text-primary-foreground'
+            <span className={`text-xl font-semibold tracking-wider ${
+              isScrolled ? 'text-gray-800' : 'text-white'
             }`}>
               Serenity Soundscapes
             </span>
@@ -57,10 +57,10 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-medium tracking-wide transition-colors duration-200 ${
+                className={`text-sm font-semibold tracking-wide transition-colors duration-200 ${
                   isScrolled 
-                    ? 'text-primary hover:text-primary/80' 
-                    : 'text-primary-foreground hover:text-primary-foreground/80'
+                    ? 'text-gray-800 hover:text-gray-600' 
+                    : 'text-white hover:text-white/80'
                 }`}
               >
                 {item.label}
@@ -75,7 +75,7 @@ export function Header() {
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`p-2 ${
-                isScrolled ? 'text-primary' : 'text-primary-foreground'
+                isScrolled ? 'text-gray-800' : 'text-white'
               }`}
             >
               {isMobileMenuOpen ? (
@@ -98,7 +98,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`block px-4 py-3 text-primary hover:text-primary/80 hover:bg-accent rounded-md transition-all duration-200 hover:translate-x-1 ${
+                className={`block px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 ${
                   isMobileMenuOpen 
                     ? 'translate-x-0 opacity-100' 
                     : 'translate-x-4 opacity-0'

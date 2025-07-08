@@ -22,7 +22,7 @@ export function AnalyticsDashboard({ className }: AnalyticsDashboardProps) {
   const [goalForm, setGoalForm] = useState<{
     type: 'daily' | 'weekly' | 'monthly';
     target: number;
-    unit: 'minutes';
+    unit: 'minutes' | 'sessions';
     description: string;
   }>({
     type: 'daily',

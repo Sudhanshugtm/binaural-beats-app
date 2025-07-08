@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Play, Headphones, Heart } from "lucide-react";
 import ParticleSystem from "@/components/ParticleSystem";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import AmbientFloatingElements from "@/components/AmbientFloatingElements";
 
 export default function Home() {
   const router = useRouter();
@@ -22,20 +23,32 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/30 flex items-center justify-center">
+      <div className="min-h-screen bg-morning-dew ambient-bg flex items-center justify-center relative">
+        <AmbientFloatingElements 
+          density="minimal" 
+          isPlaying={false}
+          className="z-1" 
+        />
         <LoadingSpinner message="Preparing your peaceful session..." variant="audio" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/30 relative overflow-hidden">
+    <div className="min-h-screen bg-forest-mist ambient-bg serene-overlay relative overflow-hidden">
       {/* Gentle animated background */}
       <ParticleSystem
         isPlaying={true}
         beatFrequency={8}
         volume={0.1}
         className="z-0"
+      />
+
+      {/* Dynamic floating nature elements */}
+      <AmbientFloatingElements 
+        density="light" 
+        isPlaying={false}
+        className="z-1" 
       />
 
       {/* Main Content */}

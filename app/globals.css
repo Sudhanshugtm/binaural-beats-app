@@ -566,7 +566,15 @@
   .animate-wave,
   .animate-orbit,
   .animate-ripple,
-  .animate-blob {
+  .animate-blob,
+  .animate-gentle-drift,
+  .animate-leaf-fall,
+  .animate-water-ripple,
+  .animate-gentle-sway,
+  .animate-cloud-drift,
+  .animate-gentle-pulse,
+  .animate-forest-breeze,
+  .animate-zen-bloom {
     animation: none;
   }
   
@@ -576,6 +584,12 @@
   
   .card-hover:hover {
     transform: none;
+  }
+  
+  .ambient-bg::before,
+  .serene-overlay::after,
+  .meditation-focus::before {
+    animation: none;
   }
 }
 
@@ -692,4 +706,296 @@
 
 .section-zen-xl {
   @apply py-24 sm:py-32 lg:py-40;
+}
+
+/* Nature-inspired ambient animations */
+@keyframes gentle-drift {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg); 
+    opacity: 0.3;
+  }
+  25% { 
+    transform: translate(10px, -15px) rotate(2deg); 
+    opacity: 0.6;
+  }
+  50% { 
+    transform: translate(-5px, -25px) rotate(-1deg); 
+    opacity: 0.8;
+  }
+  75% { 
+    transform: translate(-15px, -10px) rotate(1deg); 
+    opacity: 0.4;
+  }
+}
+
+@keyframes leaf-fall {
+  0% { 
+    transform: translateY(-100vh) rotate(0deg); 
+    opacity: 0;
+  }
+  10% { 
+    opacity: 0.6;
+  }
+  90% { 
+    opacity: 0.3;
+  }
+  100% { 
+    transform: translateY(100vh) rotate(360deg); 
+    opacity: 0;
+  }
+}
+
+@keyframes water-ripple {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(20) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes gentle-sway {
+  0%, 100% { 
+    transform: translateX(0) scale(1); 
+  }
+  25% { 
+    transform: translateX(5px) scale(1.02); 
+  }
+  75% { 
+    transform: translateX(-5px) scale(0.98); 
+  }
+}
+
+@keyframes cloud-drift {
+  0% { 
+    transform: translateX(-100vw); 
+    opacity: 0;
+  }
+  10%, 90% { 
+    opacity: 0.3;
+  }
+  100% { 
+    transform: translateX(100vw); 
+    opacity: 0;
+  }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 0.5;
+  }
+  50% { 
+    transform: scale(1.1); 
+    opacity: 0.8;
+  }
+}
+
+@keyframes forest-breeze {
+  0%, 100% { 
+    transform: translateY(0) skewX(0deg); 
+  }
+  25% { 
+    transform: translateY(-2px) skewX(1deg); 
+  }
+  75% { 
+    transform: translateY(2px) skewX(-1deg); 
+  }
+}
+
+@keyframes zen-bloom {
+  0% { 
+    transform: scale(0) rotate(0deg); 
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.2) rotate(180deg); 
+    opacity: 0.6;
+  }
+  100% { 
+    transform: scale(1) rotate(360deg); 
+    opacity: 0.3;
+  }
+}
+
+/* Animation classes */
+.animate-gentle-drift {
+  animation: gentle-drift 20s ease-in-out infinite;
+}
+
+.animate-leaf-fall {
+  animation: leaf-fall 15s linear infinite;
+}
+
+.animate-water-ripple {
+  animation: water-ripple 8s ease-out infinite;
+}
+
+.animate-gentle-sway {
+  animation: gentle-sway 12s ease-in-out infinite;
+}
+
+.animate-cloud-drift {
+  animation: cloud-drift 60s linear infinite;
+}
+
+.animate-gentle-pulse {
+  animation: gentle-pulse 6s ease-in-out infinite;
+}
+
+.animate-forest-breeze {
+  animation: forest-breeze 8s ease-in-out infinite;
+}
+
+.animate-zen-bloom {
+  animation: zen-bloom 10s ease-in-out infinite;
+}
+
+/* Ambient background elements */
+.ambient-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.ambient-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(115, 148, 120, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(160, 180, 140, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(135, 169, 107, 0.06) 0%, transparent 50%);
+  animation: gentle-pulse 15s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-bg-deep {
+  background: 
+    linear-gradient(135deg, 
+      rgba(248, 250, 252, 0.95) 0%,
+      rgba(241, 245, 249, 0.9) 25%,
+      rgba(226, 232, 240, 0.85) 50%,
+      rgba(203, 213, 225, 0.8) 75%,
+      rgba(148, 163, 184, 0.75) 100%
+    );
+}
+
+/* Floating nature elements */
+.floating-element {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floating-leaf {
+  width: 12px;
+  height: 12px;
+  background: rgba(115, 148, 120, 0.4);
+  border-radius: 50% 0 50% 0;
+  transform-origin: center;
+}
+
+.floating-petal {
+  width: 8px;
+  height: 8px;
+  background: rgba(190, 165, 155, 0.3);
+  border-radius: 50% 10px 50% 10px;
+  transform-origin: center;
+}
+
+.floating-particle {
+  width: 4px;
+  height: 4px;
+  background: rgba(135, 169, 107, 0.5);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(135, 169, 107, 0.3);
+}
+
+/* Nature-inspired gradient backgrounds */
+.bg-forest-mist {
+  background: linear-gradient(135deg, 
+    rgba(248, 250, 252, 0.98) 0%,
+    rgba(236, 254, 255, 0.95) 25%,
+    rgba(220, 252, 231, 0.92) 50%,
+    rgba(240, 253, 244, 0.95) 75%,
+    rgba(247, 254, 231, 0.98) 100%
+  );
+}
+
+.bg-morning-dew {
+  background: linear-gradient(45deg,
+    rgba(254, 252, 232, 0.9) 0%,
+    rgba(247, 254, 231, 0.85) 25%,
+    rgba(236, 254, 255, 0.8) 50%,
+    rgba(240, 253, 244, 0.85) 75%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
+}
+
+.bg-gentle-sky {
+  background: linear-gradient(180deg,
+    rgba(240, 249, 255, 0.95) 0%,
+    rgba(224, 242, 254, 0.9) 25%,
+    rgba(186, 230, 253, 0.85) 50%,
+    rgba(147, 197, 253, 0.8) 75%,
+    rgba(96, 165, 250, 0.75) 100%
+  );
+}
+
+/* Serene overlay effects */
+.serene-overlay {
+  position: relative;
+}
+
+.serene-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(135, 169, 107, 0.05) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 1;
+  animation: gentle-sway 20s ease-in-out infinite;
+}
+
+/* Meditation-focused styles */
+.meditation-focus {
+  position: relative;
+  background: radial-gradient(circle at center, 
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.9) 40%,
+    rgba(226, 232, 240, 0.85) 100%
+  );
+}
+
+.meditation-focus::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, 
+    rgba(115, 148, 120, 0.1) 0%,
+    rgba(115, 148, 120, 0.05) 50%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  animation: zen-bloom 12s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
 }

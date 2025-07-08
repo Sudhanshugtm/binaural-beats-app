@@ -84,7 +84,8 @@ export default function ProductivityBinauralPlayer() {
   const [sessionProgress, setSessionProgress] = useState(0);
   const [totalFocusTime, setTotalFocusTime] = useState(127); // minutes today
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
-  
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Elegant auto-fade controls state
   const [controlsVisible, setControlsVisible] = useState(true);
@@ -129,6 +130,47 @@ export default function ProductivityBinauralPlayer() {
   const handleInteraction = () => {
     resetFadeTimer();
   };
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return; // Don't handle shortcuts when typing
+      }
+      
+      switch (e.key) {
+        case ' ':
+          e.preventDefault();
+          if (selectedMode) {
+            togglePlayPause();
+          }
+          break;
+        case 'Escape':
+          if (selectedMode) {
+            stopAudio();
+            setIsPlaying(false);
+            setSelectedMode(null);
+            setTimeRemaining(0);
+            setSessionProgress(0);
+            setControlsVisible(true);
+            exitDeepFocusMode();
+          }
+          break;
+        case 'm':
+        case 'M':
+          if (selectedMode) {
+            toggleMute();
+          }
+          break;
+        case '?':
+          setShowKeyboardShortcuts(!showKeyboardShortcuts);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedMode, showKeyboardShortcuts]);
 
   const handleControlsMouseEnter = () => {
     if (isPlaying) {
@@ -258,10 +300,12 @@ export default function ProductivityBinauralPlayer() {
     if (!selectedMode) return;
 
     if (isPlaying) {
+      setIsLoading(true);
       stopAudio();
       setIsPlaying(false);
       setControlsVisible(true);
       exitDeepFocusMode();
+      setIsLoading(false);
       
       if (sessionStartTime) {
         setSessionStartTime(null);
@@ -275,10 +319,12 @@ export default function ProductivityBinauralPlayer() {
         clearTimeout(deepFocusTimerRef.current);
       }
     } else {
+      setIsLoading(true);
       await startAudio(selectedMode.frequency);
       setIsPlaying(true);
       setSessionStartTime(new Date());
       resetFadeTimer();
+      setIsLoading(false);
       
       // Set up deep focus mode timer (30 seconds for deep work modes)
       if (selectedMode.id === 'deep-work' || selectedMode.id === 'study') {
@@ -476,7 +522,7 @@ export default function ProductivityBinauralPlayer() {
                 {WORK_MODES.map((mode) => (
                   <Card
                     key={mode.id}
-                    className="group p-12 cursor-pointer transition-all duration-700 border-0 shadow-none hover:shadow-lg bg-gradient-to-br from-background/90 to-accent/60 hover:from-background/95 hover:to-accent/80 backdrop-blur-sm rounded-3xl touch-target transform hover:scale-[1.02] relative"
+                    className="group p-12 cursor-pointer card-micro glow-subtle card-focus border-0 shadow-none hover:shadow-lg bg-gradient-to-br from-background/90 to-accent/60 hover:from-background/95 hover:to-accent/80 backdrop-blur-sm rounded-3xl touch-target relative"
                     onClick={() => handleModeSelect(mode)}
                     role="button"
                     tabIndex={0}
@@ -533,7 +579,9 @@ export default function ProductivityBinauralPlayer() {
               {/* Timer Display - Central Focus */}
               <div className="text-center mb-8">
                 <div className="relative mb-6">
-                  <div className="font-heading text-5xl font-light text-foreground/80 mb-4 tracking-wider leading-tight" aria-live="polite">
+                  <div className="font-mono text-6xl font-normal text-foreground/90 mb-4 tracking-wide leading-none tabular-nums drop-shadow-sm" 
+                       style={{ fontVariantNumeric: 'tabular-nums' }}
+                       aria-live="polite">
                     {formatTime(timeRemaining)}
                   </div>
                   <p className="text-lg text-muted-foreground font-light tracking-wide px-4">
@@ -565,7 +613,7 @@ export default function ProductivityBinauralPlayer() {
                     variant="ghost"
                     size="icon"
                     onClick={toggleMute}
-                    className={`h-18 w-18 rounded-full transition-all duration-700 hover:bg-muted hover:shadow-lg hover:scale-105 backdrop-blur-sm border border-transparent hover:border-muted ${isMuted ? 'text-destructive' : 'text-muted-foreground'}`}
+                    className={`h-18 w-18 rounded-full btn-micro touch-target backdrop-blur-sm border border-transparent hover:border-muted hover:bg-muted/50 ${isMuted ? 'text-destructive' : 'text-muted-foreground'}`}
                     aria-label={isMuted ? "Unmute audio" : "Mute audio"}
                   >
                     {isMuted ? <VolumeX className="h-7 w-7" /> : <Volume2 className="h-7 w-7" />}
@@ -574,10 +622,17 @@ export default function ProductivityBinauralPlayer() {
                   <Button
                     size="lg"
                     onClick={togglePlayPause}
-                    className={`h-28 w-28 rounded-full transition-all duration-700 shadow-lg hover:shadow-xl hover:scale-105 border-0 font-normal tracking-wide backdrop-blur-sm ${isPlaying ? 'bg-secondary hover:bg-secondary/90 text-secondary-foreground' : 'bg-primary hover:bg-primary/90 text-primary-foreground'}`}
+                    disabled={isLoading}
+                    className={`h-28 w-28 rounded-full btn-micro touch-target shadow-lg border-0 font-normal tracking-wide backdrop-blur-sm ${isPlaying ? 'bg-secondary hover:bg-secondary/90 text-secondary-foreground animate-gentle-pulse' : 'bg-primary hover:bg-primary/90 text-primary-foreground'}`}
                     aria-label={isPlaying ? "Pause session" : "Start session"}
                   >
-                    {isPlaying ? <Pause className="h-10 w-10" /> : <Play className="h-10 w-10 ml-1" />}
+                    {isLoading ? (
+                      <div className="animate-spin rounded-full h-10 w-10 border-2 border-current border-t-transparent" />
+                    ) : isPlaying ? (
+                      <Pause className="h-10 w-10" />
+                    ) : (
+                      <Play className="h-10 w-10 ml-1" />
+                    )}
                   </Button>
 
                   {/* Stop button - hidden in deep focus mode */}
@@ -623,9 +678,42 @@ export default function ProductivityBinauralPlayer() {
         )}
       </main>
 
-
-
-
+      {/* Keyboard Shortcuts Guide */}
+      {showKeyboardShortcuts && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-background border rounded-lg p-6 max-w-md w-full shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Keyboard Shortcuts</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowKeyboardShortcuts(false)}
+                className="h-8 w-8 p-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between items-center">
+                <span>Play/Pause</span>
+                <kbd className="px-2 py-1 bg-muted rounded text-xs">Space</kbd>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>Mute/Unmute</span>
+                <kbd className="px-2 py-1 bg-muted rounded text-xs">M</kbd>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>Exit Session</span>
+                <kbd className="px-2 py-1 bg-muted rounded text-xs">Esc</kbd>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>Show Shortcuts</span>
+                <kbd className="px-2 py-1 bg-muted rounded text-xs">?</kbd>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

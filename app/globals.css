@@ -220,6 +220,24 @@
     @apply outline-2 outline-offset-2 outline-primary;
   }
   
+  /* Consistent focus styles for interactive elements */
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  
+  /* Enhanced focus for cards and interactive containers */
+  .card-focus:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 4px;
+    box-shadow: 0 0 0 4px hsla(var(--primary), 0.2);
+  }
+  
   /* Base text sizes using the custom variables */
   .text-xs {
     font-size: var(--font-size-xs);
@@ -294,6 +312,11 @@
     letter-spacing: var(--letter-spacing-widest);
   }
   
+  /* Tabular numbers for consistent digit spacing */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  
   /* Skip to content link for keyboard users */
   .skip-to-content {
     @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded;
@@ -303,8 +326,8 @@
 .slider-thumb::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 32px; /* Larger for better touch target on mobile */
-  height: 32px; /* Larger for better touch target on mobile */
+  width: 44px; /* Increased to meet mobile touch target guidelines */
+  height: 44px; /* Increased to meet mobile touch target guidelines */
   background: hsl(var(--primary));
   cursor: pointer;
   border-radius: 50%;
@@ -319,8 +342,8 @@
 }
 
 .slider-thumb::-moz-range-thumb {
-  width: 32px; /* Larger for better touch target on mobile */
-  height: 32px; /* Larger for better touch target on mobile */
+  width: 44px; /* Increased to meet mobile touch target guidelines */
+  height: 44px; /* Increased to meet mobile touch target guidelines */
   background: hsl(var(--primary));
   cursor: pointer;
   border-radius: 50%;
@@ -493,6 +516,60 @@
 .btn-interactive:active::before {
   width: 300px;
   height: 300px;
+}
+
+/* Micro-interactions for buttons */
+.btn-micro {
+  transform: scale(1);
+  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-micro:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-micro:active {
+  transform: scale(0.98);
+}
+
+/* Gentle scale animation for cards */
+.card-micro {
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-micro:hover {
+  transform: scale(1.01);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.card-micro:active {
+  transform: scale(0.99);
+}
+
+/* Subtle glow effect for interactive elements */
+.glow-subtle {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.glow-subtle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(115, 148, 120, 0.1) 0%, rgba(115, 148, 120, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.glow-subtle:hover::after {
+  opacity: 1;
 }
 
 /* Enhanced card hover effects */

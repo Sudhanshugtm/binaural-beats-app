@@ -132,21 +132,55 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
           >
             ✕
           </button>
-          {/* Progress indicator with ARIA roles for accessibility */}
+          {/* Progress indicator with enhanced animations */}
           <div className="flex justify-center mb-6" role="progressbar" aria-valuenow={currentStep + 1} aria-valuemin={1} aria-valuemax={onboardingSteps.length} aria-valuetext={`Step ${currentStep + 1} of ${onboardingSteps.length}: ${currentStepData.title}`}>
             {onboardingSteps.map((step, index) => (
-              <div
+              <motion.div
                 key={step.id}
-                className={`w-3 h-3 rounded-full mx-1.5 transition-all duration-300 ${
-                  index <= currentStep ? 'bg-primary scale-110' : 'bg-slate-600'
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ 
+                  scale: index <= currentStep ? 1.1 : 1,
+                  opacity: index <= currentStep ? 1 : 0.6,
+                  backgroundColor: index <= currentStep ? 'rgb(115, 148, 120)' : 'rgb(71, 85, 105)'
+                }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                className={`w-3 h-3 rounded-full mx-1.5 ${
+                  index <= currentStep ? 'shadow-lg shadow-primary/30' : ''
                 }`}
               />
             ))}
           </div>
-          <div className={`relative w-20 h-20 flex items-center justify-center rounded-full bg-slate-700/50 mb-4`}>
-            <div className={`absolute inset-0 ${currentStepData.iconColor} opacity-20 rounded-full animate-pulse`}></div>
-            <Icon className={`w-10 h-10 ${currentStepData.iconColor}`} aria-hidden="true" />
-          </div>
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className={`relative w-20 h-20 flex items-center justify-center rounded-full bg-slate-700/50 mb-4`}
+          >
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.1, 1],
+                opacity: [0.2, 0.3, 0.2] 
+              }}
+              transition={{ 
+                duration: 3, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className={`absolute inset-0 ${currentStepData.iconColor} rounded-full`}
+            />
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ 
+                duration: 0.6, 
+                delay: 0.3,
+                type: "spring",
+                stiffness: 200
+              }}
+            >
+              <Icon className={`w-10 h-10 ${currentStepData.iconColor}`} aria-hidden="true" />
+            </motion.div>
+          </motion.div>
           <CardTitle id="onboarding-title" ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-white">
             {currentStepData.title}
           </CardTitle>

@@ -89,14 +89,23 @@ export function Header() {
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-sm border-t border-border shadow-lg">
+      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+      }`}>
+        <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-lg">
           <nav className="container-zen mx-auto py-4 space-y-2">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="block px-4 py-2 text-primary hover:text-primary/80 hover:bg-accent rounded-md transition-colors duration-200"
+                className={`block px-4 py-3 text-primary hover:text-primary/80 hover:bg-accent rounded-md transition-all duration-200 hover:translate-x-1 ${
+                  isMobileMenuOpen 
+                    ? 'translate-x-0 opacity-100' 
+                    : 'translate-x-4 opacity-0'
+                }`}
+                style={{
+                  transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
+                }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.label}
@@ -104,7 +113,7 @@ export function Header() {
             ))}
           </nav>
         </div>
-      )}
+      </div>
     </header>
   );
 }

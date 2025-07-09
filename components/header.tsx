@@ -30,10 +30,10 @@ export function Header() {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out mobile-safe-area ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
         isScrolled 
-          ? 'bg-white/80 backdrop-blur-sm shadow-sm' 
-          : 'bg-transparent'
+          ? 'bg-white/95 backdrop-blur-sm shadow-md' 
+          : 'bg-white/10 backdrop-blur-sm'
       }`}
       role="banner"
     >
@@ -45,11 +45,11 @@ export function Header() {
             className="flex items-center space-x-2 sm:space-x-3 transition-opacity hover:opacity-80 touch-target"
             aria-label="Beatful Home - Binaural Beats for Focus and Meditation"
           >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-gradient-to-br from-background to-muted rounded-full shadow-inner">
-              <Waves className="w-5 h-5 sm:w-6 sm:h-6 text-primary" aria-hidden="true" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-primary rounded-full shadow-md">
+              <Waves className="w-5 h-5 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
             </div>
             <span className={`text-lg sm:text-xl font-semibold tracking-wider ${
-              isScrolled ? 'text-gray-800' : 'text-white'
+              isScrolled ? 'text-gray-800' : 'text-gray-800'
             }`}>
               Beatful
             </span>
@@ -63,8 +63,8 @@ export function Header() {
                 href={item.href}
                 className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
                   isScrolled 
-                    ? 'text-gray-800 hover:text-gray-600' 
-                    : 'text-white hover:text-white/80'
+                    ? 'text-gray-700 hover:text-gray-900' 
+                    : 'text-gray-700 hover:text-gray-900'
                 }`}
               >
                 {item.label}
@@ -86,7 +86,7 @@ export function Header() {
                 );
               }}
               className={`p-2 touch-target ${
-                isScrolled ? 'text-gray-800' : 'text-white'
+                isScrolled ? 'text-gray-700' : 'text-gray-700'
               }`}
               aria-label="Toggle mobile menu"
               aria-expanded={isMobileMenuOpen}

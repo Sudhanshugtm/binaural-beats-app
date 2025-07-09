@@ -498,7 +498,7 @@ export default function ProductivityBinauralPlayer() {
       />
 
       {/* Main Content */}
-      <main className={`container-zen py-2 sm:py-4 md:py-6 relative z-10 ${selectedMode ? 'h-screen flex flex-col justify-center' : 'min-h-screen flex flex-col'}`}>
+      <main className={`container-zen ${selectedMode ? 'h-screen flex flex-col justify-center p-2 sm:p-4' : 'min-h-screen flex flex-col py-2 sm:py-4 md:py-6'} relative z-10`}>
         {!selectedMode ? (
           <div className="space-zen-3xl">
             {/* Gentle Welcome */}
@@ -587,10 +587,10 @@ export default function ProductivityBinauralPlayer() {
             </div>
           </div>
         ) : (
-          <div className="container-zen-narrow lg:container-zen-wide xl:container-zen max-w-4xl mx-auto">
+          <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
             {/* Premium Active Session with Glassmorphism */}
             <Card 
-              className={`p-4 sm:p-6 md:p-8 lg:p-6 xl:p-8 card-premium glass-effect-strong shadow-zen-xl rounded-2xl backdrop-blur-md border-2 border-primary/10 ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
+              className={`p-3 sm:p-4 md:p-6 lg:p-8 card-premium glass-effect-strong shadow-zen-xl rounded-2xl backdrop-blur-md border-2 border-primary/10 ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
@@ -624,24 +624,24 @@ export default function ProductivityBinauralPlayer() {
               </div>
 
               {/* Central Breathing Circle with Integrated Timer */}
-              <div className="flex-1 flex items-center justify-center py-2 sm:py-4 md:py-6">
+              <div className="flex items-center justify-center py-1 sm:py-2 md:py-3">
                 <div className="relative flex items-center justify-center">
                   {/* Main Breathing Circle */}
-                  <div className={`w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96 rounded-full flex items-center justify-center transition-all duration-2000 ${
+                  <div className={`w-36 h-36 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full flex items-center justify-center transition-all duration-2000 ${
                     isPlaying 
                       ? 'bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 breathe-gentle shadow-2xl' 
                       : 'bg-gradient-to-br from-gray-100 to-gray-50 shadow-lg'
                   }`}>
                     
                     {/* Inner Circle */}
-                    <div className={`w-36 h-36 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
+                    <div className={`w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 lg:w-52 lg:h-52 xl:w-60 xl:h-60 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
                       isPlaying 
                         ? 'bg-white/80 backdrop-blur-sm border-2 border-primary/20' 
                         : 'bg-white/60 backdrop-blur-sm border-2 border-gray-200'
                     }`}>
                       
                       {/* Timer Display */}
-                      <div className={`font-mono text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 tracking-wider leading-none tabular-nums transition-all duration-500 ${
+                      <div className={`font-mono text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-1 sm:mb-2 tracking-wider leading-none tabular-nums transition-all duration-500 ${
                         isPlaying 
                           ? 'text-primary' 
                           : 'text-gray-700'
@@ -709,7 +709,7 @@ export default function ProductivityBinauralPlayer() {
                 onFocus={handleControlsMouseEnter}
                 data-testid="audio-controls"
               >
-                <div className="flex items-center justify-center space-x-6 sm:space-x-8 md:space-x-12 lg:space-x-16 mb-4 sm:mb-6">
+                <div className="flex items-center justify-center space-x-4 sm:space-x-6 md:space-x-8 lg:space-x-10 mb-2 sm:mb-3">
                   {/* Premium Mute Control */}
                   <Button
                     variant="ghost"

@@ -32,8 +32,8 @@ export function Header() {
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
         isScrolled 
-          ? 'bg-white/95 shadow-md' 
-          : 'bg-white/20'
+          ? 'bg-white/90 shadow-sm' 
+          : 'bg-transparent'
       }`}
       role="banner"
     >
@@ -49,7 +49,7 @@ export function Header() {
               <Waves className="w-5 h-5 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
             </div>
             <span className={`text-lg sm:text-xl font-semibold tracking-wider ${
-              isScrolled ? 'text-gray-800' : 'text-gray-800'
+              isScrolled ? 'text-gray-800' : 'text-white'
             }`}>
               Beatful
             </span>
@@ -64,7 +64,7 @@ export function Header() {
                 className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
                   isScrolled 
                     ? 'text-gray-700 hover:text-gray-900' 
-                    : 'text-gray-700 hover:text-gray-900'
+                    : 'text-white hover:text-white/80'
                 }`}
               >
                 {item.label}
@@ -86,7 +86,7 @@ export function Header() {
                 );
               }}
               className={`p-2 touch-target ${
-                isScrolled ? 'text-gray-700' : 'text-gray-700'
+                isScrolled ? 'text-gray-700' : 'text-white'
               }`}
               aria-label="Toggle mobile menu"
               aria-expanded={isMobileMenuOpen}

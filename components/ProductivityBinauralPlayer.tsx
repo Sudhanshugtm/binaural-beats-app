@@ -623,73 +623,85 @@ export default function ProductivityBinauralPlayer() {
                 </div>
               </div>
 
-              {/* Premium Timer Display with Breathing Animation */}
-              <div className="text-center mb-6 sm:mb-8">
-                <div className="relative mb-4 sm:mb-6">
-                  {/* Breathing circle background */}
-                  <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-40 sm:h-40 rounded-full transition-all duration-1000 ${
+              {/* Central Breathing Circle with Integrated Timer */}
+              <div className="flex-1 flex items-center justify-center py-8">
+                <div className="relative flex items-center justify-center">
+                  {/* Main Breathing Circle */}
+                  <div className={`w-64 h-64 sm:w-72 sm:h-72 rounded-full flex items-center justify-center transition-all duration-2000 ${
                     isPlaying 
-                      ? 'bg-gradient-to-r from-primary/10 to-accent/10 breathe-gentle' 
-                      : 'bg-gradient-to-r from-muted/20 to-muted/10'
-                  }`} />
-                  
-                  {/* Premium Timer Display */}
-                  <div className="relative z-10">
-                    <div className={`font-mono text-4xl sm:text-5xl md:text-6xl font-semibold mb-3 sm:mb-4 tracking-wide leading-none tabular-nums transition-all duration-500 ${
+                      ? 'bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 breathe-gentle shadow-2xl' 
+                      : 'bg-gradient-to-br from-gray-100 to-gray-50 shadow-lg'
+                  }`}>
+                    
+                    {/* Inner Circle */}
+                    <div className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
                       isPlaying 
-                        ? 'text-primary gradient-text-premium' 
-                        : 'text-foreground'
-                    }`}
-                         style={{ fontVariantNumeric: 'tabular-nums' }}
-                         aria-live="polite">
-                      {formatTime(timeRemaining)}
+                        ? 'bg-white/80 backdrop-blur-sm border-2 border-primary/20' 
+                        : 'bg-white/60 backdrop-blur-sm border-2 border-gray-200'
+                    }`}>
+                      
+                      {/* Timer Display */}
+                      <div className={`font-mono text-3xl sm:text-4xl font-bold mb-2 tracking-wider leading-none tabular-nums transition-all duration-500 ${
+                        isPlaying 
+                          ? 'text-primary' 
+                          : 'text-gray-700'
+                      }`}
+                           style={{ fontVariantNumeric: 'tabular-nums' }}
+                           aria-live="polite">
+                        {formatTime(timeRemaining)}
+                      </div>
+                      
+                      {/* Status Text */}
+                      <p className={`text-sm font-medium tracking-wide text-center px-4 transition-all duration-500 ${
+                        isPlaying 
+                          ? 'text-primary/70' 
+                          : 'text-gray-500'
+                      }`}>
+                        {isPlaying ? 'Breathe deeply' : 'Take a breath and begin'}
+                      </p>
+                      
+                      {/* Progress Ring */}
+                      <div className="absolute inset-0 rounded-full">
+                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                          <circle
+                            cx="50"
+                            cy="50"
+                            r="47"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1"
+                            className="text-gray-200"
+                          />
+                          <circle
+                            cx="50"
+                            cy="50"
+                            r="47"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            className={`transition-all duration-500 ${
+                              isPlaying ? 'text-primary' : 'text-gray-300'
+                            }`}
+                            strokeDasharray={`${sessionProgress * 2.95} 295`}
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </div>
                     </div>
-                    
-                    {/* Enhanced status text */}
-                    <p className={`text-fluid-base font-medium tracking-wide px-2 sm:px-4 transition-all duration-500 ${
-                      isPlaying 
-                        ? 'text-primary/80' 
-                        : 'text-muted-foreground'
-                    }`}>
-                      {isPlaying ? 'Practice session in progress' : 'Take a breath and begin'}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Premium Progress Indicator */}
-                <div className="max-w-xs sm:max-w-md mx-auto px-4 sm:px-8">
-                  <div className="relative">
-                    <Progress 
-                      value={sessionProgress} 
-                      className="h-3 bg-muted rounded-full shadow-inner" 
-                      aria-label={`Session progress: ${Math.round(sessionProgress)}% complete`}
-                    />
-                    
-                    {/* Progress glow effect */}
-                    {isPlaying && (
-                      <div 
-                        className="absolute top-0 left-0 h-3 rounded-full bg-gradient-to-r from-primary to-gradient-middle transition-all duration-1000 opacity-50 blur-sm"
-                        style={{ width: `${sessionProgress}%` }}
-                      />
-                    )}
-                  </div>
-                  
-                  {/* Progress percentage */}
-                  <div className="flex justify-between items-center mt-2 text-xs text-muted-foreground font-medium">
-                    <span>0%</span>
-                    <span className={`transition-colors duration-500 ${
-                      isPlaying ? 'text-primary' : 'text-muted-foreground'
-                    }`}>
-                      {Math.round(sessionProgress)}%
-                    </span>
-                    <span>100%</span>
                   </div>
                 </div>
               </div>
+                
+              {/* Progress Indicator */}
+              <div className="text-center mb-6">
+                <div className="text-sm text-gray-500 font-medium">
+                  {Math.round(sessionProgress)}% Complete
+                </div>
+              </div>
 
-              {/* Essential Controls with Auto-fade */}
+              {/* Clean Control Layout */}
               <div 
-                className={`transition-all duration-700 ease-in-out ${
+                className={`bg-white/60 backdrop-blur-sm rounded-2xl p-6 mx-4 transition-all duration-700 ease-in-out ${
                   controlsVisible || !isPlaying ? 'opacity-100' : 'opacity-30'
                 } ${isDeepFocusMode && !controlsVisible ? 'opacity-10' : ''}`}
                 onMouseEnter={handleControlsMouseEnter}
@@ -697,44 +709,45 @@ export default function ProductivityBinauralPlayer() {
                 onFocus={handleControlsMouseEnter}
                 data-testid="audio-controls"
               >
-                <div className="flex items-center justify-center space-x-4 sm:space-x-6 md:space-x-8 mb-4 sm:mb-6">
-                  {/* Premium Mute Control */}
+                {/* Main Controls */}
+                <div className="flex items-center justify-center space-x-8 mb-6">
+                  {/* Mute Control */}
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={toggleMute}
-                    className={`h-12 w-12 sm:h-16 sm:w-16 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-14 w-14 rounded-full transition-all duration-300 ${
                       isMuted 
-                        ? 'text-destructive border-destructive/30 hover:border-destructive/50 hover:bg-destructive/10' 
-                        : 'text-muted-foreground border-transparent hover:border-primary/30 hover:bg-primary/10'
+                        ? 'text-red-500 bg-red-50 hover:bg-red-100' 
+                        : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                     }`}
                     aria-label={isMuted ? "Unmute audio" : "Mute audio"}
                   >
-                    {isMuted ? <VolumeX className="h-5 w-5 sm:h-6 sm:w-6" /> : <Volume2 className="h-5 w-5 sm:h-6 sm:w-6" />}
+                    {isMuted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
                   </Button>
 
-                  {/* Premium Play/Pause Control */}
+                  {/* Play/Pause Control */}
                   <Button
                     size="lg"
                     onClick={togglePlayPause}
                     disabled={isLoading}
-                    className={`h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-full zen-ripple touch-target shadow-zen-lg border-2 font-normal tracking-wide backdrop-blur-sm transition-all duration-500 ${
+                    className={`h-20 w-20 rounded-full shadow-lg transition-all duration-500 ${
                       isPlaying 
-                        ? 'bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary/80 text-secondary-foreground border-secondary/30 breathe-gentle' 
-                        : 'bg-gradient-to-r from-primary to-gradient-middle hover:from-primary/90 hover:to-gradient-middle/90 text-primary-foreground border-primary/30 hover:shadow-zen-xl'
+                        ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                        : 'bg-green-500 hover:bg-green-600 text-white'
                     }`}
                     aria-label={isPlaying ? "Pause session" : "Start session"}
                   >
                     {isLoading ? (
-                      <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 border-2 border-current border-t-transparent" />
+                      <div className="animate-spin rounded-full h-6 w-6 border-2 border-current border-t-transparent" />
                     ) : isPlaying ? (
-                      <Pause className="h-6 w-6 sm:h-8 sm:w-8" />
+                      <Pause className="h-7 w-7" />
                     ) : (
-                      <Play className="h-6 w-6 sm:h-8 sm:w-8 ml-1" />
+                      <Play className="h-7 w-7 ml-0.5" />
                     )}
                   </Button>
 
-                  {/* Premium Stop Control */}
+                  {/* Stop Control */}
                   <Button
                     variant="ghost"
                     size="icon"
@@ -747,28 +760,32 @@ export default function ProductivityBinauralPlayer() {
                       setControlsVisible(true);
                       exitDeepFocusMode();
                     }}
-                    className={`h-12 w-12 sm:h-16 sm:w-16 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-14 w-14 rounded-full text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-all duration-300 ${
                       isDeepFocusMode ? 'opacity-0 invisible' : 'opacity-100 visible'
                     }`}
                     aria-label="Stop and return to mode selection"
                   >
-                    <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <X className="h-6 w-6" />
                   </Button>
                 </div>
 
-                {/* Elegant Volume Control */}
-                <div className="max-w-xs sm:max-w-sm mx-auto px-4 sm:px-6">
-                  <Slider
-                    value={[volume]}
-                    onValueChange={([v]) => updateVolume(v)}
-                    max={1}
-                    step={0.01}
-                    className={`w-full transition-all duration-700 ${
-                      controlsVisible || !isPlaying ? 'opacity-80 hover:opacity-100' : 'opacity-20'
-                    }`}
-                    aria-label={`Volume control, currently ${Math.round(volume * 100)}%`}
-                    aria-valuenow={Math.round(volume * 100)}
-                  />
+                {/* Volume Control */}
+                <div className="px-4">
+                  <div className="flex items-center space-x-3">
+                    <Volume2 className="h-4 w-4 text-gray-400" />
+                    <Slider
+                      value={[volume]}
+                      onValueChange={([v]) => updateVolume(v)}
+                      max={1}
+                      step={0.01}
+                      className="flex-1"
+                      aria-label={`Volume control, currently ${Math.round(volume * 100)}%`}
+                      aria-valuenow={Math.round(volume * 100)}
+                    />
+                    <span className="text-sm text-gray-500 min-w-[3rem] text-right">
+                      {Math.round(volume * 100)}%
+                    </span>
+                  </div>
                 </div>
               </div>
             </Card>

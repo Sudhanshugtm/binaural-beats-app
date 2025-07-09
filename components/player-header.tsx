@@ -9,34 +9,25 @@ import { Button } from "@/components/ui/button";
 
 export function PlayerHeader() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border/50">
-      <div className="container-zen mx-auto px-4">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm">
+      <div className="mx-auto px-4 max-w-sm sm:max-w-md md:max-w-lg">
         <div className="flex h-16 items-center justify-between">
-          {/* Left: Back to Home */}
+          {/* Left: Back Button */}
           <Link 
             href="/"
-            className="flex items-center space-x-2 text-muted-foreground hover:text-primary transition-colors min-w-0 flex-shrink-0"
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors p-2 -ml-2 rounded-lg hover:bg-gray-50"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="text-sm font-medium hidden sm:inline">Back to Home</span>
-            <span className="text-sm font-medium sm:hidden">Back</span>
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">Back</span>
           </Link>
 
-          {/* Center: App Logo/Brand */}
-          <Link 
-            href="/" 
-            className="flex items-center space-x-2 opacity-60 hover:opacity-100 transition-opacity min-w-0 flex-shrink justify-center"
-          >
-            <div className="w-6 h-6 flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/20 rounded-full">
-              <Waves className="w-4 h-4 text-primary" />
-            </div>
-            <span className="text-sm font-light text-muted-foreground tracking-wide truncate max-w-[120px] sm:max-w-none">
-              Serenity Soundscapes
-            </span>
-          </Link>
+          {/* Center: Simple Logo */}
+          <div className="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full">
+            <Waves className="w-4 h-4 text-primary" />
+          </div>
 
-          {/* Right: Empty space for balance */}
-          <div className="w-[80px] sm:w-[100px] flex-shrink-0"></div>
+          {/* Right: Empty for balance */}
+          <div className="w-[60px]"></div>
         </div>
       </div>
     </header>

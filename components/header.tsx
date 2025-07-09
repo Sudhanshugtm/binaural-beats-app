@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Waves, Menu, X, Settings } from "lucide-react"; // Changed from Headphones
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAccessibility } from "@/components/AccessibilityProvider";
 
@@ -16,17 +17,27 @@ const navItems = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const pathname = usePathname();
   const { announceToScreenReader } = useAccessibility();
+  
+  const isHomePage = pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollThreshold = 20; // Reduced for earlier effect
+      const scrollThreshold = 20;
+      const visibilityThreshold = isHomePage ? 300 : 0; // Show header after scrolling 300px on home page
+      
       setIsScrolled(window.scrollY > scrollThreshold);
+      setIsVisible(window.scrollY > visibilityThreshold || !isHomePage);
     };
 
+    // Initial check
+    handleScroll();
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isHomePage]);
 
   return (
     <header 
@@ -34,6 +45,8 @@ export function Header() {
         isScrolled 
           ? 'bg-white/90 shadow-sm' 
           : 'bg-transparent'
+      } ${
+        isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
       }`}
       role="banner"
     >

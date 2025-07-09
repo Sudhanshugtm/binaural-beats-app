@@ -709,7 +709,7 @@ export default function ProductivityBinauralPlayer() {
                 onFocus={handleControlsMouseEnter}
                 data-testid="audio-controls"
               >
-                <div className="flex items-center justify-center space-x-4 sm:space-x-8 md:space-x-12 mb-4 sm:mb-8">
+                <div className="flex items-center justify-center space-x-6 sm:space-x-12 md:space-x-16 lg:space-x-20 mb-4 sm:mb-8">
                   {/* Premium Mute Control */}
                   <Button
                     variant="ghost"

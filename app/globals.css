@@ -1019,53 +1019,178 @@ button, .btn, [role="button"] {
 }
 
 /* Enhanced responsive text utilities using clamp() for fluid typography */
+/* Optimized for better space utilization and readability */
+.text-fluid-xs {
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem); /* 12px to 14px */
+  line-height: clamp(1.4, 1.5, 1.6);
+  letter-spacing: clamp(0.01em, 0.02em, 0.025em);
+}
+
 .text-fluid-sm {
-  font-size: clamp(0.875rem, 2.5vw, 1rem); /* 14px to 16px */
+  font-size: clamp(0.875rem, 2vw, 1rem); /* 14px to 16px */
+  line-height: clamp(1.4, 1.5, 1.6);
+  letter-spacing: clamp(0.005em, 0.01em, 0.02em);
 }
 
 .text-fluid-base {
-  font-size: clamp(1rem, 2.5vw, 1.125rem); /* 16px to 18px */
+  font-size: clamp(1rem, 2.2vw, 1.125rem); /* 16px to 18px */
+  line-height: clamp(1.5, 1.6, 1.7);
+  letter-spacing: clamp(0em, 0.005em, 0.01em);
 }
 
 .text-fluid-lg {
-  font-size: clamp(1.125rem, 3vw, 1.5rem); /* 18px to 24px */
+  font-size: clamp(1.125rem, 2.8vw, 1.375rem); /* 18px to 22px */
+  line-height: clamp(1.4, 1.5, 1.6);
+  letter-spacing: clamp(-0.005em, 0em, 0.01em);
 }
 
 .text-fluid-xl {
-  font-size: clamp(1.25rem, 4vw, 1.875rem); /* 20px to 30px */
+  font-size: clamp(1.25rem, 3.5vw, 1.75rem); /* 20px to 28px */
+  line-height: clamp(1.3, 1.4, 1.5);
+  letter-spacing: clamp(-0.01em, -0.005em, 0.005em);
 }
 
 .text-fluid-2xl {
-  font-size: clamp(1.5rem, 5vw, 2.25rem); /* 24px to 36px */
+  font-size: clamp(1.5rem, 4.5vw, 2.25rem); /* 24px to 36px */
+  line-height: clamp(1.2, 1.3, 1.4);
+  letter-spacing: clamp(-0.02em, -0.01em, 0em);
 }
 
 .text-fluid-3xl {
-  font-size: clamp(1.875rem, 6vw, 3rem); /* 30px to 48px */
+  font-size: clamp(1.875rem, 5.5vw, 3rem); /* 30px to 48px */
+  line-height: clamp(1.1, 1.2, 1.3);
+  letter-spacing: clamp(-0.03em, -0.02em, -0.01em);
 }
 
 .text-fluid-4xl {
-  font-size: clamp(2.25rem, 8vw, 3.75rem); /* 36px to 60px */
+  font-size: clamp(2.25rem, 7vw, 3.75rem); /* 36px to 60px */
+  line-height: clamp(1.05, 1.1, 1.2);
+  letter-spacing: clamp(-0.04em, -0.03em, -0.02em);
 }
 
 .text-fluid-5xl {
-  font-size: clamp(3rem, 10vw, 4.5rem); /* 48px to 72px */
+  font-size: clamp(3rem, 9vw, 4.5rem); /* 48px to 72px */
+  line-height: clamp(1.0, 1.05, 1.1);
+  letter-spacing: clamp(-0.05em, -0.04em, -0.03em);
 }
 
-/* Enhanced responsive spacing utilities */
+/* Contextual fluid typography for different content types */
+.text-fluid-heading {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  line-height: clamp(1.2, 1.3, 1.4);
+  letter-spacing: clamp(-0.02em, -0.01em, 0em);
+  font-weight: var(--font-weight-light);
+}
+
+.text-fluid-subheading {
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  line-height: clamp(1.3, 1.4, 1.5);
+  letter-spacing: clamp(-0.01em, 0em, 0.01em);
+  font-weight: var(--font-weight-normal);
+}
+
+.text-fluid-body {
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  line-height: clamp(1.5, 1.6, 1.7);
+  letter-spacing: clamp(0em, 0.005em, 0.01em);
+  font-weight: var(--font-weight-normal);
+}
+
+.text-fluid-caption {
+  font-size: clamp(0.875rem, 1.8vw, 1rem);
+  line-height: clamp(1.4, 1.5, 1.6);
+  letter-spacing: clamp(0.01em, 0.02em, 0.025em);
+  font-weight: var(--font-weight-medium);
+}
+
+.text-fluid-button {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  line-height: clamp(1.2, 1.3, 1.4);
+  letter-spacing: clamp(0.01em, 0.02em, 0.03em);
+  font-weight: var(--font-weight-medium);
+}
+
+.text-fluid-timer {
+  font-size: clamp(2rem, 8vw, 4rem);
+  line-height: clamp(1.0, 1.1, 1.2);
+  letter-spacing: clamp(-0.03em, -0.02em, -0.01em);
+  font-weight: var(--font-weight-light);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Enhanced responsive spacing utilities with vertical rhythm */
+.space-fluid-xs {
+  margin: clamp(0.25rem, 1vw, 0.5rem);
+}
+
 .space-fluid-sm {
-  margin: clamp(0.5rem, 2vw, 1rem);
+  margin: clamp(0.5rem, 1.5vw, 0.75rem);
 }
 
 .space-fluid-md {
-  margin: clamp(1rem, 3vw, 1.5rem);
+  margin: clamp(0.75rem, 2vw, 1rem);
 }
 
 .space-fluid-lg {
-  margin: clamp(1.5rem, 4vw, 2rem);
+  margin: clamp(1rem, 2.5vw, 1.5rem);
 }
 
 .space-fluid-xl {
-  margin: clamp(2rem, 5vw, 3rem);
+  margin: clamp(1.5rem, 3vw, 2rem);
+}
+
+.space-fluid-2xl {
+  margin: clamp(2rem, 4vw, 2.5rem);
+}
+
+.space-fluid-3xl {
+  margin: clamp(2.5rem, 5vw, 3rem);
+}
+
+/* Vertical rhythm utilities for consistent spacing */
+.rhythm-xs {
+  margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
+}
+
+.rhythm-sm {
+  margin-bottom: clamp(0.75rem, 2vw, 1rem);
+}
+
+.rhythm-md {
+  margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.rhythm-lg {
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+.rhythm-xl {
+  margin-bottom: clamp(2rem, 4vw, 2.5rem);
+}
+
+.rhythm-2xl {
+  margin-bottom: clamp(2.5rem, 5vw, 3rem);
+}
+
+/* Contextual spacing for different content types */
+.space-heading {
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+}
+
+.space-subheading {
+  margin-bottom: clamp(0.75rem, 2.5vw, 1.25rem);
+}
+
+.space-body {
+  margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.space-caption {
+  margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
+}
+
+.space-section {
+  margin-bottom: clamp(2rem, 5vw, 3rem);
 }
 
 /* Enhanced button sizes for better touch targets */
@@ -1303,7 +1428,7 @@ button, .btn, [role="button"] {
 }
 
 .container-zen-wide {
-  @apply max-w-7xl mx-auto px-8 sm:px-12 lg:px-20;
+  @apply max-w-7xl mx-auto px-8 sm:px-12 md:px-16 lg:px-20;
 }
 
 /* Section spacing for zen layouts */
@@ -1523,6 +1648,37 @@ button, .btn, [role="button"] {
   transform-origin: center;
 }
 
+/* Ultra-wide screen support (>1920px) */
+@media (min-width: 1920px) {
+  .ultra-wide-layout {
+    max-width: 2400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .ultra-wide-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+  
+  .ultra-wide-session {
+    display: grid;
+    grid-template-columns: 1fr 600px 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  
+  .ultra-wide-breathing-circle {
+    width: clamp(24rem, 30vw, 40rem);
+    height: clamp(24rem, 30vw, 40rem);
+  }
+  
+  .ultra-wide-typography {
+    font-size: clamp(1.5rem, 2.5vw, 3rem);
+    line-height: 1.3;
+  }
+}
+
 .floating-particle {
   width: 4px;
   height: 4px;
@@ -1609,4 +1765,1299 @@ button, .btn, [role="button"] {
   animation: zen-bloom 12s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
+}
+
+/* Advanced CSS Grid Utilities for Enhanced Layouts */
+
+/* CSS Grid Areas for Semantic Layout */
+.grid-practice-layout {
+  display: grid;
+  grid-template-areas: 
+    "header header header"
+    "main main sidebar"
+    "footer footer footer";
+  grid-template-columns: 1fr 1fr 300px;
+  grid-template-rows: auto 1fr auto;
+  gap: clamp(1rem, 3vw, 2rem);
+  min-height: 100vh;
+}
+
+.grid-practice-header { grid-area: header; }
+.grid-practice-main { grid-area: main; }
+.grid-practice-sidebar { grid-area: sidebar; }
+.grid-practice-footer { grid-area: footer; }
+
+/* Advanced Masonry-Style Grid Layout */
+.grid-masonry {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  grid-auto-flow: row dense;
+}
+
+.grid-masonry-item {
+  break-inside: avoid;
+  margin-bottom: 0;
+}
+
+.grid-masonry-item.tall {
+  grid-row: span 2;
+}
+
+.grid-masonry-item.wide {
+  grid-column: span 2;
+}
+
+.grid-masonry-item.feature {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* Auto-fit and Auto-fill Grid Techniques */
+.grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.grid-auto-fill {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.grid-auto-fit-responsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+/* Advanced Responsive Grid with Better Breakpoints */
+.grid-zen-responsive {
+  display: grid;
+  gap: clamp(1rem, 3vw, 2rem);
+  /* Mobile first */
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 480px) {
+  .grid-zen-responsive {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .grid-zen-responsive {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-zen-responsive {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid-zen-responsive {
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  }
+}
+
+@media (min-width: 1536px) {
+  .grid-zen-responsive {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Subgrid Implementation for Better Alignment */
+.grid-subgrid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.grid-subgrid-item {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 4;
+  gap: inherit;
+}
+
+/* Fallback for browsers without subgrid support */
+@supports not (grid-template-rows: subgrid) {
+  .grid-subgrid-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .grid-subgrid-item > * {
+    flex: 1;
+  }
+}
+
+/* Advanced Grid Placement Techniques */
+.grid-placement-zen {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(6, minmax(100px, auto));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  grid-auto-flow: dense;
+}
+
+.grid-span-2 { grid-column: span 2; }
+.grid-span-3 { grid-column: span 3; }
+.grid-span-4 { grid-column: span 4; }
+.grid-span-6 { grid-column: span 6; }
+.grid-span-8 { grid-column: span 8; }
+.grid-span-12 { grid-column: span 12; }
+
+.grid-row-span-2 { grid-row: span 2; }
+.grid-row-span-3 { grid-row: span 3; }
+
+/* Adaptive Grid Spacing */
+.grid-spacing-tight {
+  gap: clamp(0.5rem, 1vw, 1rem);
+}
+
+.grid-spacing-normal {
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.grid-spacing-loose {
+  gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+.grid-spacing-extra-loose {
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+/* Zen-Inspired Grid Layouts */
+.grid-zen-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(1.5rem, 3vw, 2rem);
+  grid-auto-flow: row;
+  align-items: start;
+}
+
+.grid-zen-cards-dense {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  grid-auto-flow: row dense;
+  align-items: stretch;
+}
+
+/* Adaptive Grid based on Container Size */
+.grid-container-adaptive {
+  display: grid;
+  gap: clamp(1rem, 3vw, 2rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+}
+
+@container (max-width: 600px) {
+  .grid-container-adaptive {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container (min-width: 601px) and (max-width: 900px) {
+  .grid-container-adaptive {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container (min-width: 901px) {
+  .grid-container-adaptive {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+/* Zen Focus Grid for Active Sessions */
+.grid-zen-session {
+  display: grid;
+  grid-template-areas: 
+    "header"
+    "visualization"
+    "timer"
+    "controls"
+    "progress";
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: center;
+  justify-items: center;
+  min-height: 100vh;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.grid-zen-session-header { grid-area: header; }
+.grid-zen-session-visualization { grid-area: visualization; }
+.grid-zen-session-timer { grid-area: timer; }
+.grid-zen-session-controls { grid-area: controls; }
+.grid-zen-session-progress { grid-area: progress; }
+
+/* Responsive Grid Areas */
+@media (min-width: 768px) {
+  .grid-zen-session {
+    grid-template-areas: 
+      "header header"
+      "visualization timer"
+      "controls controls"
+      "progress progress";
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-zen-session {
+    grid-template-areas: 
+      "header header header"
+      "visualization timer controls"
+      "progress progress progress";
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+}
+
+/* Grid Animation Classes */
+.grid-animate-in {
+  animation: gridFadeIn 0.6s ease-out;
+}
+
+.grid-animate-in > * {
+  animation: gridItemSlideIn 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.grid-animate-in > *:nth-child(1) { animation-delay: 0.1s; }
+.grid-animate-in > *:nth-child(2) { animation-delay: 0.2s; }
+.grid-animate-in > *:nth-child(3) { animation-delay: 0.3s; }
+.grid-animate-in > *:nth-child(4) { animation-delay: 0.4s; }
+.grid-animate-in > *:nth-child(5) { animation-delay: 0.5s; }
+.grid-animate-in > *:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes gridFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes gridItemSlideIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive Grid Helpers */
+.grid-responsive-1 {
+  grid-template-columns: 1fr;
+}
+
+.grid-responsive-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-responsive-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-responsive-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 767px) {
+  .grid-responsive-2,
+  .grid-responsive-3,
+  .grid-responsive-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-responsive-3,
+  .grid-responsive-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .grid-responsive-4 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Advanced Grid Features for Better Space Utilization */
+
+/* Dynamic Grid Sizing with Aspect Ratio Control */
+.grid-aspect-aware {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  grid-auto-rows: 1fr;
+}
+
+.grid-aspect-aware > * {
+  aspect-ratio: 4 / 3;
+  min-height: 200px;
+}
+
+/* Grid with Intrinsic Sizing */
+.grid-intrinsic {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  grid-auto-rows: max-content;
+  align-items: start;
+}
+
+/* Grid with Flexible Tracks */
+.grid-flexible {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  grid-auto-rows: minmax(200px, auto);
+  grid-auto-flow: row;
+}
+
+/* Smart Grid with Content-Based Sizing */
+.grid-content-aware {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(1.5rem, 3vw, 2rem);
+  grid-auto-rows: min-content;
+  align-items: stretch;
+}
+
+/* Grid with Enhanced Masonry Support */
+.grid-masonry-enhanced {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  grid-auto-flow: row dense;
+  align-items: start;
+}
+
+/* Enhanced masonry items with better spacing */
+.grid-masonry-enhanced .grid-masonry-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: fit-content;
+}
+
+/* Responsive Masonry Adjustments */
+@media (max-width: 767px) {
+  .grid-masonry-enhanced .grid-masonry-item.wide,
+  .grid-masonry-enhanced .grid-masonry-item.feature {
+    grid-column: span 1;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-masonry-enhanced .grid-masonry-item.feature {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+}
+
+/* Advanced Grid Alignment */
+.grid-align-center {
+  place-items: center;
+}
+
+.grid-align-start {
+  place-items: start;
+}
+
+.grid-align-stretch {
+  place-items: stretch;
+}
+
+.grid-justify-center {
+  justify-items: center;
+}
+
+.grid-justify-stretch {
+  justify-items: stretch;
+}
+
+/* Grid with Advanced Gap Control */
+.grid-gap-responsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+@media (max-width: 480px) {
+  .grid-gap-responsive {
+    gap: clamp(0.75rem, 2vw, 1rem);
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid-gap-responsive {
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+}
+
+/* Grid with Enhanced Focus Management */
+.grid-focus-enhanced {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.grid-focus-enhanced > * {
+  position: relative;
+  z-index: 1;
+}
+
+.grid-focus-enhanced > *:focus-within {
+  z-index: 10;
+  transform: scale(1.02);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Grid with Advanced Hover Effects */
+.grid-hover-enhanced {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.grid-hover-enhanced:hover > * {
+  opacity: 0.7;
+  transform: scale(0.98);
+  transition: all 0.3s ease;
+}
+
+.grid-hover-enhanced:hover > *:hover {
+  opacity: 1;
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+/* Grid with Adaptive Columns Based on Content */
+.grid-adaptive-content {
+  display: grid;
+  gap: clamp(1rem, 3vw, 2rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+}
+
+.grid-adaptive-content[data-items="1"] {
+  grid-template-columns: minmax(300px, 600px);
+  justify-content: center;
+}
+
+.grid-adaptive-content[data-items="2"] {
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+}
+
+.grid-adaptive-content[data-items="3"] {
+  grid-template-columns: repeat(3, minmax(250px, 1fr));
+}
+
+/* Grid with Enhanced Accessibility */
+.grid-accessible {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.grid-accessible > * {
+  scroll-margin-top: 2rem;
+}
+
+/* Keyboard navigation support */
+.grid-accessible > *:focus {
+  outline: 3px solid hsl(var(--primary));
+  outline-offset: 2px;
+  scroll-margin-top: 2rem;
+}
+
+/* Grid with Performance Optimizations */
+.grid-optimized {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  will-change: transform;
+  contain: layout style;
+}
+
+.grid-optimized > * {
+  will-change: transform;
+  contain: layout style paint;
+}
+
+/* Grid with Dark Mode Support */
+.grid-theme-aware {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  transition: gap 0.3s ease;
+}
+
+.dark .grid-theme-aware {
+  gap: clamp(1.25rem, 3.5vw, 2.5rem);
+}
+
+/* Advanced Grid Utilities */
+.grid-min-content {
+  grid-template-columns: repeat(auto-fit, min-content);
+}
+
+.grid-max-content {
+  grid-template-columns: repeat(auto-fit, max-content);
+}
+
+.grid-fit-content {
+  grid-template-columns: repeat(auto-fit, fit-content(300px));
+}
+
+/* Enhanced Typography Utilities for Better Space Utilization */
+
+/* Optimized line heights for different contexts */
+.leading-fluid-tight {
+  line-height: clamp(1.2, 1.3, 1.4);
+}
+
+.leading-fluid-normal {
+  line-height: clamp(1.4, 1.5, 1.6);
+}
+
+.leading-fluid-relaxed {
+  line-height: clamp(1.6, 1.7, 1.8);
+}
+
+.leading-fluid-loose {
+  line-height: clamp(1.7, 1.8, 1.9);
+}
+
+/* Contextual line heights for different content types */
+.leading-heading {
+  line-height: clamp(1.1, 1.2, 1.3);
+}
+
+.leading-subheading {
+  line-height: clamp(1.2, 1.3, 1.4);
+}
+
+.leading-body {
+  line-height: clamp(1.5, 1.6, 1.7);
+}
+
+.leading-caption {
+  line-height: clamp(1.4, 1.5, 1.6);
+}
+
+.leading-button {
+  line-height: clamp(1.2, 1.3, 1.4);
+}
+
+.leading-timer {
+  line-height: clamp(1.0, 1.1, 1.2);
+}
+
+/* Enhanced letter spacing for better readability */
+.tracking-fluid-tighter {
+  letter-spacing: clamp(-0.05em, -0.03em, -0.02em);
+}
+
+.tracking-fluid-tight {
+  letter-spacing: clamp(-0.02em, -0.01em, 0em);
+}
+
+.tracking-fluid-normal {
+  letter-spacing: clamp(0em, 0.005em, 0.01em);
+}
+
+.tracking-fluid-wide {
+  letter-spacing: clamp(0.01em, 0.02em, 0.03em);
+}
+
+.tracking-fluid-wider {
+  letter-spacing: clamp(0.02em, 0.03em, 0.04em);
+}
+
+.tracking-fluid-widest {
+  letter-spacing: clamp(0.03em, 0.04em, 0.05em);
+}
+
+/* Contextual letter spacing for different content types */
+.tracking-heading {
+  letter-spacing: clamp(-0.03em, -0.02em, -0.01em);
+}
+
+.tracking-subheading {
+  letter-spacing: clamp(-0.01em, 0em, 0.01em);
+}
+
+.tracking-body {
+  letter-spacing: clamp(0em, 0.005em, 0.01em);
+}
+
+.tracking-caption {
+  letter-spacing: clamp(0.01em, 0.02em, 0.025em);
+}
+
+.tracking-button {
+  letter-spacing: clamp(0.01em, 0.02em, 0.03em);
+}
+
+.tracking-timer {
+  letter-spacing: clamp(-0.03em, -0.02em, -0.01em);
+}
+
+/* Typography hierarchy utilities for better space utilization */
+.text-display-1 {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  line-height: clamp(1.0, 1.1, 1.2);
+  letter-spacing: clamp(-0.04em, -0.03em, -0.02em);
+  font-weight: var(--font-weight-light);
+}
+
+.text-display-2 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: clamp(1.05, 1.1, 1.2);
+  letter-spacing: clamp(-0.03em, -0.02em, -0.01em);
+  font-weight: var(--font-weight-light);
+}
+
+.text-hero {
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  line-height: clamp(1.1, 1.2, 1.3);
+  letter-spacing: clamp(-0.02em, -0.01em, 0em);
+  font-weight: var(--font-weight-light);
+}
+
+.text-title {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  line-height: clamp(1.2, 1.3, 1.4);
+  letter-spacing: clamp(-0.02em, -0.01em, 0em);
+  font-weight: var(--font-weight-normal);
+}
+
+.text-subtitle {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  line-height: clamp(1.3, 1.4, 1.5);
+  letter-spacing: clamp(-0.01em, 0em, 0.01em);
+  font-weight: var(--font-weight-normal);
+}
+
+.text-label {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  line-height: clamp(1.4, 1.5, 1.6);
+  letter-spacing: clamp(0.01em, 0.02em, 0.025em);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+}
+
+.text-micro {
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  line-height: clamp(1.4, 1.5, 1.6);
+  letter-spacing: clamp(0.02em, 0.025em, 0.03em);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Enhanced typography for zen/meditation contexts */
+.text-zen-primary {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  line-height: clamp(1.2, 1.3, 1.4);
+  letter-spacing: clamp(-0.01em, 0em, 0.01em);
+  font-weight: var(--font-weight-light);
+  color: hsl(var(--foreground));
+}
+
+.text-zen-secondary {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  line-height: clamp(1.5, 1.6, 1.7);
+  letter-spacing: clamp(0em, 0.01em, 0.02em);
+  font-weight: var(--font-weight-normal);
+  color: hsl(var(--muted-foreground));
+}
+
+.text-zen-accent {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  line-height: clamp(1.4, 1.5, 1.6);
+  letter-spacing: clamp(0.01em, 0.02em, 0.03em);
+  font-weight: var(--font-weight-medium);
+  color: hsl(var(--primary));
+}
+
+/* Space-efficient typography for dense content */
+.text-compact-sm {
+  font-size: clamp(0.875rem, 1.8vw, 1rem);
+  line-height: clamp(1.3, 1.4, 1.5);
+  letter-spacing: clamp(0.005em, 0.01em, 0.015em);
+}
+
+.text-compact-md {
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  line-height: clamp(1.4, 1.5, 1.6);
+  letter-spacing: clamp(0em, 0.005em, 0.01em);
+}
+
+.text-compact-lg {
+  font-size: clamp(1.125rem, 2.8vw, 1.25rem);
+  line-height: clamp(1.3, 1.4, 1.5);
+  letter-spacing: clamp(-0.005em, 0em, 0.005em);
+}
+
+/* Typography utilities for improved readability on mobile */
+.text-mobile-optimized {
+  font-size: clamp(1rem, 4vw, 1.125rem);
+  line-height: clamp(1.5, 1.6, 1.7);
+  letter-spacing: clamp(0em, 0.01em, 0.02em);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.text-mobile-heading {
+  font-size: clamp(1.5rem, 6vw, 2.25rem);
+  line-height: clamp(1.2, 1.3, 1.4);
+  letter-spacing: clamp(-0.02em, -0.01em, 0em);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Enhanced text alignment utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Optical margin adjustments for better visual alignment */
+.text-optical-left {
+  margin-left: -0.1em;
+}
+
+.text-optical-right {
+  margin-right: -0.1em;
+}
+
+/* Typography utilities for better contrast and accessibility */
+.text-high-contrast {
+  font-weight: var(--font-weight-semibold);
+  color: hsl(var(--foreground));
+}
+
+.text-medium-contrast {
+  font-weight: var(--font-weight-medium);
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.text-low-contrast {
+  font-weight: var(--font-weight-normal);
+  color: hsl(var(--muted-foreground));
+}
+
+/* Grid with Enhanced Print Support */
+@media print {
+  .grid-zen-cards,
+  .grid-zen-cards-dense,
+  .grid-masonry,
+  .grid-masonry-enhanced {
+    display: block;
+  }
+  
+  .grid-zen-cards > *,
+  .grid-zen-cards-dense > *,
+  .grid-masonry > *,
+  .grid-masonry-enhanced > * {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+}
+
+/* =================================================================
+   LANDSCAPE MODE OPTIMIZATIONS
+   ================================================================= */
+
+/* Landscape Detection Utilities */
+.landscape-only {
+  display: none;
+}
+
+.portrait-only {
+  display: block;
+}
+
+@media (orientation: landscape) {
+  .landscape-only {
+    display: block;
+  }
+  
+  .portrait-only {
+    display: none;
+  }
+}
+
+/* Landscape-Optimized Session Grid */
+.grid-zen-session-landscape {
+  display: grid;
+  grid-template-areas: 
+    "header header header"
+    "visualization timer controls"
+    "progress progress progress";
+  grid-template-columns: 1fr 1.5fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: center;
+  justify-items: center;
+  min-height: 100vh;
+  padding: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+/* Mobile landscape optimizations */
+@media (orientation: landscape) and (max-height: 600px) {
+  .grid-zen-session-landscape {
+    grid-template-areas: 
+      "header visualization timer controls"
+      "progress progress progress progress";
+    grid-template-columns: 0.8fr 1.2fr 1fr 0.8fr;
+    grid-template-rows: 1fr auto;
+    gap: clamp(0.5rem, 1vw, 1rem);
+    padding: clamp(0.25rem, 1vw, 0.5rem);
+  }
+}
+
+/* Tablet landscape optimizations */
+@media (orientation: landscape) and (min-height: 601px) and (max-height: 900px) {
+  .grid-zen-session-landscape {
+    grid-template-areas: 
+      "header header header"
+      "visualization timer controls"
+      "progress progress progress";
+    grid-template-columns: 1fr 1.8fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+}
+
+/* Desktop landscape optimizations */
+@media (orientation: landscape) and (min-height: 901px) {
+  .grid-zen-session-landscape {
+    grid-template-areas: 
+      "header header header header"
+      "visualization visualization timer controls"
+      "progress progress progress progress";
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: clamp(1.5rem, 3vw, 2rem);
+  }
+}
+
+/* Landscape-Optimized Breathing Circle */
+.breathing-circle-landscape {
+  width: clamp(120px, 25vw, 200px);
+  height: clamp(120px, 25vw, 200px);
+  max-width: 30vh;
+  max-height: 30vh;
+  aspect-ratio: 1;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .breathing-circle-landscape {
+    width: clamp(80px, 20vw, 140px);
+    height: clamp(80px, 20vw, 140px);
+    max-width: 25vh;
+    max-height: 25vh;
+  }
+}
+
+@media (orientation: landscape) and (min-height: 601px) {
+  .breathing-circle-landscape {
+    width: clamp(160px, 30vw, 240px);
+    height: clamp(160px, 30vw, 240px);
+    max-width: 35vh;
+    max-height: 35vh;
+  }
+}
+
+/* Landscape-Optimized Controls */
+.controls-landscape {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  flex-wrap: wrap;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .controls-landscape {
+    flex-direction: column;
+    gap: clamp(0.25rem, 1vw, 0.5rem);
+  }
+}
+
+/* Landscape-Optimized Volume Control */
+.volume-control-landscape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1vw, 1rem);
+  max-width: min(300px, 40vw);
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .volume-control-landscape {
+    flex-direction: column;
+    max-width: min(120px, 20vw);
+  }
+  
+  .volume-control-landscape .slider-container {
+    writing-mode: vertical-lr;
+    height: 120px;
+  }
+}
+
+/* Landscape-Optimized Typography */
+.text-landscape-hero {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.text-landscape-title {
+  font-size: clamp(1.125rem, 2.5vw, 1.75rem);
+  line-height: 1.3;
+}
+
+.text-landscape-body {
+  font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+  line-height: 1.5;
+}
+
+.text-landscape-timer {
+  font-size: clamp(2rem, 8vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .text-landscape-hero {
+    font-size: clamp(1.25rem, 3vw, 2rem);
+  }
+  
+  .text-landscape-title {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+  }
+  
+  .text-landscape-body {
+    font-size: clamp(0.75rem, 1.25vw, 1rem);
+  }
+  
+  .text-landscape-timer {
+    font-size: clamp(1.5rem, 6vw, 3rem);
+  }
+}
+
+/* Landscape-Optimized Button Sizes */
+.button-landscape-primary {
+  height: clamp(48px, 8vw, 64px);
+  width: clamp(48px, 8vw, 64px);
+  border-radius: 50%;
+}
+
+.button-landscape-secondary {
+  height: clamp(40px, 6vw, 52px);
+  width: clamp(40px, 6vw, 52px);
+  border-radius: 50%;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .button-landscape-primary {
+    height: clamp(40px, 6vw, 52px);
+    width: clamp(40px, 6vw, 52px);
+  }
+  
+  .button-landscape-secondary {
+    height: clamp(32px, 5vw, 44px);
+    width: clamp(32px, 5vw, 44px);
+  }
+}
+
+/* Landscape-Optimized Spacing */
+.spacing-landscape-tight {
+  gap: clamp(0.25rem, 0.5vw, 0.5rem);
+}
+
+.spacing-landscape-normal {
+  gap: clamp(0.5rem, 1vw, 1rem);
+}
+
+.spacing-landscape-loose {
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.padding-landscape-container {
+  padding: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .padding-landscape-container {
+    padding: clamp(0.25rem, 1vw, 0.5rem);
+  }
+}
+
+/* Landscape-Optimized Visualization Area */
+.visualization-landscape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16/9;
+  min-height: 200px;
+  max-height: 60vh;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .visualization-landscape {
+    aspect-ratio: 2/1;
+    min-height: 120px;
+    max-height: 40vh;
+  }
+}
+
+/* Landscape-Optimized Progress Indicators */
+.progress-landscape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .progress-landscape {
+    max-width: 400px;
+  }
+}
+
+/* Landscape-Optimized Floating Controls */
+.floating-controls-landscape {
+  position: fixed;
+  bottom: clamp(0.5rem, 2vh, 1rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1vw, 1rem);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: clamp(0.5rem, 1vw, 1rem);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .floating-controls-landscape {
+    bottom: clamp(0.25rem, 1vh, 0.5rem);
+    padding: clamp(0.25rem, 0.5vw, 0.5rem);
+  }
+}
+
+/* Landscape-Optimized Side Controls */
+.side-controls-landscape {
+  position: fixed;
+  right: clamp(0.5rem, 2vw, 1rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.5rem, 1vh, 1rem);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: clamp(0.5rem, 1vw, 1rem);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+
+/* Landscape-Optimized Split Screen Layout */
+.split-screen-landscape {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  height: 100vh;
+  align-items: center;
+}
+
+.split-screen-landscape .left-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.split-screen-landscape .right-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .split-screen-landscape {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(0.5rem, 1vw, 1rem);
+  }
+}
+
+/* Landscape-Optimized Header */
+.header-landscape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(0.5rem, 1vh, 1rem);
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .header-landscape {
+    padding: clamp(0.25rem, 0.5vh, 0.5rem);
+  }
+}
+
+/* Landscape-Optimized Card Grid */
+.card-grid-landscape {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .card-grid-landscape {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: clamp(0.5rem, 1vw, 1rem);
+    max-height: 60vh;
+  }
+}
+
+/* Landscape-Optimized Animation Adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  .breathe-gentle {
+    animation-duration: 2s;
+  }
+  
+  .fade-in-landscape {
+    animation: fadeInLandscape 0.4s ease-out;
+  }
+  
+  @keyframes fadeInLandscape {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Landscape-Optimized Focus States */
+@media (orientation: landscape) {
+  .focus-ring-landscape:focus {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 1px;
+    border-radius: 4px;
+  }
+}
+
+/* Landscape-Optimized Responsive Utilities */
+.landscape-hide {
+  display: block;
+}
+
+.landscape-show {
+  display: none;
+}
+
+@media (orientation: landscape) {
+  .landscape-hide {
+    display: none;
+  }
+  
+  .landscape-show {
+    display: block;
+  }
+}
+
+/* Landscape-Optimized Container Sizes */
+.container-landscape {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .container-landscape {
+    padding: clamp(0.25rem, 1vw, 0.5rem);
+  }
+}
+
+/* Landscape-Optimized Thumb Accessibility */
+.thumb-zone-landscape {
+  position: relative;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .thumb-zone-landscape {
+    min-height: 40px;
+    min-width: 40px;
+  }
+}
+
+/* Landscape-Optimized Touch Targets */
+.touch-target-landscape {
+  min-height: 44px;
+  min-width: 44px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.touch-target-landscape::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .touch-target-landscape,
+  .touch-target-landscape::before {
+    min-height: 40px;
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+  }
 }

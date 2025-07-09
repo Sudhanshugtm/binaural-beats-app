@@ -17,31 +17,45 @@ const navItems = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
   const { announceToScreenReader } = useAccessibility();
   
   const isHomePage = pathname === '/';
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const scrollThreshold = 20;
-      const visibilityThreshold = isHomePage ? 300 : 0; // Show header after scrolling 300px on home page
-      
-      setIsScrolled(window.scrollY > scrollThreshold);
-      setIsVisible(window.scrollY > visibilityThreshold || !isHomePage);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollThreshold = 20;
+          const isMobile = window.innerWidth < 768;
+          const visibilityThreshold = (isHomePage && isMobile) ? 200 : 0;
+          
+          setIsScrolled(window.scrollY > scrollThreshold);
+          setIsVisible(window.scrollY > visibilityThreshold || !isHomePage || !isMobile);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     // Initial check
     handleScroll();
     
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, [isHomePage]);
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
         isScrolled 
           ? 'bg-white/90 shadow-sm' 
           : 'bg-transparent'

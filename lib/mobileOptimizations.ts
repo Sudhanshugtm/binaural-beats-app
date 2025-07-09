@@ -47,6 +47,7 @@ export class MobileOptimizationManager {
   private gestureHandlers: Map<string, (event: TouchGestureEvent) => void> = new Map();
   private touchState: Map<number, Touch> = new Map();
   private isGestureActive: boolean = false;
+  private lastTap: number = 0;
 
   private constructor() {
     this.mobileInfo = this.detectMobileInfo();
@@ -253,7 +254,6 @@ export class MobileOptimizationManager {
 
   private setupGestureRecognition(): void {
     let tapTimeout: number | null = null;
-    let lastTap = 0;
 
     document.addEventListener('touchstart', (e) => {
       this.handleTouchStart(e);
@@ -364,7 +364,7 @@ export class MobileOptimizationManager {
     const now = Date.now();
     const touch = event.changedTouches[0];
 
-    if (now - lastTap < 300) {
+    if (now - this.lastTap < 300) {
       // Double tap
       const gestureEvent: TouchGestureEvent = {
         type: 'doubletap',
@@ -384,7 +384,7 @@ export class MobileOptimizationManager {
       this.triggerGestureEvent(gestureEvent);
     }
 
-    lastTap = now;
+    this.lastTap = now;
   }
 
   private triggerGestureEvent(gesture: TouchGestureEvent): void {
@@ -721,7 +721,7 @@ export class MobileOptimizationManager {
     return this.mobileInfo.orientation;
   }
 
-  async lockOrientation(orientation: OrientationLockType): Promise<boolean> {
+  async lockOrientation(orientation: 'portrait' | 'landscape' | 'portrait-primary' | 'portrait-secondary' | 'landscape-primary' | 'landscape-secondary' | 'natural' | 'any'): Promise<boolean> {
     if (!this.capabilities.hasScreenOrientation) {
       console.warn('Screen Orientation API not supported');
       return false;

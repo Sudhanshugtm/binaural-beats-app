@@ -191,7 +191,7 @@ export class MediaSessionManager {
 
     if (this.hasMediaSession) {
       try {
-        navigator.mediaSession.setActionHandler(action, handler ? (details) => {
+        navigator.mediaSession.setActionHandler(action as MediaSessionAction, handler ? (details) => {
           handler({
             action,
             seekOffset: details.seekOffset,
@@ -418,8 +418,8 @@ export class MediaSessionManager {
       // Test each action to see if it's supported
       allActions.forEach(action => {
         try {
-          navigator.mediaSession.setActionHandler(action, () => {});
-          navigator.mediaSession.setActionHandler(action, null);
+          navigator.mediaSession.setActionHandler(action as MediaSessionAction, () => {});
+          navigator.mediaSession.setActionHandler(action as MediaSessionAction, null);
         } catch (error) {
           console.warn(`Action ${action} not supported in Chrome`);
         }
@@ -452,8 +452,8 @@ export class MediaSessionManager {
 
       testActions.forEach(action => {
         try {
-          navigator.mediaSession.setActionHandler(action, () => {});
-          navigator.mediaSession.setActionHandler(action, null);
+          navigator.mediaSession.setActionHandler(action as MediaSessionAction, () => {});
+          navigator.mediaSession.setActionHandler(action as MediaSessionAction, null);
           supportedActions.push(action);
         } catch (error) {
           // Action not supported
@@ -477,7 +477,7 @@ export class MediaSessionManager {
         
         // Clear all action handlers
         this.actionHandlers.forEach((handler, action) => {
-          navigator.mediaSession.setActionHandler(action, null);
+          navigator.mediaSession.setActionHandler(action as MediaSessionAction, null);
         });
       } catch (error) {
         console.warn('Failed to cleanup media session:', error);

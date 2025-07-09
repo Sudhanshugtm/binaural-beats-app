@@ -157,7 +157,7 @@ class PerformanceMonitor {
         
         if (navigation) {
           this.metrics.ttfb = navigation.responseStart - navigation.requestStart;
-          this.metrics.pageLoadTime = navigation.loadEventEnd - navigation.navigationStart;
+          this.metrics.pageLoadTime = navigation.loadEventEnd - navigation.fetchStart;
           this.notifyListeners();
         }
       });

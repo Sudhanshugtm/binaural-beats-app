@@ -29,6 +29,30 @@ const DefaultLoadingComponent: React.FC = () =>
     React.createElement('div', { className: "animate-spin rounded-full h-8 w-8 border-b-2 border-primary" })
   );
 
+function withRetry<T>(
+  importFn: () => Promise<T>,
+  retryCount: number,
+  retryDelay: number
+): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const attempt = (remainingRetries: number) => {
+      importFn()
+        .then(resolve)
+        .catch((error) => {
+          if (remainingRetries > 0) {
+            setTimeout(() => {
+              attempt(remainingRetries - 1);
+            }, retryDelay);
+          } else {
+            reject(error);
+          }
+        });
+    };
+    
+    attempt(retryCount);
+  });
+}
+
 class CodeSplittingManager {
   private loadedChunks: Set<string> = new Set();
   private preloadedChunks: Set<string> = new Set();
@@ -134,7 +158,7 @@ class CodeSplittingManager {
   public createLazyComponent<T extends ComponentType<any>>(
     importFn: () => Promise<{ default: T }>,
     options: LazyComponentOptions = {}
-  ): ComponentType<React.ComponentProps<T>> {
+  ): React.LazyExoticComponent<T> {
     const {
       fallback = DefaultLoadingComponent,
       retryCount = 3,
@@ -142,7 +166,7 @@ class CodeSplittingManager {
       preload = false,
     } = options;
 
-    const LazyComponent = lazy(() => this.withRetry(importFn, retryCount, retryDelay));
+    const LazyComponent = lazy(() => withRetry(importFn, retryCount, retryDelay));
 
     if (preload) {
       // Preload the component
@@ -153,36 +177,9 @@ class CodeSplittingManager {
       }, 100);
     }
 
-    return React.forwardRef<any, React.ComponentProps<T>>((props, ref) => (
-      <Suspense fallback={<fallback />}>
-        <LazyComponent {...props} ref={ref} />
-      </Suspense>
-    ));
+    return LazyComponent;
   }
 
-  private withRetry<T>(
-    importFn: () => Promise<T>,
-    retryCount: number,
-    retryDelay: number
-  ): Promise<T> {
-    return new Promise((resolve, reject) => {
-      const attempt = (remainingRetries: number) => {
-        importFn()
-          .then(resolve)
-          .catch((error) => {
-            if (remainingRetries > 0) {
-              setTimeout(() => {
-                attempt(remainingRetries - 1);
-              }, retryDelay);
-            } else {
-              reject(error);
-            }
-          });
-      };
-      
-      attempt(retryCount);
-    });
-  }
 
 
   public preloadChunk(chunkName: string): Promise<void> {
@@ -441,7 +438,7 @@ export function withLazyLoading<T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   fallback?: React.ComponentType
 ): ComponentType<React.ComponentProps<T>> {
-  return codeSplittingManager.createLazyComponent(importFn, { fallback });
+  return codeSplittingManager.createLazyComponent(importFn, { fallback }) as ComponentType<React.ComponentProps<T>>;
 }
 
 export function LazyRoute({ 
@@ -454,7 +451,7 @@ export function LazyRoute({
   [key: string]: any;
 }) {
   const LazyComponent = codeSplittingManager.createLazyComponent(component, { fallback });
-  return <LazyComponent {...props} />;
+  return React.createElement(LazyComponent, props);
 }
 
 // Performance optimization utilities

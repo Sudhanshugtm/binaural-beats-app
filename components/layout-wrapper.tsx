@@ -17,7 +17,7 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
   return (
     <div className="relative min-h-screen bg-background prevent-horizontal-scroll">
       {isPlayerPage ? <PlayerHeader /> : <Header />}
-      <main id="main-content" tabIndex={-1} className={`${isPlayerPage ? 'pt-14 min-h-screen' : ''} prevent-horizontal-scroll`}>
+      <main id="main-content" tabIndex={-1} className={`${isPlayerPage ? 'pt-16 min-h-screen' : ''} prevent-horizontal-scroll`}>
         {children}
       </main>
     </div>

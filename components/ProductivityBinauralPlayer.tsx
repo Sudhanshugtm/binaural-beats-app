@@ -498,7 +498,7 @@ export default function ProductivityBinauralPlayer() {
       />
 
       {/* Main Content */}
-      <main className="container-zen section-zen-lg relative z-10">
+      <main className="container-zen py-4 sm:py-8 relative z-10 min-h-screen flex flex-col">
         {!selectedMode ? (
           <div className="space-zen-3xl">
             {/* Gentle Welcome */}
@@ -697,20 +697,20 @@ export default function ProductivityBinauralPlayer() {
                 onFocus={handleControlsMouseEnter}
                 data-testid="audio-controls"
               >
-                <div className="flex items-center justify-center space-x-6 sm:space-x-8 md:space-x-12 mb-6 sm:mb-8">
+                <div className="flex items-center justify-center space-x-4 sm:space-x-6 md:space-x-8 mb-4 sm:mb-6">
                   {/* Premium Mute Control */}
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={toggleMute}
-                    className={`h-16 w-16 sm:h-18 sm:w-18 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-12 w-12 sm:h-16 sm:w-16 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-zen-md ${
                       isMuted 
                         ? 'text-destructive border-destructive/30 hover:border-destructive/50 hover:bg-destructive/10' 
                         : 'text-muted-foreground border-transparent hover:border-primary/30 hover:bg-primary/10'
                     }`}
                     aria-label={isMuted ? "Unmute audio" : "Mute audio"}
                   >
-                    {isMuted ? <VolumeX className="h-6 w-6 sm:h-7 sm:w-7" /> : <Volume2 className="h-6 w-6 sm:h-7 sm:w-7" />}
+                    {isMuted ? <VolumeX className="h-5 w-5 sm:h-6 sm:w-6" /> : <Volume2 className="h-5 w-5 sm:h-6 sm:w-6" />}
                   </Button>
 
                   {/* Premium Play/Pause Control */}
@@ -718,7 +718,7 @@ export default function ProductivityBinauralPlayer() {
                     size="lg"
                     onClick={togglePlayPause}
                     disabled={isLoading}
-                    className={`h-24 w-24 sm:h-28 sm:w-28 rounded-full zen-ripple touch-target shadow-zen-lg border-2 font-normal tracking-wide backdrop-blur-sm transition-all duration-500 ${
+                    className={`h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-full zen-ripple touch-target shadow-zen-lg border-2 font-normal tracking-wide backdrop-blur-sm transition-all duration-500 ${
                       isPlaying 
                         ? 'bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary/80 text-secondary-foreground border-secondary/30 breathe-gentle' 
                         : 'bg-gradient-to-r from-primary to-gradient-middle hover:from-primary/90 hover:to-gradient-middle/90 text-primary-foreground border-primary/30 hover:shadow-zen-xl'
@@ -728,9 +728,9 @@ export default function ProductivityBinauralPlayer() {
                     {isLoading ? (
                       <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 border-2 border-current border-t-transparent" />
                     ) : isPlaying ? (
-                      <Pause className="h-8 w-8 sm:h-10 sm:w-10" />
+                      <Pause className="h-6 w-6 sm:h-8 sm:w-8" />
                     ) : (
-                      <Play className="h-8 w-8 sm:h-10 sm:w-10 ml-1" />
+                      <Play className="h-6 w-6 sm:h-8 sm:w-8 ml-1" />
                     )}
                   </Button>
 
@@ -747,17 +747,17 @@ export default function ProductivityBinauralPlayer() {
                       setControlsVisible(true);
                       exitDeepFocusMode();
                     }}
-                    className={`h-16 w-16 sm:h-18 sm:w-18 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-12 w-12 sm:h-16 sm:w-16 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
                       isDeepFocusMode ? 'opacity-0 invisible' : 'opacity-100 visible'
                     }`}
                     aria-label="Stop and return to mode selection"
                   >
-                    <X className="h-6 w-6 sm:h-7 sm:w-7" />
+                    <X className="h-5 w-5 sm:h-6 sm:w-6" />
                   </Button>
                 </div>
 
                 {/* Elegant Volume Control */}
-                <div className="max-w-xs sm:max-w-sm mx-auto px-6 sm:px-8">
+                <div className="max-w-xs sm:max-w-sm mx-auto px-4 sm:px-6">
                   <Slider
                     value={[volume]}
                     onValueChange={([v]) => updateVolume(v)}

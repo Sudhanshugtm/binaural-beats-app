@@ -14,39 +14,57 @@
 
 @layer base {
   :root {
-    /* Nature-inspired calming backgrounds */
-    --background: 40 20% 98%; /* Soft warm white with beige undertones */
-    --foreground: 20 20% 15%; /* Much darker for better readability */
-    --card: 45 25% 96%; /* Warm off-white cards */
-    --card-foreground: 20 20% 15%; /* Much darker for better readability */
-    --popover: 45 25% 96%;
-    --popover-foreground: 20 20% 15%;
+    /* Enhanced nature-inspired calming backgrounds */
+    --background: 45 25% 98%; /* Warmer, more inviting white */
+    --foreground: 25 18% 12%; /* Rich, dark earth tone for better readability */
+    --card: 48 30% 96%; /* Slightly warmer card background */
+    --card-foreground: 25 18% 12%; /* Consistent with foreground */
+    --popover: 48 30% 96%;
+    --popover-foreground: 25 18% 12%;
     
-    /* Calming sage green as primary - evokes nature and tranquility */
-    --primary: 140 30% 35%; /* Muted sage green */
-    --primary-foreground: 40 20% 98%; /* Soft warm white for contrast */
+    /* Refined sage green palette with depth */
+    --primary: 142 35% 38%; /* Deeper, richer sage green */
+    --primary-foreground: 45 25% 98%; /* Warm white for perfect contrast */
     
-    /* Earthy secondary colors */
-    --secondary: 35 25% 88%; /* Soft warm beige */
-    --secondary-foreground: 20 15% 30%;
+    /* Sophisticated earthy secondary tones */
+    --secondary: 38 28% 86%; /* Warmer, more sophisticated beige */
+    --secondary-foreground: 25 18% 25%;
     
-    /* Subtle muted colors for backgrounds */
-    --muted: 40 15% 94%; /* Very light warm neutral */
-    --muted-foreground: 20 20% 20%; /* Much darker for proper contrast */
+    /* Enhanced muted colors for subtle elements */
+    --muted: 42 20% 93%; /* Slightly warmer muted background */
+    --muted-foreground: 25 18% 18%; /* Rich dark tone for better readability */
     
-    /* Soft accent colors */
-    --accent: 160 20% 85%; /* Soft seafoam green */
-    --accent-foreground: 20 15% 30%;
+    /* Harmonious accent colors */
+    --accent: 158 25% 82%; /* More saturated seafoam with warmth */
+    --accent-foreground: 25 18% 25%;
     
-    /* Gentle destructive colors */
-    --destructive: 10 60% 55%; /* Muted terracotta red */
-    --destructive-foreground: 40 20% 98%;
+    /* Refined destructive colors */
+    --destructive: 12 65% 52%; /* More sophisticated terracotta */
+    --destructive-foreground: 45 25% 98%;
     
-    /* Subtle borders and inputs */
-    --border: 40 15% 85%; /* Soft neutral border */
-    --input: 40 15% 90%; /* Light input background */
-    --ring: 140 30% 35%; /* Sage green focus ring */
+    /* Subtle borders and inputs with warmth */
+    --border: 42 18% 82%; /* Warmer, more inviting border */
+    --input: 42 18% 88%; /* Slightly warmer input background */
+    --ring: 142 35% 38%; /* Consistent with primary */
     --radius: 0.5rem;
+    
+    /* New premium color additions */
+    --success: 145 50% 42%; /* Rich forest green for success states */
+    --success-foreground: 45 25% 98%;
+    --warning: 35 84% 62%; /* Warm amber for warnings */
+    --warning-foreground: 25 18% 12%;
+    --info: 195 45% 58%; /* Calming blue for info */
+    --info-foreground: 45 25% 98%;
+    
+    /* Gradient color stops for advanced effects */
+    --gradient-start: 142 35% 38%;
+    --gradient-middle: 158 25% 45%;
+    --gradient-end: 172 22% 52%;
+    
+    /* Shadow colors for depth */
+    --shadow-light: 142 35% 38% / 0.1;
+    --shadow-medium: 142 35% 38% / 0.2;
+    --shadow-heavy: 142 35% 38% / 0.3;
     
     /* Comprehensive typography system for peaceful reading */
     --font-size-xs: 0.8125rem; /* 13px */
@@ -80,38 +98,56 @@
   }
  
   .dark {
-    /* Deep forest-inspired dark backgrounds */
-    --background: 160 15% 8%; /* Deep forest green-black */
-    --foreground: 40 20% 88%; /* Softer warm off-white for peaceful reading */
-    --card: 160 12% 12%; /* Slightly lighter forest tone */
-    --card-foreground: 40 20% 88%;
-    --popover: 160 12% 12%;
-    --popover-foreground: 40 20% 88%;
+    /* Enhanced deep forest-inspired dark backgrounds */
+    --background: 158 18% 9%; /* Richer, deeper forest background */
+    --foreground: 42 25% 90%; /* Warmer, more inviting light text */
+    --card: 158 15% 13%; /* Sophisticated dark card background */
+    --card-foreground: 42 25% 90%;
+    --popover: 158 15% 13%;
+    --popover-foreground: 42 25% 90%;
     
-    /* Gentle sage green for dark mode */
-    --primary: 140 25% 55%; /* Lighter sage green for visibility */
-    --primary-foreground: 160 15% 8%; /* Dark background for contrast */
+    /* Refined sage green for dark mode with better visibility */
+    --primary: 142 40% 58%; /* Brighter, more vibrant sage */
+    --primary-foreground: 158 18% 9%; /* Dark background for perfect contrast */
     
-    /* Warm earth tones for secondary */
-    --secondary: 35 15% 18%; /* Dark warm brown */
-    --secondary-foreground: 40 20% 82%;
+    /* Sophisticated dark earth tones */
+    --secondary: 38 18% 20%; /* Richer, warmer dark brown */
+    --secondary-foreground: 42 25% 85%;
     
-    /* Subtle muted colors for dark mode */
-    --muted: 160 10% 15%; /* Muted dark green */
-    --muted-foreground: 40 15% 75%; /* Brighter for better readability */
+    /* Enhanced muted colors for dark mode */
+    --muted: 158 12% 17%; /* Warmer muted dark background */
+    --muted-foreground: 42 20% 78%; /* Better readability with warmth */
     
-    /* Soft accent for dark mode */
-    --accent: 160 15% 18%; /* Soft dark green accent */
-    --accent-foreground: 40 20% 82%;
+    /* Harmonious accent for dark mode */
+    --accent: 158 18% 20%; /* Sophisticated dark green accent */
+    --accent-foreground: 42 25% 85%;
     
-    /* Muted destructive for dark mode */
-    --destructive: 10 45% 50%; /* Softer terracotta red */
-    --destructive-foreground: 40 20% 88%;
+    /* Refined destructive for dark mode */
+    --destructive: 12 60% 55%; /* More vibrant terracotta for visibility */
+    --destructive-foreground: 42 25% 90%;
     
-    /* Subtle borders for dark mode */
-    --border: 160 10% 20%; /* Subtle green-tinted border */
-    --input: 160 10% 18%; /* Dark input background */
-    --ring: 140 25% 55%; /* Sage green focus ring */
+    /* Enhanced borders and inputs for dark mode */
+    --border: 158 12% 22%; /* Warmer, more sophisticated border */
+    --input: 158 12% 19%; /* Slightly warmer input background */
+    --ring: 142 40% 58%; /* Consistent with primary */
+    
+    /* Dark mode premium color additions */
+    --success: 145 55% 48%; /* Brighter forest green for dark mode */
+    --success-foreground: 158 18% 9%;
+    --warning: 35 90% 68%; /* Brighter amber for dark mode */
+    --warning-foreground: 158 18% 9%;
+    --info: 195 50% 65%; /* Brighter blue for dark mode */
+    --info-foreground: 158 18% 9%;
+    
+    /* Dark mode gradient stops */
+    --gradient-start: 142 40% 58%;
+    --gradient-middle: 158 30% 52%;
+    --gradient-end: 172 25% 48%;
+    
+    /* Dark mode shadow colors */
+    --shadow-light: 142 40% 58% / 0.15;
+    --shadow-medium: 142 40% 58% / 0.25;
+    --shadow-heavy: 142 40% 58% / 0.35;
   }
   
   /* High contrast theme for accessibility */
@@ -135,6 +171,29 @@
     --border: 0 0% 40%;
     --input: 0 0% 80%;
     --ring: 140 100% 25%;
+  }
+
+  /* Enhanced dark mode high contrast */
+  .dark.high-contrast {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 140 100% 60%; /* Bright sage green for dark mode */
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 140 100% 60%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 100% 65%; /* Bright terracotta for dark mode */
+    --destructive-foreground: 0 0% 0%;
+    --border: 0 0% 60%;
+    --input: 0 0% 20%;
+    --ring: 140 100% 60%;
   }
 }
 
@@ -215,27 +274,70 @@
     letter-spacing: var(--letter-spacing-wide);
   }
   
-  /* Improved focus styles for better accessibility */
+  /* Enhanced focus styles for better accessibility */
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-primary;
+    outline: 3px solid hsl(var(--primary));
+    outline-offset: 3px;
+    border-radius: 6px;
   }
   
-  /* Consistent focus styles for interactive elements */
+  /* Premium focus styles for interactive elements */
   button:focus-visible,
   [role="button"]:focus-visible,
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    outline: 2px solid hsl(var(--primary));
-    outline-offset: 2px;
-    border-radius: 4px;
+    outline: 3px solid hsl(var(--primary));
+    outline-offset: 3px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 6px hsl(var(--primary) / 0.15);
+    transform: scale(1.02);
+    transition: all 0.2s ease;
   }
   
   /* Enhanced focus for cards and interactive containers */
   .card-focus:focus-visible {
-    outline: 2px solid hsl(var(--primary));
+    outline: 3px solid hsl(var(--primary));
+    outline-offset: 6px;
+    box-shadow: 
+      0 0 0 6px hsl(var(--primary) / 0.15),
+      0 0 0 12px hsl(var(--primary) / 0.1);
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+  }
+  
+  /* Premium focus ring for zen elements */
+  .zen-focus:focus-visible {
+    outline: 3px solid hsl(var(--primary));
     outline-offset: 4px;
-    box-shadow: 0 0 0 4px hsla(var(--primary), 0.2);
+    border-radius: 50%;
+    box-shadow: 
+      0 0 0 6px hsl(var(--primary) / 0.2),
+      0 0 0 12px hsl(var(--primary) / 0.1),
+      0 0 20px hsl(var(--primary) / 0.3);
+    animation: breathe-gentle 2s ease-in-out infinite;
+  }
+  
+  /* Skip to main content enhancement */
+  .skip-to-main {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    z-index: 100;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px hsl(var(--shadow-medium));
+  }
+  
+  .skip-to-main:focus {
+    top: 6px;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px hsl(var(--shadow-heavy));
   }
   
   /* Base text sizes using the custom variables */
@@ -320,6 +422,102 @@
   /* Skip to content link for keyboard users */
   .skip-to-content {
     @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded;
+  }
+
+  /* Font size scaling for accessibility */
+  [data-font-size="small"] {
+    font-size: 0.875rem; /* 14px */
+  }
+
+  [data-font-size="medium"] {
+    font-size: 1rem; /* 16px - default */
+  }
+
+  [data-font-size="large"] {
+    font-size: 1.125rem; /* 18px */
+  }
+
+  [data-font-size="extra-large"] {
+    font-size: 1.25rem; /* 20px */
+  }
+
+  [data-font-size="small"] h1 { font-size: 1.875rem; }
+  [data-font-size="large"] h1 { font-size: 2.5rem; }
+  [data-font-size="extra-large"] h1 { font-size: 3rem; }
+
+  [data-font-size="small"] h2 { font-size: 1.5rem; }
+  [data-font-size="large"] h2 { font-size: 2rem; }
+  [data-font-size="extra-large"] h2 { font-size: 2.5rem; }
+
+  [data-font-size="small"] h3 { font-size: 1.25rem; }
+  [data-font-size="large"] h3 { font-size: 1.75rem; }
+  [data-font-size="extra-large"] h3 { font-size: 2rem; }
+
+  /* Enhanced keyboard navigation indicators */
+  .keyboard-navigation button:focus,
+  .keyboard-navigation [role="button"]:focus,
+  .keyboard-navigation input:focus,
+  .keyboard-navigation textarea:focus,
+  .keyboard-navigation select:focus,
+  .keyboard-navigation [tabindex]:focus {
+    outline: 3px solid hsl(var(--primary)) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 6px hsl(var(--primary) / 0.2) !important;
+  }
+
+  /* Visual indicators for interactive elements */
+  .visual-indicators button,
+  .visual-indicators [role="button"],
+  .visual-indicators input,
+  .visual-indicators textarea,
+  .visual-indicators select {
+    border: 2px solid hsl(var(--border));
+    transition: border-color 0.2s ease;
+  }
+
+  .visual-indicators button:hover,
+  .visual-indicators [role="button"]:hover,
+  .visual-indicators input:hover,
+  .visual-indicators textarea:hover,
+  .visual-indicators select:hover {
+    border-color: hsl(var(--primary));
+  }
+
+  /* Reduced motion support */
+  .reduced-motion *,
+  .reduced-motion *::before,
+  .reduced-motion *::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
   }
 }
 
@@ -574,13 +772,198 @@
 
 /* Enhanced card hover effects */
 .card-hover {
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
 
 .card-hover:hover {
   transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px hsl(var(--shadow-light)), 0 10px 20px hsl(var(--shadow-medium));
+}
+
+/* Premium card effects with nature-inspired animations */
+.card-premium {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.95) 100%);
+  border: 1px solid hsl(var(--border));
+  backdrop-filter: blur(10px);
+}
+
+.card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--primary) / 0.1),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.card-premium:hover::before {
+  left: 100%;
+}
+
+.card-premium:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 25px 50px hsl(var(--shadow-medium)),
+    0 15px 30px hsl(var(--shadow-light)),
+    0 0 0 1px hsl(var(--primary) / 0.1);
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+/* Premium button effects */
+.btn-premium {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--gradient-middle)) 100%);
+  border: 2px solid hsl(var(--primary));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(5px);
+}
+
+.btn-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-premium:hover::before {
+  left: 100%;
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 15px 30px hsl(var(--shadow-medium)),
+    0 5px 15px hsl(var(--shadow-light));
+  border-color: hsl(var(--gradient-end));
+}
+
+.btn-premium:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Breathing animation for meditation elements */
+.breathe-gentle {
+  animation: breathe-gentle 6s ease-in-out infinite;
+}
+
+@keyframes breathe-gentle {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 0.8;
+  }
+  50% { 
+    transform: scale(1.05); 
+    opacity: 1;
+  }
+}
+
+/* Zen ripple effect for interactive elements */
+.zen-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.zen-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: hsl(var(--primary) / 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.zen-ripple:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* Premium gradient text effects */
+.gradient-text-premium {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--gradient-start)) 0%,
+    hsl(var(--gradient-middle)) 50%,
+    hsl(var(--gradient-end)) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradient-flow 8s ease infinite;
+}
+
+@keyframes gradient-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* New utility classes for premium colors */
+.text-success {
+  color: hsl(var(--success));
+}
+
+.text-warning {
+  color: hsl(var(--warning));
+}
+
+.text-info {
+  color: hsl(var(--info));
+}
+
+.bg-success {
+  background-color: hsl(var(--success));
+}
+
+.bg-warning {
+  background-color: hsl(var(--warning));
+}
+
+.bg-info {
+  background-color: hsl(var(--info));
+}
+
+/* Premium shadow utilities */
+.shadow-zen-sm {
+  box-shadow: 0 2px 8px hsl(var(--shadow-light));
+}
+
+.shadow-zen-md {
+  box-shadow: 0 4px 16px hsl(var(--shadow-medium));
+}
+
+.shadow-zen-lg {
+  box-shadow: 0 8px 32px hsl(var(--shadow-heavy));
+}
+
+.shadow-zen-xl {
+  box-shadow: 
+    0 20px 40px hsl(var(--shadow-heavy)),
+    0 10px 20px hsl(var(--shadow-medium));
 }
 
 /* Audio visualization enhancements */
@@ -594,43 +977,194 @@
 }
 
 /* Mobile-first responsive utilities */
+.mobile-safe-area {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Improved touch targets for all devices */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation; /* Prevents zoom on double-tap */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Better mobile typography */
+.mobile-text {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%; /* Prevents automatic text resizing */
+}
+
+/* Mobile-specific improvements */
+body {
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Prevent zoom on buttons */
+}
+
+/* Better spacing for mobile */
 @media (max-width: 640px) {
-  .mobile-safe-area {
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
-  
-  /* Improved touch targets for mobile */
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
-    touch-action: manipulation; /* Prevents zoom on double-tap */
-  }
-  
-  /* Better mobile typography */
-  .mobile-text {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%; /* Prevents automatic text resizing */
-  }
-  
-  /* Mobile-specific improvements */
-  body {
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
-    touch-action: manipulation; /* Prevent zoom on buttons */
-  }
-  
-  /* Better spacing for mobile */
   .space-y-8 > * + * {
     margin-top: 1.5rem; /* Reduce from 2rem to 1.5rem on mobile */
   }
-  
-  /* Mobile button improvements */
-  button, .btn, [role="button"] {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
+}
+
+/* Mobile button improvements */
+button, .btn, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Enhanced responsive text utilities using clamp() for fluid typography */
+.text-fluid-sm {
+  font-size: clamp(0.875rem, 2.5vw, 1rem); /* 14px to 16px */
+}
+
+.text-fluid-base {
+  font-size: clamp(1rem, 2.5vw, 1.125rem); /* 16px to 18px */
+}
+
+.text-fluid-lg {
+  font-size: clamp(1.125rem, 3vw, 1.5rem); /* 18px to 24px */
+}
+
+.text-fluid-xl {
+  font-size: clamp(1.25rem, 4vw, 1.875rem); /* 20px to 30px */
+}
+
+.text-fluid-2xl {
+  font-size: clamp(1.5rem, 5vw, 2.25rem); /* 24px to 36px */
+}
+
+.text-fluid-3xl {
+  font-size: clamp(1.875rem, 6vw, 3rem); /* 30px to 48px */
+}
+
+.text-fluid-4xl {
+  font-size: clamp(2.25rem, 8vw, 3.75rem); /* 36px to 60px */
+}
+
+.text-fluid-5xl {
+  font-size: clamp(3rem, 10vw, 4.5rem); /* 48px to 72px */
+}
+
+/* Enhanced responsive spacing utilities */
+.space-fluid-sm {
+  margin: clamp(0.5rem, 2vw, 1rem);
+}
+
+.space-fluid-md {
+  margin: clamp(1rem, 3vw, 1.5rem);
+}
+
+.space-fluid-lg {
+  margin: clamp(1.5rem, 4vw, 2rem);
+}
+
+.space-fluid-xl {
+  margin: clamp(2rem, 5vw, 3rem);
+}
+
+/* Enhanced button sizes for better touch targets */
+.btn-touch-sm {
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0.5rem 1rem;
+}
+
+.btn-touch-md {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.75rem 1.5rem;
+}
+
+.btn-touch-lg {
+  min-height: 48px;
+  min-width: 48px;
+  padding: 1rem 2rem;
+}
+
+/* Enhanced card responsiveness */
+.card-responsive {
+  padding: clamp(1rem, 4vw, 2rem);
+  border-radius: clamp(0.5rem, 2vw, 1rem);
+}
+
+/* Responsive grid improvements */
+.grid-responsive-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+/* Enhanced container utilities */
+.container-fluid {
+  max-width: 100%;
+  padding-left: clamp(1rem, 4vw, 2rem);
+  padding-right: clamp(1rem, 4vw, 2rem);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Improved focus ring for mobile */
+.focus-ring-mobile {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Better scrollbar for mobile */
+.scrollbar-mobile {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--muted));
+}
+
+.scrollbar-mobile::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-mobile::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 3px;
+}
+
+.scrollbar-mobile::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border-radius: 3px;
+}
+
+.scrollbar-mobile::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--foreground));
+}
+
+/* Enhanced horizontal scroll prevention */
+.prevent-horizontal-scroll {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Improved aspect ratio utilities */
+.aspect-square-responsive {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: auto;
+}
+
+.aspect-video-responsive {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+}
+
+/* Enhanced animation controls for mobile */
+@media (prefers-reduced-motion: reduce) {
+  .animate-mobile-safe {
+    animation: none !important;
+    transition: none !important;
   }
 }
 

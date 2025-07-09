@@ -36,6 +36,46 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-forest-mist ambient-bg serene-overlay relative overflow-hidden mobile-safe-area">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Beatful - Binaural Beats for Focus & Meditation",
+            "description": "Transform your focus and meditation practice with scientifically-designed binaural beats. Free web app for mindful productivity and relaxation.",
+            "url": "https://beatful.app",
+            "mainEntity": {
+              "@type": "SoftwareApplication",
+              "name": "Beatful",
+              "applicationCategory": "HealthApplication",
+              "operatingSystem": "Web Browser",
+              "description": "Interactive binaural beats application for meditation, focus, and relaxation",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              }
+            },
+            "breadcrumb": {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://beatful.app"
+                }
+              ]
+            }
+          })
+        }}
+      />"
+      {/* Skip to main content for accessibility */}
+      <a href="#main-content" className="skip-to-main sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-gray-900 px-4 py-2 rounded-md z-50">
+        Skip to main content
+      </a>
+      
       {/* Gentle animated background */}
       <ParticleSystem
         isPlaying={true}
@@ -52,70 +92,74 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-8 sm:px-12 lg:px-16 pt-24">
-        <div className="container-zen-narrow text-center space-zen-3xl pt-8">
+      <main id="main-content" className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-8 lg:px-16 pt-16 sm:pt-24" role="main">
+        <div className="container-zen-narrow text-center space-zen-3xl pt-4 sm:pt-8">
           
           {/* Welcome Section */}
-          <div className="space-zen-xl">
+          <header className="space-zen-xl">
             <div className="space-zen-lg">
-              <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-semibold text-gray-800 leading-tight tracking-wide mb-12">
+              <h1 className="font-heading text-fluid-3xl lg:text-fluid-4xl font-semibold text-gray-800 leading-tight tracking-wide mb-8 sm:mb-12">
                 Welcome to Your
                 <br />
                 <span className="text-gray-700">Mindful Practice</span>
               </h1>
               
-              <p className="text-xl sm:text-2xl text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide">
+              <p className="text-fluid-lg md:text-fluid-xl text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide px-4 sm:px-0">
                 Take a breath. Find your center. Let the gentle sounds guide you to clarity.
               </p>
             </div>
 
             
-          </div>
+          </header>
 
           {/* Call to Action */}
-          <div className="space-zen-lg">
+          <section className="space-zen-lg" aria-labelledby="cta-heading">
+            <h2 id="cta-heading" className="sr-only">Start Your Meditation Practice</h2>
             <Button
               onClick={handleBeginSession}
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-16 py-8 text-xl font-normal rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 tracking-wide mb-8"
+              className="group px-8 sm:px-12 md:px-16 py-6 sm:py-8 text-fluid-lg font-normal rounded-2xl tracking-wide mb-6 sm:mb-8 touch-target w-full sm:w-auto max-w-sm sm:max-w-none zen-ripple"
+              aria-label="Begin your meditation practice with binaural beats"
             >
-              <Play className="w-6 h-6 mr-4" />
+              <Play className="w-5 h-5 sm:w-6 sm:h-6 mr-3 sm:mr-4 transition-transform duration-300 group-hover:scale-110" aria-hidden="true" />
               Begin Your Practice
             </Button>
             
-            <p className="text-gray-600 text-sm font-medium tracking-wide mt-6">
+            <p className="text-gray-600 text-sm font-medium tracking-wide mt-4 sm:mt-6 px-4 sm:px-0">
               No distractions. No pressure. Just you and the sounds.
             </p>
-          </div>
+          </section>
 
           {/* Simple Feature Highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 pt-20">
-            <div className="text-center space-zen-sm">
-              <div className="w-20 h-20 mx-auto bg-accent rounded-full flex items-center justify-center mb-8">
-                <Headphones className="w-10 h-10 text-accent-foreground/70" />
-              </div>
-              <h3 className="font-heading text-lg font-semibold text-gray-800 tracking-wide mb-4">Pure Audio</h3>
-              <p className="text-sm text-gray-600 font-medium leading-relaxed px-4">Clean, calming binaural beats</p>
-            </div>
+          <section className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 pt-16 sm:pt-20" aria-labelledby="features-heading">
+            <h2 id="features-heading" className="sr-only">Key Features of Beatful</h2>
             
-            <div className="text-center space-zen-sm">
-              <div className="w-20 h-20 mx-auto bg-secondary rounded-full flex items-center justify-center mb-8">
-                <Heart className="w-10 h-10 text-secondary-foreground/70" />
+            <article className="text-center space-zen-sm">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-accent rounded-full flex items-center justify-center mb-6 sm:mb-8" aria-hidden="true">
+                <Headphones className="w-8 h-8 sm:w-10 sm:h-10 text-accent-foreground/70" />
               </div>
-              <h3 className="font-heading text-lg font-semibold text-gray-800 tracking-wide mb-4">Gentle Approach</h3>
-              <p className="text-sm text-gray-600 font-medium leading-relaxed px-4">Designed for peaceful focus</p>
-            </div>
+              <h3 className="font-heading text-fluid-base font-semibold text-gray-800 tracking-wide mb-3 sm:mb-4">Pure Audio</h3>
+              <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed px-2 sm:px-4">Clean, calming binaural beats designed for optimal focus and relaxation</p>
+            </article>
             
-            <div className="text-center space-zen-sm">
-              <div className="w-20 h-20 mx-auto bg-muted rounded-full flex items-center justify-center mb-8">
-                <Play className="w-10 h-10 text-gray-600" />
+            <article className="text-center space-zen-sm">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-secondary rounded-full flex items-center justify-center mb-6 sm:mb-8" aria-hidden="true">
+                <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-secondary-foreground/70" />
               </div>
-              <h3 className="font-heading text-lg font-semibold text-gray-800 tracking-wide mb-4">Instant Access</h3>
-              <p className="text-sm text-gray-600 font-medium leading-relaxed px-4">Start whenever you're ready</p>
-            </div>
-          </div>
+              <h3 className="font-heading text-fluid-base font-semibold text-gray-800 tracking-wide mb-3 sm:mb-4">Gentle Approach</h3>
+              <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed px-2 sm:px-4">Designed for peaceful focus and mindful meditation practice</p>
+            </article>
+            
+            <article className="text-center space-zen-sm">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-muted rounded-full flex items-center justify-center mb-6 sm:mb-8" aria-hidden="true">
+                <Play className="w-8 h-8 sm:w-10 sm:h-10 text-gray-600" />
+              </div>
+              <h3 className="font-heading text-fluid-base font-semibold text-gray-800 tracking-wide mb-3 sm:mb-4">Instant Access</h3>
+              <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed px-2 sm:px-4">Start your meditation practice whenever you're ready</p>
+            </article>
+          </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

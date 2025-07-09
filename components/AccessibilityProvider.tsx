@@ -141,6 +141,66 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
           }
         }
       }
+
+      // Global keyboard shortcuts for audio controls
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        const focusedElement = document.activeElement;
+        if (focusedElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(focusedElement.tagName)) {
+          return; // Don't interfere with form inputs
+        }
+        
+        e.preventDefault();
+        const playPauseButton = document.querySelector('[aria-label*="play"], [aria-label*="pause"]') as HTMLElement;
+        if (playPauseButton) {
+          playPauseButton.click();
+          announceToScreenReader('Toggled audio playback', 'assertive');
+        }
+      }
+
+      // Volume controls
+      if (e.key === 'ArrowUp' && e.altKey) {
+        e.preventDefault();
+        const volumeSlider = document.querySelector('[aria-label*="volume"]') as HTMLInputElement;
+        if (volumeSlider) {
+          const currentValue = parseFloat(volumeSlider.value);
+          const newValue = Math.min(1, currentValue + 0.1);
+          volumeSlider.value = newValue.toString();
+          volumeSlider.dispatchEvent(new Event('input', { bubbles: true }));
+          announceToScreenReader(`Volume ${Math.round(newValue * 100)}%`, 'assertive');
+        }
+      }
+
+      if (e.key === 'ArrowDown' && e.altKey) {
+        e.preventDefault();
+        const volumeSlider = document.querySelector('[aria-label*="volume"]') as HTMLInputElement;
+        if (volumeSlider) {
+          const currentValue = parseFloat(volumeSlider.value);
+          const newValue = Math.max(0, currentValue - 0.1);
+          volumeSlider.value = newValue.toString();
+          volumeSlider.dispatchEvent(new Event('input', { bubbles: true }));
+          announceToScreenReader(`Volume ${Math.round(newValue * 100)}%`, 'assertive');
+        }
+      }
+
+      // Mute toggle
+      if (e.key === 'm' && e.altKey) {
+        e.preventDefault();
+        const muteButton = document.querySelector('[aria-label*="mute"], [aria-label*="unmute"]') as HTMLElement;
+        if (muteButton) {
+          muteButton.click();
+        }
+      }
+
+      // Help shortcut
+      if (e.key === '?' && e.shiftKey) {
+        e.preventDefault();
+        const helpButton = document.querySelector('[aria-label*="help"], [aria-label*="shortcuts"]') as HTMLElement;
+        if (helpButton) {
+          helpButton.click();
+        } else {
+          announceToScreenReader('Keyboard shortcuts: Space to play/pause, Alt+Up/Down for volume, Alt+M to mute, Escape to close dialogs', 'assertive');
+        }
+      }
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -272,12 +332,12 @@ export function useKeyboardNavigation() {
 export function useAudioDescriptions() {
   const { settings, announceToScreenReader } = useAccessibility();
 
-  const describeAudioState = (isPlaying: boolean, mode?: string, frequency?: number) => {
+  const describeAudioState = (isPlaying: boolean, mode?: string, frequency?: number, volume?: number) => {
     if (!settings.audioDescriptions) return;
 
     let description = '';
     if (isPlaying) {
-      description = `Audio playing. ${mode ? `Mode: ${mode}. ` : ''}${frequency ? `Frequency: ${frequency} Hz.` : ''}`;
+      description = `Audio playing. ${mode ? `Mode: ${mode}. ` : ''}${frequency ? `Frequency: ${frequency} Hz. ` : ''}${volume !== undefined ? `Volume: ${Math.round(volume * 100)}%. ` : ''}`;
     } else {
       description = 'Audio stopped.';
     }
@@ -292,8 +352,51 @@ export function useAudioDescriptions() {
     announceToScreenReader(description);
   };
 
+  const describeVolumeChange = (volume: number, isMuted: boolean) => {
+    if (!settings.audioDescriptions) return;
+
+    const description = isMuted ? 'Audio muted' : `Volume set to ${Math.round(volume * 100)}%`;
+    announceToScreenReader(description, 'assertive');
+  };
+
+  const describeModeChange = (mode: string, frequency: number, duration: number) => {
+    if (!settings.audioDescriptions) return;
+
+    const description = `Selected ${mode} mode. Frequency: ${frequency} Hz. Duration: ${duration} minutes.`;
+    announceToScreenReader(description, 'assertive');
+  };
+
+  const describeSessionComplete = (totalTime: number) => {
+    if (!settings.audioDescriptions) return;
+
+    const description = `Session complete. Total time: ${totalTime} minutes.`;
+    announceToScreenReader(description, 'assertive');
+  };
+
+  const describeKeyboardShortcuts = () => {
+    if (!settings.audioDescriptions) return;
+
+    const shortcuts = [
+      'Space bar: Play or pause audio',
+      'Alt plus Up arrow: Increase volume',
+      'Alt plus Down arrow: Decrease volume',
+      'Alt plus M: Toggle mute',
+      'Shift plus question mark: Show this help',
+      'Escape: Close dialogs',
+      'Tab: Navigate between elements',
+      'Enter or Space: Activate buttons and controls'
+    ];
+
+    const description = `Keyboard shortcuts available: ${shortcuts.join('. ')}.`;
+    announceToScreenReader(description, 'assertive');
+  };
+
   return {
     describeAudioState,
-    describeProgress
+    describeProgress,
+    describeVolumeChange,
+    describeModeChange,
+    describeSessionComplete,
+    describeKeyboardShortcuts
   };
 }

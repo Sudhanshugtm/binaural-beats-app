@@ -1,0 +1,520 @@
+/* Browser Compatibility CSS
+ * Cross-browser fixes and fallbacks for binaural beats app
+ * Handles vendor prefixes, browser-specific quirks, and progressive enhancement
+ */
+
+/* === CSS Variables Fallback === */
+:root {
+  /* Color palette with fallbacks */
+  --primary-color: #3b82f6;
+  --primary-color-fallback: #2563eb;
+  --secondary-color: #8b5cf6;
+  --secondary-color-fallback: #7c3aed;
+  --background-color: #ffffff;
+  --background-color-fallback: #f8fafc;
+  --text-color: #1f2937;
+  --text-color-fallback: #374151;
+  --border-color: #e5e7eb;
+  --border-color-fallback: #d1d5db;
+  
+  /* Layout variables */
+  --container-max-width: 1200px;
+  --border-radius: 0.5rem;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  
+  /* Animation variables */
+  --transition-duration: 0.3s;
+  --transition-easing: ease-in-out;
+}
+
+/* === Browser Detection Classes === */
+.browser-webkit {
+  /* Safari-specific styles */
+}
+
+.browser-gecko {
+  /* Firefox-specific styles */
+}
+
+.browser-blink {
+  /* Chrome/Edge-specific styles */
+}
+
+/* === Flexbox Compatibility === */
+.flex-container {
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+.flex-item {
+  -webkit-box-flex: 1;      /* OLD - iOS 6-, Safari 3.1-6 */
+  -moz-box-flex: 1;         /* OLD - Firefox 19- */
+  -webkit-flex: 1;          /* Chrome */
+  -ms-flex: 1;              /* IE 10 */
+  flex: 1;                  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+.flex-center {
+  -webkit-box-pack: center;     /* OLD - iOS 6-, Safari 3.1-6 */
+  -moz-box-pack: center;        /* OLD - Firefox 19- */
+  -ms-flex-pack: center;        /* TWEENER - IE 10 */
+  -webkit-justify-content: center;  /* NEW - Chrome */
+  justify-content: center;      /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  
+  -webkit-box-align: center;    /* OLD - iOS 6-, Safari 3.1-6 */
+  -moz-box-align: center;       /* OLD - Firefox 19- */
+  -ms-flex-align: center;       /* TWEENER - IE 10 */
+  -webkit-align-items: center;  /* NEW - Chrome */
+  align-items: center;          /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+/* === Grid Compatibility === */
+.grid-container {
+  display: -ms-grid;  /* IE 10-11 */
+  display: grid;      /* Modern browsers */
+}
+
+/* IE 10-11 Grid fallback */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .grid-container {
+    display: -ms-grid;
+    -ms-grid-columns: 1fr 1fr 1fr;
+    -ms-grid-rows: auto auto auto;
+  }
+  
+  .grid-item:nth-child(1) { -ms-grid-column: 1; -ms-grid-row: 1; }
+  .grid-item:nth-child(2) { -ms-grid-column: 2; -ms-grid-row: 1; }
+  .grid-item:nth-child(3) { -ms-grid-column: 3; -ms-grid-row: 1; }
+}
+
+/* === Transform Compatibility === */
+.transform-scale {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.transform-rotate {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+/* === Transition Compatibility === */
+.transition-all {
+  -webkit-transition: all var(--transition-duration) var(--transition-easing);
+  -moz-transition: all var(--transition-duration) var(--transition-easing);
+  -o-transition: all var(--transition-duration) var(--transition-easing);
+  transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.transition-opacity {
+  -webkit-transition: opacity var(--transition-duration) var(--transition-easing);
+  -moz-transition: opacity var(--transition-duration) var(--transition-easing);
+  -o-transition: opacity var(--transition-duration) var(--transition-easing);
+  transition: opacity var(--transition-duration) var(--transition-easing);
+}
+
+/* === Animation Compatibility === */
+@-webkit-keyframes pulse {
+  0% { -webkit-transform: scale(1); opacity: 1; }
+  50% { -webkit-transform: scale(1.05); opacity: 0.8; }
+  100% { -webkit-transform: scale(1); opacity: 1; }
+}
+
+@-moz-keyframes pulse {
+  0% { -moz-transform: scale(1); opacity: 1; }
+  50% { -moz-transform: scale(1.05); opacity: 0.8; }
+  100% { -moz-transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-pulse {
+  -webkit-animation: pulse 2s infinite;
+  -moz-animation: pulse 2s infinite;
+  animation: pulse 2s infinite;
+}
+
+/* === Gradient Compatibility === */
+.gradient-background {
+  background: var(--primary-color-fallback); /* Fallback for old browsers */
+  background: -webkit-linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background: -moz-linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background: -o-linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+}
+
+/* === Box Shadow Compatibility === */
+.shadow-sm {
+  -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.shadow-md {
+  -webkit-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-lg {
+  -webkit-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* === Border Radius Compatibility === */
+.rounded {
+  -webkit-border-radius: var(--border-radius);
+  -moz-border-radius: var(--border-radius);
+  border-radius: var(--border-radius);
+}
+
+.rounded-full {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+
+/* === Filter Compatibility === */
+.filter-blur {
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  filter: blur(5px);
+}
+
+.filter-brightness {
+  -webkit-filter: brightness(1.2);
+  -moz-filter: brightness(1.2);
+  -o-filter: brightness(1.2);
+  filter: brightness(1.2);
+}
+
+/* === Backdrop Filter Compatibility === */
+.backdrop-blur {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(10px)) {
+  .backdrop-blur {
+    background: rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* === Clip Path Compatibility === */
+.clip-path-circle {
+  -webkit-clip-path: circle(50% at 50% 50%);
+  clip-path: circle(50% at 50% 50%);
+}
+
+/* === User Select Compatibility === */
+.select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* === Appearance Compatibility === */
+.appearance-none {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* === Scroll Behavior Compatibility === */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Fallback for browsers without scroll-behavior */
+@supports not (scroll-behavior: smooth) {
+  .scroll-smooth {
+    /* JavaScript will handle smooth scrolling */
+  }
+}
+
+/* === Mobile Safari Specific Fixes === */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific styles */
+  .ios-fix {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Fix for iOS Safari viewport height issue */
+  .ios-vh-fix {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+  
+  /* Fix for iOS Safari input zoom */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* === Firefox Specific Fixes === */
+@-moz-document url-prefix() {
+  /* Firefox specific styles */
+  .firefox-fix {
+    /* Firefox handles flexbox differently */
+    -moz-box-sizing: border-box;
+  }
+}
+
+/* === Internet Explorer Specific Fixes === */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  /* IE 10-11 specific styles */
+  .ie-fix {
+    /* IE fallbacks */
+    background: var(--background-color-fallback);
+    color: var(--text-color-fallback);
+  }
+  
+  /* IE doesn't support CSS Grid properly */
+  .grid-container {
+    display: block;
+  }
+  
+  .grid-item {
+    display: inline-block;
+    width: 33.33%;
+    vertical-align: top;
+  }
+}
+
+/* === High Contrast Mode Support === */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-color: #000000;
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --border-color: #000000;
+  }
+}
+
+/* === Reduced Motion Support === */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === Dark Mode Support === */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #60a5fa;
+    --secondary-color: #a78bfa;
+    --background-color: #111827;
+    --text-color: #f9fafb;
+    --border-color: #374151;
+  }
+}
+
+/* === Print Styles === */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .shadow-md,
+  .shadow-lg {
+    box-shadow: none !important;
+  }
+}
+
+/* === Progressive Enhancement === */
+/* Base styles for browsers without JavaScript */
+.no-js .js-only {
+  display: none;
+}
+
+/* Enhanced styles for browsers with JavaScript */
+.js .no-js-only {
+  display: none;
+}
+
+/* === Accessibility Improvements === */
+/* Focus indicators */
+.focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Skip links */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--primary-color);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* === Audio Player Specific Fixes === */
+.audio-player {
+  /* Ensure audio controls work across browsers */
+  position: relative;
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+}
+
+/* Custom range input styling for cross-browser compatibility */
+.custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 20px;
+  background: var(--border-color);
+  border-radius: 10px;
+  outline: none;
+}
+
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.custom-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+/* === Button Compatibility === */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-duration) var(--transition-easing);
+  
+  /* Prevent text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
+  /* Prevent button from being draggable */
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+.btn:hover {
+  background: var(--primary-color-fallback);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* === Loading States === */
+.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* === Touch Device Optimizations === */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device specific styles */
+  .btn {
+    min-height: 44px; /* Minimum touch target size */
+    min-width: 44px;
+  }
+  
+  .touch-friendly {
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+/* === Orientation Support === */
+@media screen and (orientation: portrait) {
+  .portrait-only {
+    display: block;
+  }
+  
+  .landscape-only {
+    display: none;
+  }
+}
+
+@media screen and (orientation: landscape) {
+  .portrait-only {
+    display: none;
+  }
+  
+  .landscape-only {
+    display: block;
+  }
+}

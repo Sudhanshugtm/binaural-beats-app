@@ -502,27 +502,27 @@ export default function ProductivityBinauralPlayer() {
         {!selectedMode ? (
           <div className="space-zen-3xl">
             {/* Gentle Welcome */}
-            <div className="text-center py-8">
-              <h1 className="font-heading text-3xl md:text-4xl font-semibold text-gray-800 mb-8 tracking-wide leading-tight">
+            <div className="text-center py-6 sm:py-8">
+              <h1 className="font-heading text-fluid-2xl md:text-fluid-3xl font-semibold text-gray-800 mb-6 sm:mb-8 tracking-wide leading-tight px-4 sm:px-0">
                 Choose Your Practice
               </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide">
+              <p className="text-fluid-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide px-4 sm:px-0">
                 Select a mindful practice to cultivate your inner awareness
               </p>
             </div>
 
             {/* Mindfulness Practices */}
             <div className="space-zen-2xl">
-              <div className="text-center mb-20">
-                <h2 className="font-heading text-xl font-semibold text-gray-700 mb-8 tracking-wide">Mindfulness Practices</h2>
-                <div className="w-20 h-0.5 bg-gray-300 mx-auto"></div>
+              <div className="text-center mb-16 sm:mb-20">
+                <h2 className="font-heading text-fluid-lg font-semibold text-gray-700 mb-6 sm:mb-8 tracking-wide">Mindfulness Practices</h2>
+                <div className="w-16 sm:w-20 h-0.5 bg-gray-300 mx-auto"></div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
-                {WORK_MODES.map((mode) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12 max-w-6xl mx-auto">
+                {WORK_MODES.map((mode, index) => (
                   <Card
                     key={mode.id}
-                    className="group p-8 cursor-pointer card-micro glow-subtle card-focus bg-white hover:bg-gray-50 border-2 border-gray-100 hover:border-primary/30 shadow-md hover:shadow-xl rounded-2xl touch-target relative transition-all duration-300"
+                    className="group card-premium cursor-pointer card-focus touch-target relative transition-all duration-500 hover:shadow-zen-lg"
                     onClick={() => handleModeSelect(mode)}
                     role="button"
                     tabIndex={0}
@@ -532,14 +532,55 @@ export default function ProductivityBinauralPlayer() {
                         handleModeSelect(mode);
                       }
                     }}
-                    style={{ animationDelay: `${Math.random() * 5}s` }}
+                    style={{ 
+                      animationDelay: `${index * 0.1}s`,
+                      backgroundImage: `radial-gradient(circle at 70% 30%, hsl(var(--primary) / 0.05) 0%, transparent 50%)`
+                    }}
                   >
-                    <div className="text-center space-zen-sm">
-                      <div className="text-5xl mb-8 transition-transform group-hover:scale-110 duration-500" role="img" aria-label={mode.name}>{mode.icon}</div>
-                      <h3 className="font-heading font-semibold text-xl text-gray-800 mb-6 tracking-wide leading-tight">{mode.name}</h3>
-                      <p className="text-sm text-gray-600 mb-8 font-medium leading-relaxed px-2 tracking-wide">{mode.description}</p>
-                      <div className="text-xs text-primary-foreground font-semibold bg-primary/90 py-3 px-6 rounded-full inline-block tracking-wide shadow-sm">{mode.duration} minutes of practice</div>
+                    <div className="p-6 sm:p-8 text-center space-zen-sm relative z-10">
+                      {/* Enhanced icon with breathing effect */}
+                      <div className="relative mb-6 sm:mb-8">
+                        <div 
+                          className="text-4xl sm:text-5xl transition-all duration-700 group-hover:scale-110 breathe-gentle" 
+                          role="img" 
+                          aria-label={mode.name}
+                        >
+                          {mode.icon}
+                        </div>
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/10 to-accent/10 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700 scale-150" />
+                      </div>
+                      
+                      {/* Enhanced title with gradient text */}
+                      <h3 className="font-heading font-semibold text-fluid-lg mb-4 sm:mb-6 tracking-wide leading-tight gradient-text-premium">
+                        {mode.name}
+                      </h3>
+                      
+                      {/* Enhanced description with better typography */}
+                      <p className="text-fluid-sm text-muted-foreground mb-6 sm:mb-8 font-medium leading-relaxed px-1 sm:px-2 tracking-wide">
+                        {mode.description}
+                      </p>
+                      
+                      {/* Premium frequency indicator */}
+                      <div className="mb-4 sm:mb-6">
+                        <div className="text-xs text-muted-foreground font-medium mb-2 tracking-wider uppercase">
+                          Frequency
+                        </div>
+                        <div className="text-lg font-mono font-semibold text-primary tracking-wide">
+                          {mode.frequency} Hz
+                        </div>
+                      </div>
+                      
+                      {/* Enhanced duration badge */}
+                      <div className="relative">
+                        <div className="text-xs text-primary-foreground font-semibold bg-gradient-to-r from-primary to-gradient-middle py-3 px-6 rounded-full inline-block tracking-wide shadow-zen-sm backdrop-blur-sm border border-primary/20">
+                          {mode.duration} minutes of practice
+                        </div>
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-gradient-middle opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-sm" />
+                      </div>
                     </div>
+                    
+                    {/* Subtle corner accent */}
+                    <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary/20 group-hover:bg-primary/40 transition-colors duration-500" />
                   </Card>
                 ))}
               </div>
@@ -547,23 +588,29 @@ export default function ProductivityBinauralPlayer() {
           </div>
         ) : (
           <div className="container-zen-narrow space-zen-3xl">
-            {/* Active Session */}
+            {/* Premium Active Session with Glassmorphism */}
             <Card 
-              className={`p-8 bg-white border-2 border-gray-100 shadow-lg rounded-2xl ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
+              className={`p-6 sm:p-8 card-premium glass-effect-strong shadow-zen-xl rounded-2xl backdrop-blur-md border-2 border-primary/10 ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               data-testid="session-container"
+              style={{
+                backgroundImage: `
+                  radial-gradient(circle at 20% 20%, hsl(var(--primary) / 0.05) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, hsl(var(--accent) / 0.05) 0%, transparent 50%)
+                `
+              }}
             >
-              <div className="text-center mb-8">
-                <div className="mb-6">
-                  <div className="text-4xl mb-4">{selectedMode.icon}</div>
-                  <h2 className="font-heading text-xl font-semibold text-gray-800 mb-4 tracking-wide leading-tight">{selectedMode.name}</h2>
-                  <p className="text-gray-600 font-medium leading-relaxed tracking-wide px-4">{selectedMode.description}</p>
+              <div className="text-center mb-6 sm:mb-8">
+                <div className="mb-4 sm:mb-6">
+                  <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{selectedMode.icon}</div>
+                  <h2 className="font-heading text-fluid-lg font-semibold text-gray-800 mb-3 sm:mb-4 tracking-wide leading-tight">{selectedMode.name}</h2>
+                  <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed tracking-wide px-2 sm:px-4">{selectedMode.description}</p>
                 </div>
                 
                 {/* Audio Visualization */}
-                <div className="py-8 relative">
+                <div className="py-6 sm:py-8 relative">
                   <AudioVisualization 
                     isPlaying={isPlaying}
                     frequency={selectedMode.frequency}
@@ -571,29 +618,72 @@ export default function ProductivityBinauralPlayer() {
                   />
                   {/* Subtle pulsing ambient circle around visualization */}
                   {isPlaying && (
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border border-primary/20 pointer-events-none" />
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 rounded-full border border-primary/20 pointer-events-none" />
                   )}
                 </div>
               </div>
 
-              {/* Timer Display - Central Focus */}
-              <div className="text-center mb-8">
-                <div className="relative mb-6">
-                  <div className="font-mono text-6xl font-semibold text-gray-800 mb-4 tracking-wide leading-none tabular-nums drop-shadow-sm" 
-                       style={{ fontVariantNumeric: 'tabular-nums' }}
-                       aria-live="polite">
-                    {formatTime(timeRemaining)}
+              {/* Premium Timer Display with Breathing Animation */}
+              <div className="text-center mb-6 sm:mb-8">
+                <div className="relative mb-4 sm:mb-6">
+                  {/* Breathing circle background */}
+                  <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-40 sm:h-40 rounded-full transition-all duration-1000 ${
+                    isPlaying 
+                      ? 'bg-gradient-to-r from-primary/10 to-accent/10 breathe-gentle' 
+                      : 'bg-gradient-to-r from-muted/20 to-muted/10'
+                  }`} />
+                  
+                  {/* Premium Timer Display */}
+                  <div className="relative z-10">
+                    <div className={`font-mono text-4xl sm:text-5xl md:text-6xl font-semibold mb-3 sm:mb-4 tracking-wide leading-none tabular-nums transition-all duration-500 ${
+                      isPlaying 
+                        ? 'text-primary gradient-text-premium' 
+                        : 'text-foreground'
+                    }`}
+                         style={{ fontVariantNumeric: 'tabular-nums' }}
+                         aria-live="polite">
+                      {formatTime(timeRemaining)}
+                    </div>
+                    
+                    {/* Enhanced status text */}
+                    <p className={`text-fluid-base font-medium tracking-wide px-2 sm:px-4 transition-all duration-500 ${
+                      isPlaying 
+                        ? 'text-primary/80' 
+                        : 'text-muted-foreground'
+                    }`}>
+                      {isPlaying ? 'Practice session in progress' : 'Take a breath and begin'}
+                    </p>
                   </div>
-                  <p className="text-lg text-gray-600 font-medium tracking-wide px-4">
-                    {isPlaying ? 'Practice session in progress' : 'Take a breath and begin'}
-                  </p>
                 </div>
-                <div className="max-w-md mx-auto px-8">
-                  <Progress 
-                    value={sessionProgress} 
-                    className="h-2 bg-muted rounded-full" 
-                    aria-label={`Session progress: ${Math.round(sessionProgress)}% complete`}
-                  />
+                
+                {/* Premium Progress Indicator */}
+                <div className="max-w-xs sm:max-w-md mx-auto px-4 sm:px-8">
+                  <div className="relative">
+                    <Progress 
+                      value={sessionProgress} 
+                      className="h-3 bg-muted rounded-full shadow-inner" 
+                      aria-label={`Session progress: ${Math.round(sessionProgress)}% complete`}
+                    />
+                    
+                    {/* Progress glow effect */}
+                    {isPlaying && (
+                      <div 
+                        className="absolute top-0 left-0 h-3 rounded-full bg-gradient-to-r from-primary to-gradient-middle transition-all duration-1000 opacity-50 blur-sm"
+                        style={{ width: `${sessionProgress}%` }}
+                      />
+                    )}
+                  </div>
+                  
+                  {/* Progress percentage */}
+                  <div className="flex justify-between items-center mt-2 text-xs text-muted-foreground font-medium">
+                    <span>0%</span>
+                    <span className={`transition-colors duration-500 ${
+                      isPlaying ? 'text-primary' : 'text-muted-foreground'
+                    }`}>
+                      {Math.round(sessionProgress)}%
+                    </span>
+                    <span>100%</span>
+                  </div>
                 </div>
               </div>
 
@@ -607,35 +697,44 @@ export default function ProductivityBinauralPlayer() {
                 onFocus={handleControlsMouseEnter}
                 data-testid="audio-controls"
               >
-                <div className="flex items-center justify-center space-x-12 mb-8">
-                  {/* Essential controls always visible */}
+                <div className="flex items-center justify-center space-x-6 sm:space-x-8 md:space-x-12 mb-6 sm:mb-8">
+                  {/* Premium Mute Control */}
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={toggleMute}
-                    className={`h-18 w-18 rounded-full btn-micro touch-target backdrop-blur-sm border border-transparent hover:border-muted hover:bg-muted/50 ${isMuted ? 'text-destructive' : 'text-muted-foreground'}`}
+                    className={`h-16 w-16 sm:h-18 sm:w-18 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-zen-md ${
+                      isMuted 
+                        ? 'text-destructive border-destructive/30 hover:border-destructive/50 hover:bg-destructive/10' 
+                        : 'text-muted-foreground border-transparent hover:border-primary/30 hover:bg-primary/10'
+                    }`}
                     aria-label={isMuted ? "Unmute audio" : "Mute audio"}
                   >
-                    {isMuted ? <VolumeX className="h-7 w-7" /> : <Volume2 className="h-7 w-7" />}
+                    {isMuted ? <VolumeX className="h-6 w-6 sm:h-7 sm:w-7" /> : <Volume2 className="h-6 w-6 sm:h-7 sm:w-7" />}
                   </Button>
 
+                  {/* Premium Play/Pause Control */}
                   <Button
                     size="lg"
                     onClick={togglePlayPause}
                     disabled={isLoading}
-                    className={`h-28 w-28 rounded-full btn-micro touch-target shadow-lg border-0 font-normal tracking-wide backdrop-blur-sm ${isPlaying ? 'bg-secondary hover:bg-secondary/90 text-secondary-foreground animate-gentle-pulse' : 'bg-primary hover:bg-primary/90 text-primary-foreground'}`}
+                    className={`h-24 w-24 sm:h-28 sm:w-28 rounded-full zen-ripple touch-target shadow-zen-lg border-2 font-normal tracking-wide backdrop-blur-sm transition-all duration-500 ${
+                      isPlaying 
+                        ? 'bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary/80 text-secondary-foreground border-secondary/30 breathe-gentle' 
+                        : 'bg-gradient-to-r from-primary to-gradient-middle hover:from-primary/90 hover:to-gradient-middle/90 text-primary-foreground border-primary/30 hover:shadow-zen-xl'
+                    }`}
                     aria-label={isPlaying ? "Pause session" : "Start session"}
                   >
                     {isLoading ? (
-                      <div className="animate-spin rounded-full h-10 w-10 border-2 border-current border-t-transparent" />
+                      <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 border-2 border-current border-t-transparent" />
                     ) : isPlaying ? (
-                      <Pause className="h-10 w-10" />
+                      <Pause className="h-8 w-8 sm:h-10 sm:w-10" />
                     ) : (
-                      <Play className="h-10 w-10 ml-1" />
+                      <Play className="h-8 w-8 sm:h-10 sm:w-10 ml-1" />
                     )}
                   </Button>
 
-                  {/* Stop button - hidden in deep focus mode */}
+                  {/* Premium Stop Control */}
                   <Button
                     variant="ghost"
                     size="icon"
@@ -648,17 +747,17 @@ export default function ProductivityBinauralPlayer() {
                       setControlsVisible(true);
                       exitDeepFocusMode();
                     }}
-                    className={`h-18 w-18 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted hover:shadow-lg hover:scale-105 transition-all duration-700 backdrop-blur-sm border border-transparent hover:border-muted ${
+                    className={`h-16 w-16 sm:h-18 sm:w-18 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
                       isDeepFocusMode ? 'opacity-0 invisible' : 'opacity-100 visible'
                     }`}
                     aria-label="Stop and return to mode selection"
                   >
-                    <X className="h-7 w-7" />
+                    <X className="h-6 w-6 sm:h-7 sm:w-7" />
                   </Button>
                 </div>
 
                 {/* Elegant Volume Control */}
-                <div className="max-w-sm mx-auto px-8">
+                <div className="max-w-xs sm:max-w-sm mx-auto px-6 sm:px-8">
                   <Slider
                     value={[volume]}
                     onValueChange={([v]) => updateVolume(v)}
@@ -680,20 +779,20 @@ export default function ProductivityBinauralPlayer() {
 
       {/* Keyboard Shortcuts Guide */}
       {showKeyboardShortcuts && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-background border rounded-lg p-6 max-w-md w-full shadow-lg">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 mobile-safe-area">
+          <div className="bg-background border rounded-lg p-4 sm:p-6 max-w-sm sm:max-w-md w-full shadow-lg">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Keyboard Shortcuts</h3>
+              <h3 className="text-base sm:text-lg font-semibold">Keyboard Shortcuts</h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowKeyboardShortcuts(false)}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 p-0 touch-target"
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <div className="space-y-2 text-sm">
+            <div className="space-y-3 sm:space-y-2 text-sm">
               <div className="flex justify-between items-center">
                 <span>Play/Pause</span>
                 <kbd className="px-2 py-1 bg-muted rounded text-xs">Space</kbd>

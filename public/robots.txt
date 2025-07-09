@@ -1,0 +1,75 @@
+# Robots.txt for Beatful - Binaural Beats App
+# https://beatful.app
+
+User-agent: *
+Allow: /
+
+# Main pages
+Allow: /
+Allow: /player
+Allow: /about
+Allow: /features
+Allow: /privacy
+Allow: /terms
+
+# Static assets
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /offline.html
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.svg
+Allow: /*.ico
+Allow: /*.webp
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /_next/
+Disallow: /analytics/
+
+# Disallow temporary and development files
+Disallow: /*.tmp
+Disallow: /*.bak
+Disallow: /*.log
+Disallow: /tmp/
+Disallow: /temp/
+
+# Crawl delay (be respectful)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://beatful.app/sitemap.xml
+
+# Specific bot instructions
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Block spam and malicious bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

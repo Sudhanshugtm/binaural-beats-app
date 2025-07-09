@@ -15,9 +15,9 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
   const isPlayerPage = pathname === '/player';
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background prevent-horizontal-scroll">
       {isPlayerPage ? <PlayerHeader /> : <Header />}
-      <main id="main-content" tabIndex={-1} className={isPlayerPage ? 'pt-14 min-h-screen' : ''}>
+      <main id="main-content" tabIndex={-1} className={`${isPlayerPage ? 'pt-14 min-h-screen' : ''} prevent-horizontal-scroll`}>
         {children}
       </main>
     </div>

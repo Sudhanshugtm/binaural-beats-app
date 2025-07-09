@@ -56,30 +56,33 @@ export default function LoadingSpinner({
     return (
       <div className="flex flex-col items-center justify-center p-8 space-y-6">
         <div className="relative">
-          {/* Audio visualization loader */}
+          {/* Premium Audio visualization loader */}
           <div className="flex items-end space-x-1">
-            {[...Array(5)].map((_, i) => (
+            {[...Array(7)].map((_, i) => (
               <div
                 key={i}
-                className="w-2 bg-gradient-to-t from-blue-500 to-purple-500 rounded-full animate-wave"
+                className="w-3 bg-gradient-to-t from-primary to-gradient-middle rounded-full animate-wave shadow-zen-sm"
                 style={{
-                  height: '20px',
-                  animationDelay: `${i * 0.1}s`,
-                  animationDuration: '1s'
+                  height: `${15 + (i % 3) * 10}px`,
+                  animationDelay: `${i * 0.15}s`,
+                  animationDuration: '1.5s'
                 }}
               />
             ))}
           </div>
           
-          {/* Floating headphones icon */}
+          {/* Floating headphones icon with breathing effect */}
           <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-            <Headphones className={`${iconSizeClasses[size]} text-blue-500 animate-float`} />
+            <Headphones className={`${iconSizeClasses[size]} text-primary animate-float breathe-gentle`} />
           </div>
+          
+          {/* Subtle glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full blur-xl animate-gentle-pulse" />
         </div>
         
         <div className="text-center space-y-2">
-          <p className="text-gray-700 font-medium">{message}{dots}</p>
-          <p className="text-sm text-gray-500">Initializing audio system...</p>
+          <p className="text-foreground font-medium gradient-text-premium">{message}{dots}</p>
+          <p className="text-sm text-muted-foreground">Initializing audio system...</p>
         </div>
       </div>
     );
@@ -87,51 +90,51 @@ export default function LoadingSpinner({
 
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-6">
-      {/* Main loading animation */}
+      {/* Premium Main loading animation */}
       <div className="relative">
-        {/* Outer rotating ring */}
+        {/* Outer rotating ring with premium colors */}
         <div className={`${sizeClasses[size]} relative`}>
-          <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
-          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-500 animate-spin"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-muted"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary animate-spin shadow-zen-sm"></div>
           
-          {/* Inner pulsing core */}
-          <div className="absolute inset-2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full animate-pulse backdrop-blur-sm"></div>
+          {/* Inner pulsing core with gradient */}
+          <div className="absolute inset-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full animate-pulse backdrop-blur-sm"></div>
           
-          {/* Center brain icon */}
+          {/* Center brain icon with breathing effect */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <Brain className={`${iconSizeClasses[size]} text-blue-600 animate-breathe`} />
+            <Brain className={`${iconSizeClasses[size]} text-primary animate-breathe`} />
           </div>
         </div>
         
-        {/* Floating waves */}
+        {/* Floating waves with premium colors */}
         <div className="absolute -inset-4 flex items-center justify-center">
-          <Waves className="w-6 h-6 text-blue-400/50 animate-orbit" />
+          <Waves className="w-6 h-6 text-primary/50 animate-orbit" />
         </div>
       </div>
       
-      {/* Progress bar */}
+      {/* Enhanced Progress bar */}
       {showProgress && (
         <div className="w-48 space-y-2">
-          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-muted rounded-full h-3 overflow-hidden shadow-inner">
             <div 
-              className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300 ease-out"
+              className="h-full bg-gradient-to-r from-primary to-gradient-middle rounded-full transition-all duration-500 ease-out shadow-zen-sm"
               style={{ width: `${Math.min(progress, 100)}%` }}
             />
           </div>
-          <p className="text-xs text-gray-500 text-center">{Math.round(progress)}% complete</p>
+          <p className="text-xs text-muted-foreground text-center font-medium">{Math.round(progress)}% complete</p>
         </div>
       )}
       
-      {/* Message */}
+      {/* Enhanced Message */}
       <div className="text-center space-y-2">
-        <p className="text-gray-700 font-medium">{message}{dots}</p>
-        <p className="text-sm text-gray-500">Please wait while we prepare your experience</p>
+        <p className="text-foreground font-medium gradient-text-premium">{message}{dots}</p>
+        <p className="text-sm text-muted-foreground">Please wait while we prepare your experience</p>
       </div>
       
-      {/* Background effects */}
+      {/* Premium Background effects */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-500/5 rounded-full animate-blob"></div>
-        <div className="absolute top-3/4 right-1/4 w-24 h-24 bg-purple-500/5 rounded-full animate-blob" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/5 rounded-full animate-blob"></div>
+        <div className="absolute top-3/4 right-1/4 w-24 h-24 bg-accent/5 rounded-full animate-blob" style={{ animationDelay: '2s' }}></div>
       </div>
     </div>
   );

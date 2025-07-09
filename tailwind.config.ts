@@ -32,6 +32,15 @@ const config = {
         '3xl': ['var(--font-size-3xl)', { lineHeight: 'var(--line-height-tight)' }],
         '4xl': ['var(--font-size-4xl)', { lineHeight: 'var(--line-height-tight)' }],
         '5xl': ['var(--font-size-5xl)', { lineHeight: 'var(--line-height-tight)' }],
+        // Fluid typography using clamp()
+        'fluid-sm': ['clamp(0.875rem, 2.5vw, 1rem)', { lineHeight: 'var(--line-height-normal)' }],
+        'fluid-base': ['clamp(1rem, 2.5vw, 1.125rem)', { lineHeight: 'var(--line-height-relaxed)' }],
+        'fluid-lg': ['clamp(1.125rem, 3vw, 1.5rem)', { lineHeight: 'var(--line-height-relaxed)' }],
+        'fluid-xl': ['clamp(1.25rem, 4vw, 1.875rem)', { lineHeight: 'var(--line-height-normal)' }],
+        'fluid-2xl': ['clamp(1.5rem, 5vw, 2.25rem)', { lineHeight: 'var(--line-height-tight)' }],
+        'fluid-3xl': ['clamp(1.875rem, 6vw, 3rem)', { lineHeight: 'var(--line-height-tight)' }],
+        'fluid-4xl': ['clamp(2.25rem, 8vw, 3.75rem)', { lineHeight: 'var(--line-height-tight)' }],
+        'fluid-5xl': ['clamp(3rem, 10vw, 4.5rem)', { lineHeight: 'var(--line-height-tight)' }],
       },
       fontWeight: {
         'light': 'var(--font-weight-light)',
@@ -54,6 +63,35 @@ const config = {
       },
       screens: {
         'xs': '475px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+        // Custom breakpoints for specific use cases
+        'mobile': {'max': '767px'},
+        'tablet': {'min': '768px', 'max': '1023px'},
+        'desktop': {'min': '1024px'},
+        'touch': {'max': '1023px'}, // For touch devices
+      },
+      spacing: {
+        // Fluid spacing utilities
+        'fluid-1': 'clamp(0.25rem, 1vw, 0.5rem)',
+        'fluid-2': 'clamp(0.5rem, 1.5vw, 1rem)',
+        'fluid-3': 'clamp(0.75rem, 2vw, 1.5rem)',
+        'fluid-4': 'clamp(1rem, 2.5vw, 2rem)',
+        'fluid-5': 'clamp(1.25rem, 3vw, 2.5rem)',
+        'fluid-6': 'clamp(1.5rem, 3.5vw, 3rem)',
+        'fluid-8': 'clamp(2rem, 4vw, 4rem)',
+        'fluid-10': 'clamp(2.5rem, 5vw, 5rem)',
+        'fluid-12': 'clamp(3rem, 6vw, 6rem)',
+        'fluid-16': 'clamp(4rem, 8vw, 8rem)',
+        'fluid-20': 'clamp(5rem, 10vw, 10rem)',
+        // Touch-friendly sizes
+        'touch-sm': '40px',
+        'touch-md': '44px',
+        'touch-lg': '48px',
+        'touch-xl': '56px',
       },
       colors: {
         border: "hsl(var(--border))",

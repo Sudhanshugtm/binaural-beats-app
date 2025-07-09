@@ -122,18 +122,18 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       aria-describedby="onboarding-description"
     >
       <Card 
-        className="max-w-md w-full bg-slate-800/50 text-slate-50 border-slate-700 shadow-2xl shadow-black/50"
+        className="max-w-sm sm:max-w-md w-full bg-slate-800/50 text-slate-50 border-slate-700 shadow-2xl shadow-black/50"
       >
-        <CardHeader className="items-center text-center pt-8 relative">
+        <CardHeader className="items-center text-center pt-6 sm:pt-8 relative">
           <button 
             onClick={onComplete}
-            className="absolute top-4 right-4 text-slate-400 hover:text-slate-200 transition-colors p-2 rounded-full hover:bg-slate-700/50"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 text-slate-400 hover:text-slate-200 transition-colors p-2 rounded-full hover:bg-slate-700/50 touch-target"
             aria-label="Skip onboarding"
           >
             ✕
           </button>
           {/* Progress indicator with enhanced animations */}
-          <div className="flex justify-center mb-6" role="progressbar" aria-valuenow={currentStep + 1} aria-valuemin={1} aria-valuemax={onboardingSteps.length} aria-valuetext={`Step ${currentStep + 1} of ${onboardingSteps.length}: ${currentStepData.title}`}>
+          <div className="flex justify-center mb-4 sm:mb-6" role="progressbar" aria-valuenow={currentStep + 1} aria-valuemin={1} aria-valuemax={onboardingSteps.length} aria-valuetext={`Step ${currentStep + 1} of ${onboardingSteps.length}: ${currentStepData.title}`}>
             {onboardingSteps.map((step, index) => (
               <motion.div
                 key={step.id}
@@ -154,7 +154,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className={`relative w-20 h-20 flex items-center justify-center rounded-full bg-slate-700/50 mb-4`}
+            className={`relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-full bg-slate-700/50 mb-3 sm:mb-4`}
           >
             <motion.div 
               animate={{ 
@@ -178,22 +178,22 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                 stiffness: 200
               }}
             >
-              <Icon className={`w-10 h-10 ${currentStepData.iconColor}`} aria-hidden="true" />
+              <Icon className={`w-8 h-8 sm:w-10 sm:h-10 ${currentStepData.iconColor}`} aria-hidden="true" />
             </motion.div>
           </motion.div>
-          <CardTitle id="onboarding-title" ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-white">
+          <CardTitle id="onboarding-title" ref={headingRef} tabIndex={-1} className="text-xl sm:text-2xl font-bold text-white">
             {currentStepData.title}
           </CardTitle>
-          <p id="onboarding-description" className="text-lg text-slate-300">
+          <p id="onboarding-description" className="text-base sm:text-lg text-slate-300">
             {currentStepData.subtitle}
           </p>
         </CardHeader>
-        <CardContent className="px-8 pb-8 text-center">
-          <div className="min-h-[120px] flex items-center">
+        <CardContent className="px-6 sm:px-8 pb-6 sm:pb-8 text-center">
+          <div className="min-h-[100px] sm:min-h-[120px] flex items-center">
             <AnimatePresence initial={false} custom={direction}>
               <motion.p
                 key={currentStep}
-                className="text-slate-400 leading-relaxed"
+                className="text-sm sm:text-base text-slate-400 leading-relaxed"
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -211,7 +211,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
           {/* Special content for specific steps, now with better styling */}
           {currentStep === 1 && (
-            <div className="grid grid-cols-3 gap-4 my-6 text-slate-300">
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 my-4 sm:my-6 text-slate-300">
               {[
                 { icon: "Clock", label: "2-90 min", sub: "Sessions", color: "text-primary" },
                 { icon: "Zap", label: "Gentle", sub: "Results", color: "text-primary" },
@@ -220,10 +220,10 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                 const ItemIcon = icons[item.icon];
                 return (
                   <div key={item.label} className="text-center p-2 rounded-lg bg-slate-700/50">
-                    <div className={`w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-2`}>
-                      <ItemIcon className={`w-5 h-5 ${item.color}`} />
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-2`}>
+                      <ItemIcon className={`w-4 h-4 sm:w-5 sm:h-5 ${item.color}`} />
                     </div>
-                    <p className="text-sm font-semibold text-white">{item.label}</p>
+                    <p className="text-xs sm:text-sm font-semibold text-white">{item.label}</p>
                     <p className="text-xs text-slate-400">{item.sub}</p>
                   </div>
                 );
@@ -233,11 +233,11 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
           <Button
             onClick={handleNext}
-            className="w-full mt-6 bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 text-lg rounded-lg shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 transform hover:scale-105 focus:ring-4 focus:ring-primary/50 focus:outline-none touch-target"
+            className="w-full mt-4 sm:mt-6 bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 text-base sm:text-lg rounded-lg shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 transform hover:scale-105 focus:ring-4 focus:ring-primary/50 focus:outline-none touch-target"
             aria-live="polite"
           >
             {currentStepData.action}
-            <ArrowRight className="w-5 h-5 ml-2.5" />
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-2.5" />
           </Button>
         </CardContent>
       </Card>

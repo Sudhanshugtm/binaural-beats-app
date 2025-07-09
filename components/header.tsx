@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Waves, Menu, X } from "lucide-react"; // Changed from Headphones
+import { Waves, Menu, X, Settings } from "lucide-react"; // Changed from Headphones
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { AccessibilitySettings } from "@/components/AccessibilitySettings";
+import { useAccessibility } from "@/components/AccessibilityProvider";
 
 const navItems = [
   { href: '/', label: 'Home' },
@@ -15,6 +17,7 @@ const navItems = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { announceToScreenReader } = useAccessibility();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,36 +31,38 @@ export function Header() {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out mobile-safe-area ${
         isScrolled 
           ? 'bg-white/80 backdrop-blur-sm shadow-sm' 
           : 'bg-transparent'
       }`}
+      role="banner"
     >
       <div className="container-zen mx-auto">
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-16 sm:h-20 items-center justify-between">
           {/* Logo */}
           <Link 
             href="/" 
-            className="flex items-center space-x-3 transition-opacity hover:opacity-80"
+            className="flex items-center space-x-2 sm:space-x-3 transition-opacity hover:opacity-80 touch-target"
+            aria-label="Beatful Home - Binaural Beats for Focus and Meditation"
           >
-            <div className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-background to-muted rounded-full shadow-inner">
-              <Waves className="w-6 h-6 text-primary" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-gradient-to-br from-background to-muted rounded-full shadow-inner">
+              <Waves className="w-5 h-5 sm:w-6 sm:h-6 text-primary" aria-hidden="true" />
             </div>
-            <span className={`text-xl font-semibold tracking-wider ${
+            <span className={`text-lg sm:text-xl font-semibold tracking-wider ${
               isScrolled ? 'text-gray-800' : 'text-white'
             }`}>
-              Serenity Soundscapes
+              Beatful
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-6" aria-label="Main navigation">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-semibold tracking-wide transition-colors duration-200 ${
+                className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
                   isScrolled 
                     ? 'text-gray-800 hover:text-gray-600' 
                     : 'text-white hover:text-white/80'
@@ -66,22 +71,35 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            
+            {/* Accessibility Settings */}
+            <AccessibilitySettings className="relative" />
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <AccessibilitySettings className="relative" />
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`p-2 ${
+              onClick={() => {
+                setIsMobileMenuOpen(!isMobileMenuOpen);
+                announceToScreenReader(
+                  isMobileMenuOpen ? 'Mobile menu closed' : 'Mobile menu opened',
+                  'assertive'
+                );
+              }}
+              className={`p-2 touch-target ${
                 isScrolled ? 'text-gray-800' : 'text-white'
               }`}
+              aria-label="Toggle mobile menu"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-5 w-5" aria-hidden="true" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-5 w-5" aria-hidden="true" />
               )}
             </Button>
           </div>
@@ -89,16 +107,20 @@ export function Header() {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-        isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-      }`}>
+      <div 
+        id="mobile-menu"
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+        aria-hidden={!isMobileMenuOpen}
+      >
         <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-lg">
-          <nav className="container-zen mx-auto py-4 space-y-2">
+          <nav className="container-zen mx-auto py-4 space-y-2" aria-label="Mobile navigation">
             {navItems.map((item, index) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`block px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 ${
+                className={`block px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target ${
                   isMobileMenuOpen 
                     ? 'translate-x-0 opacity-100' 
                     : 'translate-x-4 opacity-0'
@@ -106,7 +128,11 @@ export function Header() {
                 style={{
                   transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
                 }}
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  announceToScreenReader(`Navigating to ${item.label}`, 'assertive');
+                }}
+                tabIndex={isMobileMenuOpen ? 0 : -1}
               >
                 {item.label}
               </Link>

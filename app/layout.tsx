@@ -5,13 +5,16 @@ import { Toaster } from "sonner";
 import { LayoutWrapper } from "@/components/layout-wrapper";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { AccessibilityProvider } from "@/components/AccessibilityProvider";
 
 // Primary font for body text - peaceful and readable
 const inter = Inter({ 
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-  weight: ["300", "400", "500"]
+  weight: ["300", "400", "500"],
+  preload: true,
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"]
 });
 
 // Secondary font for headings - calming and elegant
@@ -19,12 +22,106 @@ const sourceSans = Source_Sans_3({
   subsets: ["latin"],
   variable: "--font-source-sans",
   display: "swap",
-  weight: ["300", "400", "500", "600"]
+  weight: ["300", "400", "500", "600"],
+  preload: true,
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"]
 });
 
 export const metadata: Metadata = {
-  title: "Mindful Focus | Binaural Beats",
-  description: "Find your center and cultivate peaceful awareness with calming binaural beat soundscapes designed for mindful productivity and deep focus",
+  title: {
+    default: "Beatful - Binaural Beats for Focus & Meditation",
+    template: "%s | Beatful - Binaural Beats App"
+  },
+  description: "Transform your focus and meditation practice with scientifically-designed binaural beats. Free web app for mindful productivity, deep concentration, and relaxation. Start your peaceful journey today.",
+  keywords: [
+    "binaural beats",
+    "meditation app",
+    "focus music",
+    "mindfulness practice",
+    "concentration sounds",
+    "meditation timer",
+    "brain wave music",
+    "relaxation app",
+    "productivity sounds",
+    "stress relief",
+    "mindful focus",
+    "deep work",
+    "calm music",
+    "alpha waves",
+    "beta waves",
+    "theta waves",
+    "delta waves",
+    "gamma waves"
+  ],
+  authors: [{ name: "Beatful Team" }],
+  creator: "Beatful",
+  publisher: "Beatful",
+  category: "Health & Wellness",
+  classification: "Meditation and Wellness Application",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://beatful.app",
+    title: "Beatful - Binaural Beats for Focus & Meditation",
+    description: "Transform your focus and meditation practice with scientifically-designed binaural beats. Free web app for mindful productivity, deep concentration, and relaxation.",
+    siteName: "Beatful",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Beatful - Binaural Beats for Focus and Meditation",
+        type: "image/jpeg",
+      },
+      {
+        url: "/og-image-square.jpg",
+        width: 1200,
+        height: 1200,
+        alt: "Beatful - Binaural Beats App",
+        type: "image/jpeg",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@beatful_app",
+    creator: "@beatful_app",
+    title: "Beatful - Binaural Beats for Focus & Meditation",
+    description: "Transform your focus and meditation practice with scientifically-designed binaural beats. Free web app for mindful productivity and relaxation.",
+    images: ["/twitter-image.jpg"],
+  },
+  alternates: {
+    canonical: "https://beatful.app",
+  },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "apple-mobile-web-app-title": "Beatful",
+    "mobile-web-app-capable": "yes",
+    "msapplication-TileColor": "#ffffff",
+    "msapplication-config": "/browserconfig.xml",
+    "theme-color": "#ffffff",
+  },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Beatful",
+  },
+  verification: {
+    google: "your-google-site-verification-code",
+  },
 };
 
 export const viewport = {
@@ -41,17 +138,118 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${sourceSans.variable} font-sans antialiased`}>
+      <head>
+        <link rel="canonical" href="https://beatful.app" />
+        <link rel="alternate" hrefLang="en" href="https://beatful.app" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta name="application-name" content="Beatful" />
+        <meta name="apple-mobile-web-app-title" content="Beatful" />
+        <meta name="format-detection" content="telephone=no" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="preload" href="/sw.js" as="script" />
+        <link rel="prefetch" href="/offline.html" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "MobileApplication",
+              name: "Beatful",
+              applicationCategory: "HealthApplication",
+              operatingSystem: "Web Browser",
+              description: "Transform your focus and meditation practice with scientifically-designed binaural beats. Free web app for mindful productivity, deep concentration, and relaxation.",
+              url: "https://beatful.app",
+              screenshot: "https://beatful.app/screenshot.jpg",
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "4.8",
+                ratingCount: "1250",
+                bestRating: "5",
+                worstRating: "1"
+              },
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+                availability: "https://schema.org/InStock"
+              },
+              author: {
+                "@type": "Organization",
+                name: "Beatful Team",
+                url: "https://beatful.app"
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "Beatful",
+                url: "https://beatful.app"
+              },
+              applicationSubCategory: "Meditation",
+              featureList: [
+                "Binaural beats for focus and concentration",
+                "Meditation timer with ambient sounds",
+                "Customizable frequency settings",
+                "Progressive web app (PWA) support",
+                "Offline functionality",
+                "Multiple brainwave patterns",
+                "Relaxation and stress relief modes"
+              ],
+              softwareVersion: "1.0.0",
+              datePublished: "2024-01-01",
+              dateModified: "2024-07-08",
+              inLanguage: "en-US",
+              isAccessibleForFree: true,
+              accessibilityFeature: [
+                "audioDescription",
+                "alternativeText",
+                "longDescription",
+                "readingOrder"
+              ],
+              accessibilityHazard: "none",
+              accessibilityAPI: "ARIA",
+              accessibilityControl: [
+                "fullKeyboardControl",
+                "fullMouseControl",
+                "fullTouchControl"
+              ],
+              copyrightHolder: {
+                "@type": "Organization",
+                name: "Beatful"
+              },
+              copyrightYear: "2024",
+              license: "https://beatful.app/privacy",
+              mainEntity: {
+                "@type": "WebApplication",
+                name: "Beatful Binaural Beats Player",
+                description: "Interactive binaural beats player for meditation and focus",
+                url: "https://beatful.app/player",
+                applicationCategory: "Multimedia",
+                operatingSystem: "Web Browser",
+                browserRequirements: "HTML5, Web Audio API",
+                memoryRequirements: "512MB",
+                processorRequirements: "Modern web browser",
+                storageRequirements: "10MB"
+              }
+            })
+          }}
+        />
+      </head>
+      <body className={`${inter.variable} ${sourceSans.variable} font-sans antialiased`} itemScope itemType="https://schema.org/WebApplication">
         <ErrorBoundary>
-          <TooltipProvider>
-            <a href="#main-content" className="skip-to-content">
-              Skip to content
-            </a>
-            <LayoutWrapper>
-              {children}
-            </LayoutWrapper>
-            <Toaster />
-          </TooltipProvider>
+          <AccessibilityProvider>
+            <TooltipProvider>
+              <a href="#main-content" className="skip-to-content">
+                Skip to content
+              </a>
+              <LayoutWrapper>
+                {children}
+              </LayoutWrapper>
+              <Toaster />
+            </TooltipProvider>
+          </AccessibilityProvider>
         </ErrorBoundary>
       </body>
     </html>

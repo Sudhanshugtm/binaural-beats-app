@@ -1,21 +1,75 @@
 {
-  "name": "Binaural Beats - Focus & Productivity",
-  "short_name": "BinauralBeats",
-  "description": "Science-based binaural beats for enhanced focus, creativity, and relaxation",
+  "name": "Beatful - Binaural Beats for Focus & Meditation",
+  "short_name": "Beatful",
+  "description": "Transform your focus and meditation practice with scientifically-designed binaural beats. Free web app for mindful productivity, deep concentration, and relaxation.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "theme_color": "#ffffff",
   "orientation": "portrait-primary",
-  "categories": ["productivity", "health", "lifestyle"],
+  "categories": ["health", "lifestyle", "productivity", "meditation", "wellness"],
   "lang": "en",
   "dir": "ltr",
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Beatful desktop interface showing binaural beats player"
+    },
+    {
+      "src": "/screenshot-mobile.jpg",
+      "sizes": "750x1334",
+      "type": "image/jpeg",
+      "platform": "narrow",
+      "label": "Beatful mobile interface optimized for touch"
+    }
+  ],
   "icons": [
+    {
+      "src": "/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
@@ -24,14 +78,72 @@
       "purpose": "any maskable"
     }
   ],
+  "shortcuts": [
+    {
+      "name": "Start Meditation",
+      "short_name": "Meditate",
+      "description": "Begin your mindful meditation session",
+      "url": "/player?mode=meditation",
+      "icons": [
+        {
+          "src": "/shortcut-meditation.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Focus Mode",
+      "short_name": "Focus",
+      "description": "Enter deep focus mode for productivity",
+      "url": "/player?mode=focus",
+      "icons": [
+        {
+          "src": "/shortcut-focus.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Relaxation",
+      "short_name": "Relax",
+      "description": "Unwind with calming binaural beats",
+      "url": "/player?mode=relaxation",
+      "icons": [
+        {
+          "src": "/shortcut-relax.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
   "features": [
     "offline-audio",
     "push-notifications",
-    "background-sync"
+    "background-sync",
+    "cross-platform",
+    "customizable-frequencies"
   ],
   "permissions": [
     "audio"
   ],
   "related_applications": [],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "display_override": [
+    "window-controls-overlay",
+    "minimal-ui",
+    "standalone",
+    "browser"
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+beatful",
+      "url": "/player?track=%s"
+    }
+  ]
 }

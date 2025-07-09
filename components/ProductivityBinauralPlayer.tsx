@@ -587,10 +587,10 @@ export default function ProductivityBinauralPlayer() {
             </div>
           </div>
         ) : (
-          <div className="container-zen-narrow space-zen-3xl">
+          <div className="container-zen-narrow lg:container-zen-wide xl:container-zen space-zen-3xl">
             {/* Premium Active Session with Glassmorphism */}
             <Card 
-              className={`p-4 sm:p-6 md:p-8 card-premium glass-effect-strong shadow-zen-xl rounded-2xl backdrop-blur-md border-2 border-primary/10 ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
+              className={`p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 card-premium glass-effect-strong shadow-zen-xl rounded-2xl backdrop-blur-md border-2 border-primary/10 ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
@@ -627,21 +627,21 @@ export default function ProductivityBinauralPlayer() {
               <div className="flex-1 flex items-center justify-center py-4 sm:py-6 md:py-8">
                 <div className="relative flex items-center justify-center">
                   {/* Main Breathing Circle */}
-                  <div className={`w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full flex items-center justify-center transition-all duration-2000 ${
+                  <div className={`w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96 2xl:w-[28rem] 2xl:h-[28rem] rounded-full flex items-center justify-center transition-all duration-2000 ${
                     isPlaying 
                       ? 'bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 breathe-gentle shadow-2xl' 
                       : 'bg-gradient-to-br from-gray-100 to-gray-50 shadow-lg'
                   }`}>
                     
                     {/* Inner Circle */}
-                    <div className={`w-36 h-36 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
+                    <div className={`w-36 h-36 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 2xl:w-80 2xl:h-80 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
                       isPlaying 
                         ? 'bg-white/80 backdrop-blur-sm border-2 border-primary/20' 
                         : 'bg-white/60 backdrop-blur-sm border-2 border-gray-200'
                     }`}>
                       
                       {/* Timer Display */}
-                      <div className={`font-mono text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 tracking-wider leading-none tabular-nums transition-all duration-500 ${
+                      <div className={`font-mono text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-2 tracking-wider leading-none tabular-nums transition-all duration-500 ${
                         isPlaying 
                           ? 'text-primary' 
                           : 'text-gray-700'
@@ -652,7 +652,7 @@ export default function ProductivityBinauralPlayer() {
                       </div>
                       
                       {/* Status Text */}
-                      <p className={`text-sm font-medium tracking-wide text-center px-4 transition-all duration-500 ${
+                      <p className={`text-sm md:text-base lg:text-lg xl:text-xl font-medium tracking-wide text-center px-4 transition-all duration-500 ${
                         isPlaying 
                           ? 'text-primary/70' 
                           : 'text-gray-500'
@@ -709,20 +709,20 @@ export default function ProductivityBinauralPlayer() {
                 onFocus={handleControlsMouseEnter}
                 data-testid="audio-controls"
               >
-                <div className="flex items-center justify-center space-x-6 sm:space-x-12 md:space-x-16 lg:space-x-20 mb-4 sm:mb-8">
+                <div className="flex items-center justify-center space-x-6 sm:space-x-12 md:space-x-16 lg:space-x-20 xl:space-x-24 2xl:space-x-28 mb-4 sm:mb-8">
                   {/* Premium Mute Control */}
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={toggleMute}
-                    className={`h-12 w-12 sm:h-16 sm:w-16 md:h-18 md:w-18 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-12 w-12 sm:h-16 sm:w-16 md:h-18 md:w-18 lg:h-20 lg:w-20 xl:h-24 xl:w-24 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-zen-md ${
                       isMuted 
                         ? 'text-destructive border-destructive/30 hover:border-destructive/50 hover:bg-destructive/10' 
                         : 'text-muted-foreground border-transparent hover:border-primary/30 hover:bg-primary/10'
                     }`}
                     aria-label={isMuted ? "Unmute audio" : "Mute audio"}
                   >
-                    {isMuted ? <VolumeX className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" /> : <Volume2 className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />}
+                    {isMuted ? <VolumeX className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 xl:h-9 xl:w-9" /> : <Volume2 className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 xl:h-9 xl:w-9" />}
                   </Button>
 
                   {/* Premium Play/Pause Control */}
@@ -730,7 +730,7 @@ export default function ProductivityBinauralPlayer() {
                     size="lg"
                     onClick={togglePlayPause}
                     disabled={isLoading}
-                    className={`h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 rounded-full zen-ripple touch-target shadow-zen-lg border-2 font-normal tracking-wide backdrop-blur-sm transition-all duration-500 ${
+                    className={`h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 xl:h-32 xl:w-32 2xl:h-36 2xl:w-36 rounded-full zen-ripple touch-target shadow-zen-lg border-2 font-normal tracking-wide backdrop-blur-sm transition-all duration-500 ${
                       isPlaying 
                         ? 'bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary/80 text-secondary-foreground border-secondary/30 breathe-gentle' 
                         : 'bg-gradient-to-r from-primary to-gradient-middle hover:from-primary/90 hover:to-gradient-middle/90 text-primary-foreground border-primary/30 hover:shadow-zen-xl'
@@ -738,11 +738,11 @@ export default function ProductivityBinauralPlayer() {
                     aria-label={isPlaying ? "Pause session" : "Start session"}
                   >
                     {isLoading ? (
-                      <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 border-2 border-current border-t-transparent" />
+                      <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 xl:h-14 xl:w-14 border-2 border-current border-t-transparent" />
                     ) : isPlaying ? (
-                      <Pause className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10" />
+                      <Pause className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 xl:h-14 xl:w-14" />
                     ) : (
-                      <Play className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 ml-1" />
+                      <Play className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 xl:h-14 xl:w-14 ml-1" />
                     )}
                   </Button>
 
@@ -759,17 +759,17 @@ export default function ProductivityBinauralPlayer() {
                       setControlsVisible(true);
                       exitDeepFocusMode();
                     }}
-                    className={`h-12 w-12 sm:h-16 sm:w-16 md:h-18 md:w-18 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-12 w-12 sm:h-16 sm:w-16 md:h-18 md:w-18 lg:h-20 lg:w-20 xl:h-24 xl:w-24 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
                       isDeepFocusMode ? 'opacity-0 invisible' : 'opacity-100 visible'
                     }`}
                     aria-label="Stop and return to mode selection"
                   >
-                    <X className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
+                    <X className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 xl:h-9 xl:w-9" />
                   </Button>
                 </div>
 
                 {/* Elegant Volume Control */}
-                <div className="max-w-xs sm:max-w-sm mx-auto px-4 sm:px-6">
+                <div className="max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
                   <Slider
                     value={[volume]}
                     onValueChange={([v]) => updateVolume(v)}

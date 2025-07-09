@@ -498,7 +498,7 @@ export default function ProductivityBinauralPlayer() {
       />
 
       {/* Main Content */}
-      <main className="container-zen py-2 sm:py-4 md:py-6 relative z-10 h-screen flex flex-col justify-center">
+      <main className={`container-zen py-2 sm:py-4 md:py-6 relative z-10 ${selectedMode ? 'h-screen flex flex-col justify-center' : 'min-h-screen flex flex-col'}`}>
         {!selectedMode ? (
           <div className="space-zen-3xl">
             {/* Gentle Welcome */}

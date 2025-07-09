@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Waves, Menu, X, Settings } from "lucide-react"; // Changed from Headphones
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { AccessibilitySettings } from "@/components/AccessibilitySettings";
 import { useAccessibility } from "@/components/AccessibilityProvider";
 
 const navItems = [
@@ -72,13 +71,10 @@ export function Header() {
               </Link>
             ))}
             
-            {/* Accessibility Settings */}
-            <AccessibilitySettings className="relative" />
           </nav>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-2">
-            <AccessibilitySettings className="relative" />
             <Button
               variant="ghost"
               size="sm"

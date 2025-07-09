@@ -76,7 +76,7 @@ export function Header() {
               <Waves className="w-5 h-5 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
             </div>
             <span className={`text-lg sm:text-xl font-semibold tracking-wider ${
-              isScrolled ? 'text-gray-800' : 'text-white'
+              isScrolled ? 'text-gray-800' : 'text-gray-800'
             }`}>
               Beatful
             </span>
@@ -91,7 +91,7 @@ export function Header() {
                 className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
                   isScrolled 
                     ? 'text-gray-700 hover:text-gray-900' 
-                    : 'text-white hover:text-white/80'
+                    : 'text-gray-700 hover:text-gray-900'
                 }`}
               >
                 {item.label}
@@ -113,7 +113,7 @@ export function Header() {
                 );
               }}
               className={`p-2 touch-target ${
-                isScrolled ? 'text-gray-700' : 'text-white'
+                isScrolled ? 'text-gray-700' : 'text-gray-700'
               }`}
               aria-label="Toggle mobile menu"
               aria-expanded={isMobileMenuOpen}

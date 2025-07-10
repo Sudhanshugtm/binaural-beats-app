@@ -40,13 +40,7 @@ export function AudioVisualization({ isPlaying, frequency, mode }: AudioVisualiz
   };
 
   if (!isPlaying) {
-    return (
-      <div className="flex items-center justify-center h-32 mb-6">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-r from-gray-300 to-gray-400 opacity-30 flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full bg-white opacity-50"></div>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (

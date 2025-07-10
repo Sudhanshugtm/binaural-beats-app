@@ -87,8 +87,6 @@ export default function ProductivityBinauralPlayer() {
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
-  // Elegant auto-fade controls state
-  const [controlsVisible, setControlsVisible] = useState(true);
   const [isDeepFocusMode, setIsDeepFocusMode] = useState(false);
   const [lastInteractionTime, setLastInteractionTime] = useState(Date.now());
 
@@ -97,7 +95,6 @@ export default function ProductivityBinauralPlayer() {
   const oscillatorRightRef = useRef<OscillatorNode | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const fadeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const deepFocusTimerRef = useRef<NodeJS.Timeout | null>(null);
   
   // Enhanced touch gesture tracking
@@ -111,25 +108,7 @@ export default function ProductivityBinauralPlayer() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Auto-fade controls functionality
-  const resetFadeTimer = () => {
-    setLastInteractionTime(Date.now());
-    setControlsVisible(true);
-    
-    if (fadeTimerRef.current) {
-      clearTimeout(fadeTimerRef.current);
-    }
-    
-    if (isPlaying) {
-      fadeTimerRef.current = setTimeout(() => {
-        setControlsVisible(false);
-      }, 3000); // Fade after 3 seconds of inactivity
-    }
-  };
 
-  const handleInteraction = () => {
-    resetFadeTimer();
-  };
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -152,8 +131,7 @@ export default function ProductivityBinauralPlayer() {
             setSelectedMode(null);
             setTimeRemaining(0);
             setSessionProgress(0);
-            setControlsVisible(true);
-            exitDeepFocusMode();
+                        exitDeepFocusMode();
           }
           break;
         case 'm':
@@ -172,36 +150,14 @@ export default function ProductivityBinauralPlayer() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedMode, showKeyboardShortcuts]);
 
-  const handleControlsMouseEnter = () => {
-    if (isPlaying) {
-      setControlsVisible(true);
-    }
-  };
-
-  const handleControlsMouseLeave = () => {
-    if (isPlaying) {
-      resetFadeTimer();
-    }
-  };
 
   // Deep focus mode management
   const enterDeepFocusMode = () => {
     setIsDeepFocusMode(true);
-    
-    // In deep focus mode, controls fade more aggressively
-    if (fadeTimerRef.current) {
-      clearTimeout(fadeTimerRef.current);
-    }
-    
-    fadeTimerRef.current = setTimeout(() => {
-      setControlsVisible(false);
-    }, 1500); // Faster fade in deep focus
   };
 
   const exitDeepFocusMode = () => {
     setIsDeepFocusMode(false);
-    setControlsVisible(true);
-    resetFadeTimer();
   };
 
   // Enhanced gesture calculations
@@ -215,13 +171,23 @@ export default function ProductivityBinauralPlayer() {
     if (typeof window === "undefined") return;
 
     try {
+      console.log('Starting audio with frequency:', frequency);
+      
       if (!audioContextRef.current) {
+        console.log('Creating new AudioContext');
         audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
       const ctx = audioContextRef.current;
+      console.log('AudioContext state:', ctx.state);
 
       if (ctx.state === "suspended") {
+        console.log('Resuming suspended AudioContext');
         await ctx.resume();
+        console.log('AudioContext resumed, new state:', ctx.state);
+      }
+
+      if (ctx.state !== "running") {
+        throw new Error(`AudioContext failed to start, state is: ${ctx.state}`);
       }
 
       oscillatorLeftRef.current = ctx.createOscillator();
@@ -238,12 +204,19 @@ export default function ProductivityBinauralPlayer() {
       
       merger.connect(gainNodeRef.current);
       gainNodeRef.current.connect(ctx.destination);
-      gainNodeRef.current.gain.setValueAtTime(isMuted ? 0 : volume, ctx.currentTime);
+      
+      const actualVolume = isMuted ? 0 : volume;
+      console.log('Setting volume to:', actualVolume, 'isMuted:', isMuted, 'volume:', volume);
+      gainNodeRef.current.gain.setValueAtTime(actualVolume, ctx.currentTime);
 
       oscillatorLeftRef.current.start();
       oscillatorRightRef.current.start();
+      
+      console.log('Audio started successfully!');
     } catch (error) {
       console.error('Failed to initialize audio:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Audio failed to start: ${errorMessage}. Please ensure audio is not blocked by your browser.`);
     }
   };
 
@@ -303,8 +276,7 @@ export default function ProductivityBinauralPlayer() {
       setIsLoading(true);
       stopAudio();
       setIsPlaying(false);
-      setControlsVisible(true);
-      exitDeepFocusMode();
+            exitDeepFocusMode();
       setIsLoading(false);
       
       if (sessionStartTime) {
@@ -312,9 +284,6 @@ export default function ProductivityBinauralPlayer() {
       }
       
       // Clear timers
-      if (fadeTimerRef.current) {
-        clearTimeout(fadeTimerRef.current);
-      }
       if (deepFocusTimerRef.current) {
         clearTimeout(deepFocusTimerRef.current);
       }
@@ -323,7 +292,6 @@ export default function ProductivityBinauralPlayer() {
       await startAudio(selectedMode.frequency);
       setIsPlaying(true);
       setSessionStartTime(new Date());
-      resetFadeTimer();
       setIsLoading(false);
       
       // Set up deep focus mode timer (30 seconds for deep work modes)
@@ -338,8 +306,7 @@ export default function ProductivityBinauralPlayer() {
           if (prev <= 1) {
             stopAudio();
             setIsPlaying(false);
-            setControlsVisible(true);
-            exitDeepFocusMode();
+                        exitDeepFocusMode();
             const newTotalTime = totalFocusTime + selectedMode.duration;
             setTotalFocusTime(newTotalTime);
             
@@ -354,7 +321,6 @@ export default function ProductivityBinauralPlayer() {
       }, 1000);
     }
     
-    handleInteraction();
   };
 
   const toggleMute = () => {
@@ -366,7 +332,6 @@ export default function ProductivityBinauralPlayer() {
         audioContextRef.current.currentTime
       );
     }
-    handleInteraction();
   };
 
   const updateVolume = (newVolume: number) => {
@@ -377,12 +342,10 @@ export default function ProductivityBinauralPlayer() {
         audioContextRef.current.currentTime
       );
     }
-    handleInteraction();
   };
 
   // Enhanced touch gesture handlers for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
-    handleInteraction();
     
     if (e.touches.length === 1) {
       const touch = e.touches[0];
@@ -464,26 +427,12 @@ export default function ProductivityBinauralPlayer() {
   useEffect(() => {
     return () => {
       stopAudio();
-      if (fadeTimerRef.current) {
-        clearTimeout(fadeTimerRef.current);
-      }
       if (deepFocusTimerRef.current) {
         clearTimeout(deepFocusTimerRef.current);
       }
     };
   }, []);
 
-  // Auto-fade controls based on session state
-  useEffect(() => {
-    if (isPlaying) {
-      resetFadeTimer();
-    } else {
-      setControlsVisible(true);
-      if (fadeTimerRef.current) {
-        clearTimeout(fadeTimerRef.current);
-      }
-    }
-  }, [isPlaying]);
 
 
   
@@ -589,59 +538,42 @@ export default function ProductivityBinauralPlayer() {
         ) : (
           <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
             {/* Premium Active Session with Glassmorphism */}
-            <Card 
-              className={`p-3 sm:p-4 md:p-6 lg:p-8 card-premium glass-effect-strong shadow-zen-xl rounded-2xl backdrop-blur-md border-2 border-primary/10 ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
+            <div 
+              className={`p-3 sm:p-4 md:p-5 ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               data-testid="session-container"
-              style={{
-                backgroundImage: `
-                  radial-gradient(circle at 20% 20%, hsl(var(--primary) / 0.05) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 80%, hsl(var(--accent) / 0.05) 0%, transparent 50%)
-                `
-              }}
             >
-              <div className="text-center mb-3 sm:mb-4 md:mb-6">
-                <div className="mb-4 sm:mb-6">
-                  <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{selectedMode.icon}</div>
-                  <h2 className="font-heading text-fluid-lg font-semibold text-gray-800 mb-3 sm:mb-4 tracking-wide leading-tight">{selectedMode.name}</h2>
+              <div className="text-center mb-3 sm:mb-4">
+                <div className="mb-3 sm:mb-4">
+                  <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">{selectedMode.icon}</div>
+                  <h2 className="font-heading text-fluid-lg font-semibold text-gray-800 mb-2 sm:mb-3 tracking-wide leading-tight">{selectedMode.name}</h2>
                   <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed tracking-wide px-2 sm:px-4">{selectedMode.description}</p>
                 </div>
                 
-                {/* Audio Visualization */}
-                <div className="py-6 sm:py-8 relative">
-                  <AudioVisualization 
-                    isPlaying={isPlaying}
-                    frequency={selectedMode.frequency}
-                    mode={selectedMode.id}
-                  />
-                  {/* Subtle pulsing ambient circle around visualization */}
-                  {isPlaying && (
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 rounded-full border border-primary/20 pointer-events-none" />
-                  )}
-                </div>
+                {/* Audio Visualization - Removed wavy animations */}
               </div>
 
               {/* Central Breathing Circle with Integrated Timer */}
               <div className="flex items-center justify-center py-1 sm:py-2 md:py-3">
                 <div className="relative flex items-center justify-center">
                   {/* Main Breathing Circle */}
-                  <div className={`w-36 h-36 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full flex items-center justify-center transition-all duration-2000 ${
+                  <div className={`w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full flex items-center justify-center transition-all duration-2000 ${
                     isPlaying 
                       ? 'bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 breathe-gentle shadow-2xl' 
                       : 'bg-gradient-to-br from-gray-100 to-gray-50 shadow-lg'
                   }`}>
                     
                     {/* Inner Circle */}
-                    <div className={`w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 lg:w-52 lg:h-52 xl:w-60 xl:h-60 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
+                    <div className={`w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
                       isPlaying 
                         ? 'bg-white/80 backdrop-blur-sm border-2 border-primary/20' 
                         : 'bg-white/60 backdrop-blur-sm border-2 border-gray-200'
                     }`}>
                       
                       {/* Timer Display */}
-                      <div className={`font-mono text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-1 sm:mb-2 tracking-wider leading-none tabular-nums transition-all duration-500 ${
+                      <div className={`font-mono text-base sm:text-lg md:text-xl font-bold mb-1 tracking-wider leading-none tabular-nums transition-all duration-500 ${
                         isPlaying 
                           ? 'text-primary' 
                           : 'text-gray-700'
@@ -651,14 +583,6 @@ export default function ProductivityBinauralPlayer() {
                         {formatTime(timeRemaining)}
                       </div>
                       
-                      {/* Status Text */}
-                      <p className={`text-sm md:text-base lg:text-lg font-medium tracking-wide text-center px-4 transition-all duration-500 ${
-                        isPlaying 
-                          ? 'text-primary/70' 
-                          : 'text-gray-500'
-                      }`}>
-                        {isPlaying ? 'Breathe deeply' : 'Take a breath and begin'}
-                      </p>
                       
                       {/* Progress Ring */}
                       <div className="absolute inset-0 rounded-full">
@@ -692,59 +616,48 @@ export default function ProductivityBinauralPlayer() {
                 </div>
               </div>
                 
-              {/* Progress Indicator */}
-              <div className="text-center mb-3 sm:mb-4">
-                <div className="text-sm text-gray-500 font-medium">
-                  {Math.round(sessionProgress)}% Complete
-                </div>
-              </div>
 
               {/* Essential Controls with Auto-fade */}
               <div 
-                className={`transition-all duration-700 ease-in-out ${
-                  controlsVisible || !isPlaying ? 'opacity-100' : 'opacity-30'
-                } ${isDeepFocusMode && !controlsVisible ? 'opacity-10' : ''}`}
-                onMouseEnter={handleControlsMouseEnter}
-                onMouseLeave={handleControlsMouseLeave}
-                onFocus={handleControlsMouseEnter}
+                className="transition-all duration-300 opacity-100"
                 data-testid="audio-controls"
               >
-                <div className="flex items-center justify-center space-x-4 sm:space-x-6 md:space-x-8 lg:space-x-10 mb-2 sm:mb-3">
+                <div className="flex items-center justify-center space-x-3 sm:space-x-4 md:space-x-5 mb-2 sm:mb-3">
                   {/* Premium Mute Control */}
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={toggleMute}
-                    className={`h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-18 lg:w-18 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-zen-md ${
                       isMuted 
                         ? 'text-destructive border-destructive/30 hover:border-destructive/50 hover:bg-destructive/10' 
                         : 'text-muted-foreground border-transparent hover:border-primary/30 hover:bg-primary/10'
                     }`}
                     aria-label={isMuted ? "Unmute audio" : "Mute audio"}
                   >
-                    {isMuted ? <VolumeX className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" /> : <Volume2 className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />}
+                    {isMuted ? <VolumeX className="h-4 w-4 sm:h-5 sm:w-5" /> : <Volume2 className="h-4 w-4 sm:h-5 sm:w-5" />}
                   </Button>
 
                   {/* Premium Play/Pause Control */}
-                  <Button
-                    size="lg"
+                  <button
                     onClick={togglePlayPause}
                     disabled={isLoading}
-                    className={`h-16 w-16 sm:h-18 sm:w-18 md:h-20 md:w-20 lg:h-24 lg:w-24 xl:h-28 xl:w-28 rounded-full zen-ripple touch-target shadow-zen-lg border-2 font-normal tracking-wide backdrop-blur-sm transition-all duration-500 ${
+                    className={`h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-full touch-target shadow-md border transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed ${
                       isPlaying 
-                        ? 'bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary/80 text-secondary-foreground border-secondary/30 breathe-gentle' 
-                        : 'bg-gradient-to-r from-primary to-gradient-middle hover:from-primary/90 hover:to-gradient-middle/90 text-primary-foreground border-primary/30 hover:shadow-zen-xl'
+                        ? 'bg-red-50 hover:bg-red-100 text-red-600 border-red-200' 
+                        : 'bg-green-50 hover:bg-green-100 text-green-600 border-green-200'
                     }`}
+                    style={{aspectRatio: '1'}}
                     aria-label={isPlaying ? "Pause session" : "Start session"}
                   >
                     {isLoading ? (
-                      <div className="animate-spin rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-10 lg:w-10 border-2 border-current border-t-transparent" />
+                      <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 border-2 border-current border-t-transparent" />
                     ) : isPlaying ? (
-                      <Pause className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-10 lg:w-10 xl:h-12 xl:w-12" />
+                      <Pause className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
                     ) : (
-                      <Play className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-10 lg:w-10 xl:h-12 xl:w-12 ml-1" />
+                      <Play className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
                     )}
-                  </Button>
+                  </button>
 
                   {/* Premium Stop Control */}
                   <Button
@@ -756,34 +669,31 @@ export default function ProductivityBinauralPlayer() {
                       setSelectedMode(null);
                       setTimeRemaining(0);
                       setSessionProgress(0);
-                      setControlsVisible(true);
-                      exitDeepFocusMode();
+                                            exitDeepFocusMode();
                     }}
-                    className={`h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-18 lg:w-18 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
                       isDeepFocusMode ? 'opacity-0 invisible' : 'opacity-100 visible'
                     }`}
                     aria-label="Stop and return to mode selection"
                   >
-                    <X className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
+                    <X className="h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </div>
 
                 {/* Elegant Volume Control */}
-                <div className="max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto px-4 sm:px-6">
+                <div className="max-w-xs sm:max-w-sm md:max-w-md mx-auto px-3 sm:px-4">
                   <Slider
                     value={[volume]}
                     onValueChange={([v]) => updateVolume(v)}
                     max={1}
                     step={0.01}
-                    className={`w-full transition-all duration-700 ${
-                      controlsVisible || !isPlaying ? 'opacity-80 hover:opacity-100' : 'opacity-20'
-                    }`}
+                    className="w-full transition-all duration-300 opacity-80 hover:opacity-100"
                     aria-label={`Volume control, currently ${Math.round(volume * 100)}%`}
                     aria-valuenow={Math.round(volume * 100)}
                   />
                 </div>
               </div>
-            </Card>
+            </div>
 
           </div>
         )}

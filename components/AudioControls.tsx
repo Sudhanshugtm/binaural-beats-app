@@ -85,7 +85,7 @@ export function AudioControls({ audioEngine, isPlaying, onSettingsChange }: Audi
 
   return (
     <Card className="w-full">
-      <CardHeader className="pb-4">
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
             <Waves className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -102,11 +102,11 @@ export function AudioControls({ audioEngine, isPlaying, onSettingsChange }: Audi
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-4 sm:space-y-6">
+      <CardContent className="space-y-3 sm:space-y-4">
         {/* Basic Controls */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1">
               <Label className="flex items-center space-x-2 text-sm sm:text-base">
                 <Volume2 className="h-4 w-4" />
                 <span>Volume</span>
@@ -125,7 +125,7 @@ export function AudioControls({ audioEngine, isPlaying, onSettingsChange }: Audi
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1">
               <Label className="text-sm sm:text-base">Binaural Frequency</Label>
               <span className="text-sm text-gray-600 font-medium">
                 {settings.binauralFrequency} Hz
@@ -152,7 +152,7 @@ export function AudioControls({ audioEngine, isPlaying, onSettingsChange }: Audi
                 variant="outline"
                 size="sm"
                 onClick={() => applyPreset(preset)}
-                className="justify-start text-left py-3 px-3 touch-target"
+                className="justify-start text-left py-2 px-3 touch-target"
                 disabled={!isPlaying}
               >
                 <span className="font-medium text-sm">{preset.name}</span>
@@ -166,9 +166,9 @@ export function AudioControls({ audioEngine, isPlaying, onSettingsChange }: Audi
 
         {/* Advanced Controls */}
         {showAdvanced && (
-          <div className="space-y-4 pt-4 border-t">
+          <div className="space-y-3 pt-3 border-t">
             <div>
-              <Label className="mb-2 block">Waveform</Label>
+              <Label className="mb-1 block">Waveform</Label>
               <Select
                 value={settings.waveform}
                 onValueChange={(value: AudioSettings['waveform']) => 
@@ -210,7 +210,7 @@ export function AudioControls({ audioEngine, isPlaying, onSettingsChange }: Audi
 
             {settings.backgroundNoise !== 'none' && (
               <div>
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-1">
                   <Label className="flex items-center space-x-2">
                     <Music className="h-4 w-4" />
                     <span>Background Volume</span>
@@ -230,7 +230,7 @@ export function AudioControls({ audioEngine, isPlaying, onSettingsChange }: Audi
             )}
 
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-1">
                 <Label>Base Frequency</Label>
                 <span className="text-sm text-gray-600">
                   {settings.baseFrequency} Hz
@@ -247,7 +247,7 @@ export function AudioControls({ audioEngine, isPlaying, onSettingsChange }: Audi
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-1">
                 <Label>Stereo Width</Label>
                 <span className="text-sm text-gray-600">
                   {Math.round(settings.stereoPanning * 100)}%

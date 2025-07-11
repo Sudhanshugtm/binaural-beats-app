@@ -6,6 +6,7 @@
 import Link from "next/link";
 import { ArrowLeft, Home, Waves } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export function PlayerHeader() {
   return (
@@ -21,10 +22,17 @@ export function PlayerHeader() {
             <span className="text-sm font-medium">Back</span>
           </Link>
 
-          {/* Center: Simple Logo - with explicit centering */}
+          {/* Center: Brand Logo - with explicit centering */}
           <div className="flex-1 flex justify-center">
-            <div className="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full">
-              <Waves className="w-4 h-4 text-primary" />
+            <div className="w-10 h-10 flex items-center justify-center">
+              <Image
+                src="/logo.png"
+                alt="Beatful Logo"
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain"
+                priority
+              />
             </div>
           </div>
 

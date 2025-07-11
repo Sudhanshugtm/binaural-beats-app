@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAccessibility } from "@/components/AccessibilityProvider";
+import Image from "next/image";
 
 const navItems = [
   { href: '/', label: 'Home' },
@@ -72,8 +73,15 @@ export function Header() {
             className="flex items-center space-x-2 sm:space-x-3 transition-opacity hover:opacity-80 touch-target"
             aria-label="Beatful Home - Binaural Beats for Focus and Meditation"
           >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-primary rounded-full shadow-md">
-              <Waves className="w-5 h-5 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full shadow-md overflow-hidden">
+              <Image
+                src="/logo.png"
+                alt="Beatful Logo"
+                width={40}
+                height={40}
+                className="w-full h-full object-contain"
+                priority
+              />
             </div>
             <span className={`text-lg sm:text-xl font-semibold tracking-wider ${
               isScrolled ? 'text-gray-800' : 'text-gray-800'

@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 export function PlayerHeader() {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm">
-      <div className="mx-auto px-4 max-w-sm sm:max-w-md md:max-w-lg">
-        <div className="flex h-16 items-center justify-between">
+      <div className="mx-auto px-6 max-w-full">
+        <div className="flex h-16 items-center">
           {/* Left: Back Button */}
           <Link 
             href="/"
@@ -21,13 +21,15 @@ export function PlayerHeader() {
             <span className="text-sm font-medium">Back</span>
           </Link>
 
-          {/* Center: Simple Logo */}
-          <div className="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full">
-            <Waves className="w-4 h-4 text-primary" />
+          {/* Center: Simple Logo - with explicit centering */}
+          <div className="flex-1 flex justify-center">
+            <div className="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-full">
+              <Waves className="w-4 h-4 text-primary" />
+            </div>
           </div>
 
           {/* Right: Empty for balance */}
-          <div className="w-[60px]"></div>
+          <div className="w-[80px]"></div>
         </div>
       </div>
     </header>

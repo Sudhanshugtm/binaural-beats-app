@@ -28,10 +28,10 @@ export default function AmbientFloatingElements({
   const [elements, setElements] = useState<FloatingElement[]>([]);
 
   const animations = [
-    'animate-gentle-drift',
-    'animate-gentle-sway',
-    'animate-gentle-pulse',
     'animate-leaf-fall',
+    'animate-leaf-spiral',
+    'animate-petal-dance',
+    'animate-gentle-sway',
   ];
 
   const generateElements = (count: number): FloatingElement[] => {
@@ -43,10 +43,10 @@ export default function AmbientFloatingElements({
         id: `element-${i}`,
         type: types[Math.floor(Math.random() * types.length)],
         x: Math.random() * 100, // percentage
-        y: Math.random() * 100, // percentage
+        y: -10 - Math.random() * 20, // start above viewport
         animation: animations[Math.floor(Math.random() * animations.length)],
-        delay: Math.random() * 15, // seconds
-        duration: 10 + Math.random() * 20, // 10-30 seconds
+        delay: Math.random() * 10, // seconds
+        duration: 15 + Math.random() * 15, // 15-30 seconds
       });
     }
     
@@ -58,13 +58,13 @@ export default function AmbientFloatingElements({
     
     switch (density) {
       case 'minimal':
-        elementCount = isPlaying ? 3 : 2;
-        break;
-      case 'light':
         elementCount = isPlaying ? 6 : 4;
         break;
+      case 'light':
+        elementCount = isPlaying ? 12 : 8;
+        break;
       case 'moderate':
-        elementCount = isPlaying ? 10 : 6;
+        elementCount = isPlaying ? 20 : 12;
         break;
     }
     

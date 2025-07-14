@@ -23,7 +23,7 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-morning-dew ambient-bg flex items-center justify-center relative mobile-safe-area">
+      <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg flex items-center justify-center relative mobile-safe-area">
         <AmbientFloatingElements 
           density="minimal" 
           isPlaying={false}
@@ -35,7 +35,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-forest-mist ambient-bg serene-overlay relative overflow-hidden mobile-safe-area">
+    <div className="min-h-screen bg-forest-mist animated-gradient ambient-bg serene-overlay relative overflow-hidden mobile-safe-area">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

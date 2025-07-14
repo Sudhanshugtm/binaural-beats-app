@@ -438,7 +438,7 @@ export default function ProductivityBinauralPlayer() {
   
 
   return (
-    <div className="min-h-screen bg-morning-dew ambient-bg serene-overlay mobile-safe-area relative">
+    <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
       {/* Dynamic floating nature elements for ambient atmosphere */}
       <AmbientFloatingElements 
         density="light" 

@@ -500,7 +500,7 @@ export default function ProductivityBinauralPlayer() {
                       </div>
                       
                       {/* Enhanced title with gradient text */}
-                      <h3 className="font-heading font-semibold text-fluid-lg mb-4 sm:mb-6 tracking-wide leading-tight gradient-text-premium">
+                      <h3 className="font-heading font-semibold text-fluid-lg mb-4 sm:mb-6 tracking-wide leading-tight text-foreground">
                         {mode.name}
                       </h3>
                       
@@ -514,7 +514,7 @@ export default function ProductivityBinauralPlayer() {
                         <div className="text-xs text-muted-foreground font-medium mb-2 tracking-wider uppercase">
                           Frequency
                         </div>
-                        <div className="text-lg font-mono font-semibold text-primary tracking-wide">
+                        <div className="text-lg font-mono font-semibold text-foreground tracking-wide">
                           {mode.frequency} Hz
                         </div>
                       </div>

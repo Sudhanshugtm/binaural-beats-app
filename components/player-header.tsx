@@ -22,9 +22,13 @@ export function PlayerHeader() {
             <span className="text-sm font-medium">Back</span>
           </Link>
 
-          {/* Center: Brand Logo - with explicit centering */}
+          {/* Center: Brand Logo - clickable */}
           <div className="flex-1 flex justify-center">
-            <div className="w-10 h-10 flex items-center justify-center">
+            <Link
+              href="/"
+              aria-label="Beatful Home - Binaural Beats for Focus and Meditation"
+              className="w-10 h-10 flex items-center justify-center rounded-full transition-opacity hover:opacity-80"
+            >
               <Image
                 src="/logo.png"
                 alt="Beatful Logo"
@@ -33,7 +37,7 @@ export function PlayerHeader() {
                 className="w-8 h-8 object-contain"
                 priority
               />
-            </div>
+            </Link>
           </div>
 
           {/* Right: Empty for balance */}

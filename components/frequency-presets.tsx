@@ -39,7 +39,7 @@ export function FrequencyPresets({ onSelectPreset, currentPreset }: FrequencyPre
           >
             <span className="font-bold text-left w-full mb-1">{preset.name}</span>
             <span className="text-xs sm:text-sm text-muted-foreground truncate w-full text-left leading-relaxed">{preset.description}</span>
-            <span className="text-xs font-mono text-primary mt-1 opacity-75">{preset.beatFrequency} Hz</span>
+            <span className="text-xs font-mono text-foreground mt-1">{preset.beatFrequency} Hz</span>
           </Button>
         ))}
       </div>

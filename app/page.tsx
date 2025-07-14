@@ -5,34 +5,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Play, Headphones, Heart } from "lucide-react";
+import { Play } from "lucide-react";
 import ParticleSystem from "@/components/ParticleSystem";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import AmbientFloatingElements from "@/components/AmbientFloatingElements";
+import { OnboardingFlow } from "@/components/OnboardingFlow";
 
 export default function Home() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const handleBeginSession = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      router.push('/player');
-    }, 1000);
+    setShowOnboarding(true);
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg flex items-center justify-center relative mobile-safe-area">
-        <AmbientFloatingElements 
-          density="minimal" 
-          isPlaying={false}
-          className="z-1" 
-        />
-        <LoadingSpinner message="Preparing your peaceful session..." variant="audio" />
-      </div>
-    );
-  }
+  const handleOnboardingComplete = () => {
+    localStorage.setItem('focusbeats-onboarding-completed', 'true');
+    router.push('/player');
+  };
 
   return (
     <div className="min-h-screen bg-forest-mist animated-gradient ambient-bg serene-overlay relative overflow-hidden mobile-safe-area">
@@ -128,6 +117,9 @@ export default function Home() {
           </section>
         </div>
       </main>
+      {showOnboarding && (
+        <OnboardingFlow onComplete={handleOnboardingComplete} />
+      )}
     </div>
   );
 }

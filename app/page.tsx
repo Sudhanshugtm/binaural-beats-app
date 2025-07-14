@@ -93,7 +93,7 @@ export default function Home() {
 
       {/* Main Content */}
       <main id="main-content" className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-8 lg:px-16" role="main">
-        <div className="container-zen-narrow text-center space-y-8 sm:space-y-12">
+        <div className="container-zen-narrow text-center space-y-8 sm:space-y-10">
           
           {/* Welcome Section */}
           <header className="space-y-6">
@@ -125,38 +125,6 @@ export default function Home() {
               Begin Your Practice
             </Button>
             
-            <p className="text-gray-600 text-sm font-medium tracking-wide mt-4 sm:mt-6 px-4 sm:px-0">
-              No distractions. No pressure. Just you and the sounds.
-            </p>
-          </section>
-
-          {/* Simple Feature Highlights */}
-          <section className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 pt-12 sm:pt-16" aria-labelledby="features-heading">
-            <h2 id="features-heading" className="sr-only">Key Features of Beatful</h2>
-            
-            <article className="text-center space-y-3">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-accent rounded-full flex items-center justify-center mb-6 sm:mb-8" aria-hidden="true">
-                <Headphones className="w-8 h-8 sm:w-10 sm:h-10 text-accent-foreground/70" />
-              </div>
-              <h3 className="font-heading text-fluid-base font-semibold text-gray-800 tracking-wide mb-3 sm:mb-4">Pure Audio</h3>
-              <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed px-2 sm:px-4">Clean, calming binaural beats designed for optimal focus and relaxation</p>
-            </article>
-            
-            <article className="text-center space-y-3">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-secondary rounded-full flex items-center justify-center mb-6 sm:mb-8" aria-hidden="true">
-                <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-secondary-foreground/70" />
-              </div>
-              <h3 className="font-heading text-fluid-base font-semibold text-gray-800 tracking-wide mb-3 sm:mb-4">Gentle Approach</h3>
-              <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed px-2 sm:px-4">Designed for peaceful focus and mindful meditation practice</p>
-            </article>
-            
-            <article className="text-center space-y-3">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-muted rounded-full flex items-center justify-center mb-6 sm:mb-8" aria-hidden="true">
-                <Play className="w-8 h-8 sm:w-10 sm:h-10 text-gray-600" />
-              </div>
-              <h3 className="font-heading text-fluid-base font-semibold text-gray-800 tracking-wide mb-3 sm:mb-4">Instant Access</h3>
-              <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed px-2 sm:px-4">Start your meditation practice whenever you're ready</p>
-            </article>
           </section>
         </div>
       </main>

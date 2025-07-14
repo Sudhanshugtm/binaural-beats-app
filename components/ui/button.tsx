@@ -8,8 +8,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 
-          "bg-gradient-to-r from-primary to-gradient-middle text-primary-foreground hover:from-primary/90 hover:to-gradient-middle/90 shadow-zen-md hover:shadow-zen-lg hover:scale-[1.02] active:scale-[0.98] font-semibold border-2 border-primary/20 hover:border-primary/40 backdrop-blur-sm",
+        default:
+          "bg-gradient-to-r from-gradient-start via-gradient-middle to-gradient-end text-primary-foreground hover:from-gradient-start/90 hover:via-gradient-middle/90 hover:to-gradient-end/90 shadow-zen-md hover:shadow-zen-lg hover:scale-[1.02] active:scale-[0.98] font-semibold border-2 border-primary/20 hover:border-primary/40 backdrop-blur-sm",
         destructive:
           "bg-gradient-to-r from-destructive to-destructive/90 text-destructive-foreground hover:from-destructive/90 hover:to-destructive/80 shadow-zen-md hover:shadow-zen-lg hover:scale-[1.02] active:scale-[0.98] border-2 border-destructive/20 hover:border-destructive/40 backdrop-blur-sm",
         outline:

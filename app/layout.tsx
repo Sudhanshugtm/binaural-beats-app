@@ -6,6 +6,7 @@ import { LayoutWrapper } from "@/components/layout-wrapper";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { AccessibilityProvider } from "@/components/AccessibilityProvider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 // Primary font for body text - peaceful and readable
 const inter = Inter({ 
@@ -256,17 +257,19 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${sourceSans.variable} font-sans antialiased`} itemScope itemType="https://schema.org/WebApplication">
         <ErrorBoundary>
-          <AccessibilityProvider>
-            <TooltipProvider>
-              <a href="#main-content" className="skip-to-content">
-                Skip to content
-              </a>
-              <LayoutWrapper>
-                {children}
-              </LayoutWrapper>
-              <Toaster />
-            </TooltipProvider>
-          </AccessibilityProvider>
+          <ThemeProvider>
+            <AccessibilityProvider>
+              <TooltipProvider>
+                <a href="#main-content" className="skip-to-content">
+                  Skip to content
+                </a>
+                <LayoutWrapper>
+                  {children}
+                </LayoutWrapper>
+                <Toaster />
+              </TooltipProvider>
+            </AccessibilityProvider>
+          </ThemeProvider>
         </ErrorBoundary>
       </body>
     </html>

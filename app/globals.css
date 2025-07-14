@@ -108,7 +108,8 @@
     
     /* Refined sage green for dark mode with better visibility */
     --primary: 142 40% 58%; /* Brighter, more vibrant sage */
-    --primary-foreground: 158 18% 9%; /* Dark background for perfect contrast */
+    /* Light text for better contrast in dark mode */
+    --primary-foreground: 45 25% 98%;
     
     /* Sophisticated dark earth tones */
     --secondary: 38 18% 20%; /* Richer, warmer dark brown */

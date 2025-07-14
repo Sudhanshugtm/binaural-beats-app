@@ -139,8 +139,9 @@ class CodeSplittingManager {
           if (entry.isIntersecting) {
             const chunkName = entry.target.getAttribute('data-chunk');
             if (chunkName && !this.loadedChunks.has(chunkName)) {
-              // TODO: Implement chunk loading
-              this.loadedChunks.add(chunkName);
+              this.loadChunk(chunkName).catch(() => {
+                /* ignore loading errors */
+              });
             }
           }
         });

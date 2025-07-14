@@ -1,19 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { Waves, Menu, X, Settings } from "lucide-react"; // Changed from Headphones
+import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAccessibility } from "@/components/AccessibilityProvider";
 import Image from "next/image";
 
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/player', label: 'Practice' },
-  { href: '#features', label: 'Features' },
-  { href: '#about', label: 'About' },
-];
+// Navigation items removed as requested
+const navItems: { href: string; label: string }[] = [];
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -91,24 +87,26 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6" aria-label="Main navigation">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
-                  isScrolled 
-                    ? 'text-gray-700 hover:text-gray-900' 
-                    : 'text-gray-700 hover:text-gray-900'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            
-          </nav>
+          {navItems.length > 0 && (
+            <nav className="hidden md:flex items-center space-x-6" aria-label="Main navigation">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
+                    isScrolled
+                      ? 'text-gray-700 hover:text-gray-900'
+                      : 'text-gray-700 hover:text-gray-900'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          )}
 
           {/* Mobile Menu Button */}
+          {navItems.length > 0 && (
           <div className="md:hidden flex items-center space-x-2">
             <Button
               variant="ghost"
@@ -134,43 +132,46 @@ export function Header() {
               )}
             </Button>
           </div>
+          )}
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <div 
-        id="mobile-menu"
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}
-        aria-hidden={!isMobileMenuOpen}
-      >
-        <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-lg">
-          <nav className="container-zen mx-auto py-4 space-y-2" aria-label="Mobile navigation">
-            {navItems.map((item, index) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`block px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target ${
-                  isMobileMenuOpen 
-                    ? 'translate-x-0 opacity-100' 
-                    : 'translate-x-4 opacity-0'
-                }`}
-                style={{
-                  transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
-                }}
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  announceToScreenReader(`Navigating to ${item.label}`, 'assertive');
-                }}
-                tabIndex={isMobileMenuOpen ? 0 : -1}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+      {navItems.length > 0 && (
+        <div
+          id="mobile-menu"
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+          aria-hidden={!isMobileMenuOpen}
+        >
+          <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-lg">
+            <nav className="container-zen mx-auto py-4 space-y-2" aria-label="Mobile navigation">
+              {navItems.map((item, index) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`block px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target ${
+                    isMobileMenuOpen
+                      ? 'translate-x-0 opacity-100'
+                      : 'translate-x-4 opacity-0'
+                  }`}
+                  style={{
+                    transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
+                  }}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    announceToScreenReader(`Navigating to ${item.label}`, 'assertive');
+                  }}
+                  tabIndex={isMobileMenuOpen ? 0 : -1}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
-      </div>
+      )}
     </header>
   );
 }

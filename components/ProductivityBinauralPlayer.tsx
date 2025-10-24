@@ -785,15 +785,11 @@ export default function ProductivityBinauralPlayer() {
                   </Button>
 
                   {/* Premium Play/Pause Control */}
-                  <button
+                  <Button
                     onClick={togglePlayPause}
                     disabled={isLoading}
-                    className={`h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-full touch-target shadow-md border transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed ${
-                      isPlaying 
-                        ? 'bg-red-50 hover:bg-red-100 text-red-600 border-red-200' 
-                        : 'bg-green-50 hover:bg-green-100 text-green-600 border-green-200'
-                    }`}
-                    style={{aspectRatio: '1'}}
+                    size="lg"
+                    className={`h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-full p-0 flex items-center justify-center ${isPlaying ? 'bg-primary/90 hover:bg-primary' : ''}`}
                     aria-label={isPlaying ? "Pause session" : "Start session"}
                   >
                     {isLoading ? (
@@ -803,7 +799,7 @@ export default function ProductivityBinauralPlayer() {
                     ) : (
                       <Play className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
                     )}
-                  </button>
+                  </Button>
 
                   {/* Premium Stop Control */}
                   <Button

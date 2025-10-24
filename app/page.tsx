@@ -10,6 +10,9 @@ import ParticleSystem from "@/components/ParticleSystem";
 import AmbientFloatingElements from "@/components/AmbientFloatingElements";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
 import QuickStartDock from "@/components/QuickStartDock";
+import FeatureGrid from "@/components/sections/FeatureGrid";
+import TrustStrip from "@/components/sections/TrustStrip";
+import Testimonials from "@/components/sections/Testimonials";
 
 export default function Home() {
   const router = useRouter();
@@ -111,6 +114,10 @@ export default function Home() {
             </Button>
             <div className="text-xs text-gray-500 dark:text-gray-400">No signup. Works offline as a PWA.</div>
           </section>
+
+          <TrustStrip />
+          <FeatureGrid />
+          <Testimonials />
         </div>
       </main>
       <QuickStartDock />

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import { BEAT_PRESETS } from "@/lib/frequency-presets";
 
 interface FrequencyPreset {
   name: string
@@ -7,12 +8,11 @@ interface FrequencyPreset {
   description: string
 }
 
-const presets: FrequencyPreset[] = [
-  { name: "Delta", beatFrequency: 2, description: "Deep sleep, relaxation" },
-  { name: "Theta", beatFrequency: 6, description: "REM sleep, meditation" },
-  { name: "Alpha", beatFrequency: 10, description: "Relaxation, focus" },
-  { name: "Beta", beatFrequency: 20, description: "Concentration, alertness" },
-]
+const presets: FrequencyPreset[] = BEAT_PRESETS.map(p => ({
+  name: p.name,
+  beatFrequency: p.frequency,
+  description: p.description,
+}));
 
 interface FrequencyPresetsProps {
   onSelectPreset: (preset: FrequencyPreset) => void

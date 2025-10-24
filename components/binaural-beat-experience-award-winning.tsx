@@ -21,8 +21,9 @@ import PremiumControls from "@/components/PremiumControls";
 import ImmersiveMode from "@/components/ImmersiveMode";
 import WebGLVisualizer from "@/components/WebGLVisualizer";
 import { SESSION_DURATIONS as CORE_SESSION_DURATIONS } from "@/lib/presets";
+import { BEAT_PRESETS } from "@/lib/frequency-presets";
 
-interface FrequencyPreset {
+interface FrequencyPresetUI {
   name: string;
   frequency: number;
   category: string;
@@ -32,44 +33,41 @@ interface FrequencyPreset {
   gradient: string;
 }
 
-const FREQUENCY_PRESETS: FrequencyPreset[] = [
-  { 
-    name: "Deep Sleep", 
-    frequency: 2, 
-    category: "Delta (2Hz)", 
-    description: "Promotes deep, restorative sleep", 
-    icon: "🌙", 
-    color: "from-violet-400 via-purple-500 to-indigo-600",
-    gradient: "from-violet-500/20 to-indigo-600/20"
-  },
-  { 
-    name: "Dream State", 
-    frequency: 6, 
-    category: "Theta (6Hz)", 
-    description: "Enhances creativity & meditation", 
-    icon: "✨", 
-    color: "from-pink-400 via-purple-500 to-violet-600",
-    gradient: "from-pink-500/20 to-violet-600/20"
-  },
-  { 
-    name: "Calm Focus", 
-    frequency: 10, 
-    category: "Alpha (10Hz)", 
-    description: "Relaxed awareness & light focus", 
-    icon: "🧘", 
-    color: "from-cyan-400 via-blue-500 to-purple-600",
-    gradient: "from-cyan-500/20 to-purple-600/20"
-  },
-  { 
-    name: "Sharp Focus", 
-    frequency: 20, 
-    category: "Beta (20Hz)", 
-    description: "Active concentration & alertness", 
-    icon: "⚡", 
-    color: "from-orange-400 via-pink-500 to-red-500",
-    gradient: "from-orange-500/20 to-red-500/20"
-  },
-];
+const FREQUENCY_PRESETS: FrequencyPresetUI[] = BEAT_PRESETS.map(preset => {
+  const meta: Record<string, { icon: string; color: string; gradient: string }>
+    = {
+      Delta: {
+        icon: "🌙",
+        color: "from-violet-400 via-purple-500 to-indigo-600",
+        gradient: "from-violet-500/20 to-indigo-600/20",
+      },
+      Theta: {
+        icon: "✨",
+        color: "from-pink-400 via-purple-500 to-violet-600",
+        gradient: "from-pink-500/20 to-violet-600/20",
+      },
+      Alpha: {
+        icon: "🧘",
+        color: "from-cyan-400 via-blue-500 to-purple-600",
+        gradient: "from-cyan-500/20 to-purple-600/20",
+      },
+      Beta: {
+        icon: "⚡",
+        color: "from-orange-400 via-pink-500 to-red-500",
+        gradient: "from-orange-500/20 to-red-500/20",
+      },
+    };
+  const m = meta[preset.name] ?? meta.Alpha;
+  return {
+    name: preset.name === 'Delta' ? 'Deep Sleep' : preset.name === 'Theta' ? 'Dream State' : preset.name === 'Alpha' ? 'Calm Focus' : 'Sharp Focus',
+    frequency: preset.frequency,
+    category: `${preset.name} (${preset.frequency}Hz)`,
+    description: preset.description,
+    icon: m.icon,
+    color: m.color,
+    gradient: m.gradient,
+  };
+});
 
 const SESSION_DURATIONS = CORE_SESSION_DURATIONS.map(p => ({ label: p.label, value: p.duration }));
 
@@ -88,6 +86,8 @@ export default function AwardWinningBinauralExperience() {
   const [showPremiumControls, setShowPremiumControls] = useState(false);
   const [isImmersiveMode, setIsImmersiveMode] = useState(false);
   const [useWebGLVisuals, setUseWebGLVisuals] = useState(true);
+  const [isPureToneMode, setIsPureToneMode] = useState(false);
+  const [pureToneFrequency, setPureToneFrequency] = useState(852);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorLeftRef = useRef<OscillatorNode | null>(null);
@@ -154,9 +154,15 @@ export default function AwardWinningBinauralExperience() {
 
       const baseFrequency = 250;
       
-      // Left ear gets base frequency, right ear gets base + beat frequency
-      oscillatorLeftRef.current.frequency.setValueAtTime(baseFrequency, ctx.currentTime);
-      oscillatorRightRef.current.frequency.setValueAtTime(baseFrequency + beatFrequency, ctx.currentTime);
+      // Apply initial frequencies based on mode
+      if (isPureToneMode) {
+        oscillatorLeftRef.current.frequency.setValueAtTime(pureToneFrequency, ctx.currentTime);
+        oscillatorRightRef.current.frequency.setValueAtTime(pureToneFrequency, ctx.currentTime);
+      } else {
+        // Left ear gets base frequency, right ear gets base + beat frequency
+        oscillatorLeftRef.current.frequency.setValueAtTime(baseFrequency, ctx.currentTime);
+        oscillatorRightRef.current.frequency.setValueAtTime(baseFrequency + beatFrequency, ctx.currentTime);
+      }
 
       // Create separate channels for true binaural effect
       const merger = ctx.createChannelMerger(2);
@@ -169,7 +175,10 @@ export default function AwardWinningBinauralExperience() {
       gainNodeRef.current.connect(analyserRef.current);
       analyserRef.current.connect(ctx.destination);
 
-      gainNodeRef.current.gain.setValueAtTime(isMuted ? 0 : volume, ctx.currentTime);
+      // Soft fade-in
+      const targetGain = isMuted ? 0 : volume;
+      gainNodeRef.current.gain.setValueAtTime(0, ctx.currentTime);
+      gainNodeRef.current.gain.linearRampToValueAtTime(targetGain, ctx.currentTime + 0.03);
 
       oscillatorLeftRef.current.start();
       oscillatorRightRef.current.start();
@@ -220,6 +229,8 @@ export default function AwardWinningBinauralExperience() {
     } else {
       // Resume or start
       if (gainNodeRef.current && audioContextRef.current) {
+        // Ensure oscillator freqs reflect current mode
+        applyCurrentModeFrequencies();
         gainNodeRef.current.gain.setValueAtTime(isMuted ? 0 : volume, audioContextRef.current.currentTime);
       } else {
         await startAudio();
@@ -265,6 +276,7 @@ export default function AwardWinningBinauralExperience() {
   };
 
   const updateFrequency = (newFrequency: number) => {
+    setIsPureToneMode(false);
     setBeatFrequency(newFrequency);
     const preset = FREQUENCY_PRESETS.find(p => p.frequency === newFrequency);
     setStatusMessage(`Frequency changed to ${newFrequency}Hz${preset ? ` - ${preset.name}` : ''}`);
@@ -274,6 +286,22 @@ export default function AwardWinningBinauralExperience() {
         baseFrequency + newFrequency,
         audioContextRef.current.currentTime
       );
+      if (oscillatorLeftRef.current) {
+        oscillatorLeftRef.current.frequency.setValueAtTime(baseFrequency, audioContextRef.current.currentTime);
+      }
+    }
+  };
+
+  const applyCurrentModeFrequencies = () => {
+    if (!audioContextRef.current || !oscillatorLeftRef.current || !oscillatorRightRef.current) return;
+    const ctx = audioContextRef.current;
+    const baseFrequency = 250;
+    if (isPureToneMode) {
+      oscillatorLeftRef.current.frequency.setValueAtTime(pureToneFrequency, ctx.currentTime);
+      oscillatorRightRef.current.frequency.setValueAtTime(pureToneFrequency, ctx.currentTime);
+    } else {
+      oscillatorLeftRef.current.frequency.setValueAtTime(baseFrequency, ctx.currentTime);
+      oscillatorRightRef.current.frequency.setValueAtTime(baseFrequency + beatFrequency, ctx.currentTime);
     }
   };
 
@@ -457,6 +485,38 @@ export default function AwardWinningBinauralExperience() {
                       </div>
                     </Button>
                   ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                  <Music className="w-4 h-4" />
+                  Solfeggio (Pure Tone)
+                </h4>
+                <div className="grid grid-cols-1 gap-3">
+                  <Button
+                    variant="ghost"
+                    className={`justify-start h-auto p-4 rounded-xl transition-all duration-300 ${
+                      isPureToneMode && pureToneFrequency === 852
+                        ? 'bg-indigo-600 text-white shadow-lg transform scale-105'
+                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => {
+                      setIsPureToneMode(true);
+                      setPureToneFrequency(852);
+                      setStatusMessage('Pure tone: 852Hz (Solfeggio)');
+                      applyCurrentModeFrequencies();
+                    }}
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <span className="text-xl">🔮</span>
+                      <div className="text-left flex-1">
+                        <div className="font-medium">Solfeggio 852Hz</div>
+                        <div className="text-xs opacity-75">Pure tone (no binaural difference)</div>
+                      </div>
+                      <div className="text-sm font-mono">852Hz</div>
+                    </div>
+                  </Button>
                 </div>
               </div>
 

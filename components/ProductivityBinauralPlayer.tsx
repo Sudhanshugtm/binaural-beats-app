@@ -392,10 +392,11 @@ export default function ProductivityBinauralPlayer() {
   };
 
   const updateVolume = (newVolume: number) => {
-    setVolume(newVolume);
+    const clamped = Math.max(0, Math.min(0.85, newVolume));
+    setVolume(clamped);
     if (gainNodeRef.current && audioContextRef.current && !isMuted) {
       gainNodeRef.current.gain.setValueAtTime(
-        newVolume,
+        clamped,
         audioContextRef.current.currentTime
       );
     }
@@ -404,7 +405,7 @@ export default function ProductivityBinauralPlayer() {
       const prefs = raw ? JSON.parse(raw) : {};
       localStorage.setItem('beatful-productivity-player-prefs', JSON.stringify({
         ...prefs,
-        volume: newVolume,
+        volume: clamped,
       }));
     } catch {}
   };
@@ -518,7 +519,7 @@ export default function ProductivityBinauralPlayer() {
     if (deltaTime < 300 && Math.abs(deltaX) > 50 && Math.abs(deltaY) < 100) {
       if (deltaX > 0) {
         // Swipe right - increase volume
-        const newVolume = Math.min(1, volume + 0.1);
+        const newVolume = Math.min(0.85, volume + 0.1);
         updateVolume(newVolume);
       } else {
         // Swipe left - decrease volume
@@ -792,7 +793,7 @@ export default function ProductivityBinauralPlayer() {
                   <Slider
                     value={[volume]}
                     onValueChange={([v]) => updateVolume(v)}
-                    max={1}
+                    max={0.85}
                     step={0.01}
                     className="w-full transition-all duration-300 opacity-80 hover:opacity-100"
                     aria-label={`Volume control, currently ${Math.round(volume * 100)}%`}

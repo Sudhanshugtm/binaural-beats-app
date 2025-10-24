@@ -435,7 +435,7 @@ export default function AwardWinningBinauralExperience() {
                     <Slider
                       value={[volume]}
                       onValueChange={([value]) => updateVolume(value)}
-                      max={1}
+                      max={0.85}
                       step={0.01}
                       className="mt-2"
                     />

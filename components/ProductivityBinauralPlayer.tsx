@@ -108,6 +108,7 @@ export default function ProductivityBinauralPlayer() {
   const gainNodeRef = useRef<GainNode | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const deepFocusTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const sessionEndAtRef = useRef<number | null>(null);
   
   // Enhanced touch gesture tracking
   const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
@@ -226,7 +227,9 @@ export default function ProductivityBinauralPlayer() {
       
       const actualVolume = isMuted ? 0 : volume;
       console.log('Setting volume to:', actualVolume, 'isMuted:', isMuted, 'volume:', volume);
-      gainNodeRef.current.gain.setValueAtTime(actualVolume, ctx.currentTime);
+      // Soft fade-in to avoid clicks
+      gainNodeRef.current.gain.setValueAtTime(0, ctx.currentTime);
+      gainNodeRef.current.gain.linearRampToValueAtTime(actualVolume, ctx.currentTime + 0.03);
 
       oscillatorLeftRef.current.start();
       oscillatorRightRef.current.start();
@@ -240,13 +243,34 @@ export default function ProductivityBinauralPlayer() {
   };
 
   const stopAudio = () => {
-    if (oscillatorLeftRef.current) {
-      oscillatorLeftRef.current.stop();
-      oscillatorLeftRef.current = null;
-    }
-    if (oscillatorRightRef.current) {
-      oscillatorRightRef.current.stop();
-      oscillatorRightRef.current = null;
+    // Smooth fade-out then stop oscillators
+    if (gainNodeRef.current && audioContextRef.current) {
+      const ctx = audioContextRef.current;
+      try {
+        gainNodeRef.current.gain.setValueAtTime(gainNodeRef.current.gain.value, ctx.currentTime);
+        gainNodeRef.current.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.03);
+      } catch {}
+      setTimeout(() => {
+        try {
+          if (oscillatorLeftRef.current) {
+            oscillatorLeftRef.current.stop();
+            oscillatorLeftRef.current = null;
+          }
+          if (oscillatorRightRef.current) {
+            oscillatorRightRef.current.stop();
+            oscillatorRightRef.current = null;
+          }
+        } catch {}
+      }, 40);
+    } else {
+      if (oscillatorLeftRef.current) {
+        oscillatorLeftRef.current.stop();
+        oscillatorLeftRef.current = null;
+      }
+      if (oscillatorRightRef.current) {
+        oscillatorRightRef.current.stop();
+        oscillatorRightRef.current = null;
+      }
     }
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -263,6 +287,13 @@ export default function ProductivityBinauralPlayer() {
     setSelectedMode(mode);
     setTimeRemaining(mode.duration * 60);
     setSessionProgress(0);
+    try {
+      localStorage.setItem('beatful-productivity-player-prefs', JSON.stringify({
+        lastModeId: mode.id,
+        volume,
+        isMuted,
+      }));
+    } catch {}
   };
 
   const mapRecommendationModeToWorkMode = (recommendationMode: ModeType): string => {
@@ -320,24 +351,23 @@ export default function ProductivityBinauralPlayer() {
         }, 30000);
       }
       
+      const now = Date.now();
+      const totalSeconds = selectedMode.duration * 60;
+      sessionEndAtRef.current = now + totalSeconds * 1000;
       timerRef.current = setInterval(() => {
-        setTimeRemaining(prev => {
-          if (prev <= 1) {
-            stopAudio();
-            setIsPlaying(false);
-                        exitDeepFocusMode();
-            const newTotalTime = totalFocusTime + selectedMode.duration;
-            setTotalFocusTime(newTotalTime);
-            
-            setSessionStartTime(null);
-            
-            return 0;
-          }
-          const newTime = prev - 1;
-          setSessionProgress(((selectedMode.duration * 60 - newTime) / (selectedMode.duration * 60)) * 100);
-          return newTime;
-        });
-      }, 1000);
+        const remaining = Math.max(0, Math.round(((sessionEndAtRef.current ?? now) - Date.now()) / 1000));
+        setTimeRemaining(remaining);
+        setSessionProgress(((totalSeconds - remaining) / totalSeconds) * 100);
+        if (remaining <= 0) {
+          try { playEndChime(); } catch {}
+          stopAudio();
+          setIsPlaying(false);
+          exitDeepFocusMode();
+          const newTotalTime = totalFocusTime + selectedMode.duration;
+          setTotalFocusTime(newTotalTime);
+          setSessionStartTime(null);
+        }
+      }, 250);
     }
     
   };
@@ -351,6 +381,14 @@ export default function ProductivityBinauralPlayer() {
         audioContextRef.current.currentTime
       );
     }
+    try {
+      const raw = localStorage.getItem('beatful-productivity-player-prefs');
+      const prefs = raw ? JSON.parse(raw) : {};
+      localStorage.setItem('beatful-productivity-player-prefs', JSON.stringify({
+        ...prefs,
+        isMuted: newMuted,
+      }));
+    } catch {}
   };
 
   const updateVolume = (newVolume: number) => {
@@ -361,6 +399,52 @@ export default function ProductivityBinauralPlayer() {
         audioContextRef.current.currentTime
       );
     }
+    try {
+      const raw = localStorage.getItem('beatful-productivity-player-prefs');
+      const prefs = raw ? JSON.parse(raw) : {};
+      localStorage.setItem('beatful-productivity-player-prefs', JSON.stringify({
+        ...prefs,
+        volume: newVolume,
+      }));
+    } catch {}
+  };
+
+  // ---- Preferences Persistence ----
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('beatful-productivity-player-prefs');
+      if (raw) {
+        const prefs = JSON.parse(raw);
+        if (typeof prefs.volume === 'number') setVolume(prefs.volume);
+        if (typeof prefs.isMuted === 'boolean') setIsMuted(prefs.isMuted);
+        if (typeof prefs.lastModeId === 'string') {
+          const mode = WORK_MODES.find(m => m.id === prefs.lastModeId);
+          if (mode) {
+            setSelectedMode(mode);
+            setTimeRemaining(mode.duration * 60);
+            setSessionProgress(0);
+          }
+        }
+      }
+    } catch {}
+  }, []);
+
+  const playEndChime = () => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.02);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.6);
+      osc.stop(ctx.currentTime + 0.65);
+      setTimeout(() => ctx.close(), 800);
+    } catch {}
   };
 
   // Enhanced touch gesture handlers for mobile
@@ -405,9 +489,13 @@ export default function ProductivityBinauralPlayer() {
       // Adjust timer based on pinch (pinch out to extend, pinch in to reduce)
       if (Math.abs(distanceChange) > 20) {
         const adjustment = distanceChange > 0 ? 5 * 60 : -5 * 60; // 5 minutes
-        const newTime = Math.max(0, Math.min(selectedMode.duration * 60, timeRemaining + adjustment));
+        const total = selectedMode.duration * 60;
+        const newTime = Math.max(0, Math.min(total, timeRemaining + adjustment));
         setTimeRemaining(newTime);
-        setSessionProgress(((selectedMode.duration * 60 - newTime) / (selectedMode.duration * 60)) * 100);
+        setSessionProgress(((total - newTime) / total) * 100);
+        if (isPlaying) {
+          sessionEndAtRef.current = Date.now() + newTime * 1000;
+        }
         
         // Reset pinch reference
         pinchStartRef.current = {

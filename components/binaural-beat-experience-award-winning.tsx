@@ -20,6 +20,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import PremiumControls from "@/components/PremiumControls";
 import ImmersiveMode from "@/components/ImmersiveMode";
 import WebGLVisualizer from "@/components/WebGLVisualizer";
+import { SESSION_DURATIONS as CORE_SESSION_DURATIONS } from "@/lib/presets";
 
 interface FrequencyPreset {
   name: string;
@@ -70,12 +71,7 @@ const FREQUENCY_PRESETS: FrequencyPreset[] = [
   },
 ];
 
-const SESSION_DURATIONS = [
-  { label: "15m", value: 15 * 60 },
-  { label: "30m", value: 30 * 60 },
-  { label: "60m", value: 60 * 60 },
-  { label: "90m", value: 90 * 60 },
-];
+const SESSION_DURATIONS = CORE_SESSION_DURATIONS.map(p => ({ label: p.label, value: p.duration }));
 
 export default function AwardWinningBinauralExperience() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -99,6 +95,8 @@ export default function AwardWinningBinauralExperience() {
   const gainNodeRef = useRef<GainNode | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timerStartAtRef = useRef<number | null>(null);
+  const timerEndAtRef = useRef<number | null>(null);
 
   const isDarkMode = false;
 
@@ -229,18 +227,41 @@ export default function AwardWinningBinauralExperience() {
       setIsPlaying(true);
       setHasStartedSession(true);
       setStatusMessage(`Binaural beats session started at ${beatFrequency}Hz`);
+      const now = Date.now();
+      timerStartAtRef.current = now;
+      timerEndAtRef.current = now + selectedDuration * 1000;
       timerIntervalRef.current = setInterval(() => {
-        setTimer(prev => {
-          if (prev >= selectedDuration) {
-            stopAudio();
-            setIsPlaying(false);
-            setStatusMessage('Session completed');
-            return 0;
-          }
-          return prev + 1;
-        });
-      }, 1000);
+        const startAt = timerStartAtRef.current ?? Date.now();
+        const endAt = timerEndAtRef.current ?? (startAt + selectedDuration * 1000);
+        const elapsed = Math.min(selectedDuration, Math.max(0, Math.floor((Date.now() - startAt) / 1000)));
+        setTimer(elapsed);
+        if (Date.now() >= endAt) {
+          try { playEndChime(); } catch {}
+          stopAudio();
+          setIsPlaying(false);
+          setStatusMessage('Session completed');
+          setTimer(0);
+        }
+      }, 250);
     }
+  };
+
+  const playEndChime = () => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.02);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.6);
+      osc.stop(ctx.currentTime + 0.65);
+      setTimeout(() => ctx.close(), 800);
+    } catch {}
   };
 
   const updateFrequency = (newFrequency: number) => {

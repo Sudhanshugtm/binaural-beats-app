@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { BinauralBeats } from "@/components/BinauralBeats";
+import { SESSION_DURATIONS } from "@/lib/presets";
 import { NoiseGenerator } from "@/components/NoiseGenerator";
 import { createOmSound } from '@/utils/omSound';
 import { createNoise as createEnhancedNoise } from '@/utils/audioUtils';
@@ -903,13 +904,8 @@ function addDroplet(leftChannel: Float32Array, rightChannel: Float32Array, start
   }
 }
 
-// ----------- TIME PRESETS -------------
-const TIME_PRESETS = [
-  { label: "15m", duration: 15 * 60, default: true },
-  { label: "30m", duration: 30 * 60 },
-  { label: "60m", duration: 60 * 60 },
-  { label: "90m", duration: 90 * 60 },
-];
+// ----------- TIME PRESETS (centralized) -------------
+const TIME_PRESETS = SESSION_DURATIONS;
 
 type AudioMode = "binaural" | "noise" | "om";
 
@@ -953,6 +949,29 @@ export default function BinauralBeatExperience() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [omBuffer, setOmBuffer] = useState<AudioBuffer | null>(null);
 
+  // ---- Preferences Persistence ----
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('beatful-bbe-prefs');
+      if (raw) {
+        const prefs = JSON.parse(raw);
+        if (typeof prefs.beatFrequency === 'number') setBeatFrequency(prefs.beatFrequency);
+        if (typeof prefs.selectedDuration === 'number') setSelectedDuration(prefs.selectedDuration);
+        if (typeof prefs.isMuted === 'boolean') setIsMuted(prefs.isMuted);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('beatful-bbe-prefs', JSON.stringify({
+        beatFrequency,
+        selectedDuration,
+        isMuted,
+      }));
+    } catch {}
+  }, [beatFrequency, selectedDuration, isMuted]);
+
   // ---- Audio nodes ----
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorLeftRef = useRef<OscillatorNode | null>(null);
@@ -966,6 +985,8 @@ export default function BinauralBeatExperience() {
 
   // ---- Timer & background context ----
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timerStartAtRef = useRef<number | null>(null);
+  const timerEndAtRef = useRef<number | null>(null);
   const backgroundAudioContextRef = useRef<AudioContext | null>(null);
 
   // ---- Dark mode theming from next-themes (optional) ----
@@ -1510,22 +1531,44 @@ export default function BinauralBeatExperience() {
     if (selectedDuration === 0) {
       setSelectedDuration(15 * 60);
     }
+    const now = Date.now();
+    timerStartAtRef.current = now;
+    timerEndAtRef.current = now + selectedDuration * 1000;
     timerIntervalRef.current = setInterval(() => {
-      setTimer((prevTimer) => {
-        if (prevTimer >= selectedDuration - 1) {
-          // Auto-stop when the timer hits the preset
-          stopAudio();
-          return selectedDuration;
-        }
-        return prevTimer + 1;
-      });
-    }, 1000);
+      const startAt = timerStartAtRef.current ?? Date.now();
+      const endAt = timerEndAtRef.current ?? (startAt + selectedDuration * 1000);
+      const elapsed = Math.min(selectedDuration, Math.max(0, Math.floor((Date.now() - startAt) / 1000)));
+      setTimer(elapsed);
+      if (Date.now() >= endAt) {
+        try { playEndChime(); } catch {}
+        stopAudio();
+      }
+    }, 250);
   };
 
   const stopTimer = () => {
     if (timerIntervalRef.current) {
       clearInterval(timerIntervalRef.current);
     }
+  };
+
+  // ---- End Session Chime ----
+  const playEndChime = () => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.02);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.6);
+      osc.stop(ctx.currentTime + 0.65);
+      setTimeout(() => ctx.close(), 800);
+    } catch {}
   };
 
   const formatTime = (seconds: number) => {

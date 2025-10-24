@@ -22,6 +22,8 @@ interface WorkMode {
   frequency: number;
   duration: number; // in minutes
   description: string;
+  // When true, treat `frequency` as a pure tone carrier (no binaural offset)
+  isPureTone?: boolean;
 }
 
 const WORK_MODES: WorkMode[] = [
@@ -72,6 +74,16 @@ const WORK_MODES: WorkMode[] = [
     frequency: 3,
     duration: 15,
     description: "Gentle restoration for inner harmony"
+  }
+  ,
+  {
+    id: "solfeggio-852",
+    name: "Solfeggio 852Hz",
+    icon: "🔮",
+    frequency: 852,
+    duration: 90,
+    description: "Awakening intuition and inner alignment",
+    isPureTone: true,
   }
 ];
 
@@ -167,7 +179,7 @@ export default function ProductivityBinauralPlayer() {
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  const startAudio = async (frequency: number) => {
+  const startAudio = async (frequency: number, isPureTone: boolean = false) => {
     if (typeof window === "undefined") return;
 
     try {
@@ -195,8 +207,15 @@ export default function ProductivityBinauralPlayer() {
       gainNodeRef.current = ctx.createGain();
 
       const baseFrequency = 250;
-      oscillatorLeftRef.current.frequency.setValueAtTime(baseFrequency, ctx.currentTime);
-      oscillatorRightRef.current.frequency.setValueAtTime(baseFrequency + frequency, ctx.currentTime);
+      if (isPureTone) {
+        // Play the same carrier in both ears (pure tone, no binaural beat)
+        oscillatorLeftRef.current.frequency.setValueAtTime(frequency, ctx.currentTime);
+        oscillatorRightRef.current.frequency.setValueAtTime(frequency, ctx.currentTime);
+      } else {
+        // Standard binaural beat: right ear = base + beat frequency
+        oscillatorLeftRef.current.frequency.setValueAtTime(baseFrequency, ctx.currentTime);
+        oscillatorRightRef.current.frequency.setValueAtTime(baseFrequency + frequency, ctx.currentTime);
+      }
 
       const merger = ctx.createChannelMerger(2);
       oscillatorLeftRef.current.connect(merger, 0, 0);
@@ -289,7 +308,7 @@ export default function ProductivityBinauralPlayer() {
       }
     } else {
       setIsLoading(true);
-      await startAudio(selectedMode.frequency);
+      await startAudio(selectedMode.frequency, !!selectedMode.isPureTone);
       setIsPlaying(true);
       setSessionStartTime(new Date());
       setIsLoading(false);

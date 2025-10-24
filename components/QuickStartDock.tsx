@@ -1,15 +1,35 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Play, Timer, Headphones, Sparkles } from "lucide-react";
+import { Play, Timer, Headphones, Sparkles, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function QuickStartDock() {
   const router = useRouter();
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [canInstall, setCanInstall] = useState(false);
 
-  const start = () => {
-    // Smooth entry into the existing onboarding → player flow
-    router.push("/player");
+  useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setCanInstall(true);
+    };
+    window.addEventListener("beforeinstallprompt", handler as any);
+    return () => window.removeEventListener("beforeinstallprompt", handler as any);
+  }, []);
+
+  const start = () => router.push("/player");
+
+  const install = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome) {
+      setDeferredPrompt(null);
+      setCanInstall(false);
+    }
   };
 
   return (
@@ -38,11 +58,13 @@ export default function QuickStartDock() {
               </div>
             </div>
 
-            <div className="w-full sm:w-auto">
-              <Button
-                onClick={start}
-                className="w-full sm:w-auto rounded-xl px-6 py-6 text-base font-medium bg-gradient-to-tr from-primary to-gradient-middle hover:brightness-105 transition shadow-md"
-              >
+            <div className="w-full sm:w-auto flex items-center gap-2">
+              {canInstall && (
+                <Button onClick={install} variant="glass" className="rounded-xl">
+                  <Download className="mr-2 h-4 w-4" /> Install App
+                </Button>
+              )}
+              <Button onClick={start} className="rounded-xl px-6 py-6 text-base font-medium">
                 <Play className="mr-2 h-4 w-4" /> Start Now
               </Button>
             </div>
@@ -52,4 +74,3 @@ export default function QuickStartDock() {
     </div>
   );
 }
-

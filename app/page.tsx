@@ -3,16 +3,18 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
-import ParticleSystem from "@/components/ParticleSystem";
+const ParticleSystem = dynamic(() => import("@/components/ParticleSystem"), { ssr: false, loading: () => null });
 import AmbientFloatingElements from "@/components/AmbientFloatingElements";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
 import QuickStartDock from "@/components/QuickStartDock";
 import FeatureGrid from "@/components/sections/FeatureGrid";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Testimonials from "@/components/sections/Testimonials";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const router = useRouter();
@@ -120,6 +122,7 @@ export default function Home() {
           <Testimonials />
         </div>
       </main>
+      <Footer />
       <QuickStartDock />
       {showOnboarding && (
         <OnboardingFlow onComplete={handleOnboardingComplete} />

@@ -522,30 +522,32 @@ export default function AwardWinningBinauralExperience() {
                   <Music className="w-4 h-4" />
                   Solfeggio (Pure Tone)
                 </h4>
-                <div className="grid grid-cols-1 gap-3">
-                  <Button
-                    variant="ghost"
-                    className={`justify-start h-auto p-4 rounded-xl transition-all duration-300 ${
-                      isPureToneMode && pureToneFrequency === 852
-                        ? 'bg-indigo-600 text-white shadow-lg transform scale-105'
-                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 hover:border-gray-300'
-                    }`}
-                    onClick={() => {
-                      setIsPureToneMode(true);
-                      setPureToneFrequency(852);
-                      setStatusMessage('Pure tone: 852Hz (Solfeggio)');
-                      applyCurrentModeFrequencies();
-                    }}
-                  >
-                    <div className="flex items-center gap-3 w-full">
-                      <span className="text-xl">🔮</span>
-                      <div className="text-left flex-1">
-                        <div className="font-medium">Solfeggio 852Hz</div>
-                        <div className="text-xs opacity-75">Pure tone (no binaural difference)</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {[396, 417, 528, 639, 741, 852, 963].map(freq => (
+                    <Button
+                      key={freq}
+                      variant="ghost"
+                      className={`justify-start h-auto p-3 rounded-xl transition-all duration-300 ${
+                        isPureToneMode && pureToneFrequency === freq
+                          ? 'bg-indigo-600 text-white shadow-lg'
+                          : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 hover:border-gray-300'
+                      }`}
+                      onClick={() => {
+                        setIsPureToneMode(true);
+                        setPureToneFrequency(freq);
+                        setStatusMessage(`Pure tone: ${freq}Hz (Solfeggio)`);
+                        applyCurrentModeFrequencies();
+                      }}
+                    >
+                      <div className="flex items-center gap-2 w-full">
+                        <span className="text-lg">🔮</span>
+                        <div className="text-left flex-1">
+                          <div className="font-medium">{freq}Hz</div>
+                          <div className="text-[11px] opacity-75">Pure tone</div>
+                        </div>
                       </div>
-                      <div className="text-sm font-mono">852Hz</div>
-                    </div>
-                  </Button>
+                    </Button>
+                  ))}
                 </div>
               </div>
 

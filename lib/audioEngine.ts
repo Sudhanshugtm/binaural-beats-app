@@ -23,6 +23,8 @@ export class EnhancedAudioEngine {
   private audioContext: AudioContext | null = null;
   private leftOscillator: OscillatorNode | null = null;
   private rightOscillator: OscillatorNode | null = null;
+  private workletNode: AudioWorkletNode | null = null;
+  private splitter: ChannelSplitterNode | null = null;
   private backgroundSource: AudioBufferSourceNode | null = null;
   private masterGain: GainNode | null = null;
   private leftGain: GainNode | null = null;
@@ -34,6 +36,7 @@ export class EnhancedAudioEngine {
   private effects: Map<string, AudioNode> = new Map();
   private isPlaying = false;
   private currentSettings: AudioSettings;
+  private useWorklet = false;
 
   constructor() {
     this.currentSettings = this.getDefaultSettings();
@@ -59,6 +62,17 @@ export class EnhancedAudioEngine {
       
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
+      }
+
+      // Try to load AudioWorklet module (best-effort)
+      try {
+        if ('audioWorklet' in this.audioContext) {
+          await this.audioContext.audioWorklet.addModule('/worklets/beat-processor.js');
+          this.useWorklet = true;
+        }
+      } catch (e) {
+        console.warn('AudioWorklet unavailable, using OscillatorNode fallback');
+        this.useWorklet = false;
       }
 
       this.setupAudioGraph();
@@ -111,29 +125,37 @@ export class EnhancedAudioEngine {
     this.currentSettings = { ...this.currentSettings, ...settings };
 
     try {
-      // Create oscillators
-      this.leftOscillator = this.audioContext.createOscillator();
-      this.rightOscillator = this.audioContext.createOscillator();
-
-      // Set waveforms
-      this.leftOscillator.type = this.currentSettings.waveform;
-      this.rightOscillator.type = this.currentSettings.waveform;
-
-      // Set frequencies for binaural effect
       const leftFreq = this.currentSettings.baseFrequency;
       const rightFreq = this.currentSettings.baseFrequency + this.currentSettings.binauralFrequency;
 
-      this.leftOscillator.frequency.value = leftFreq;
-      this.rightOscillator.frequency.value = rightFreq;
-
-      // Apply frequency modulation if enabled
-      if (this.currentSettings.frequencyModulation) {
-        this.applyFrequencyModulation();
+      if (this.useWorklet) {
+        // Worklet-based generator -> Splitter -> left/right gains
+        this.workletNode = new (window as any).AudioWorkletNode(this.audioContext, 'beat-processor', {
+          numberOfInputs: 0,
+          numberOfOutputs: 1,
+          outputChannelCount: [2],
+        });
+        this.splitter = this.audioContext.createChannelSplitter(2);
+        this.workletNode.parameters.get('leftFreq')?.setValueAtTime(leftFreq, this.audioContext.currentTime);
+        this.workletNode.parameters.get('rightFreq')?.setValueAtTime(rightFreq, this.audioContext.currentTime);
+        this.workletNode.parameters.get('gain')?.setValueAtTime(1.0, this.audioContext.currentTime);
+        this.workletNode.connect(this.splitter);
+        this.splitter.connect(this.leftGain!, 0);
+        this.splitter.connect(this.rightGain!, 1);
+      } else {
+        // Oscillator fallback
+        this.leftOscillator = this.audioContext.createOscillator();
+        this.rightOscillator = this.audioContext.createOscillator();
+        this.leftOscillator.type = this.currentSettings.waveform;
+        this.rightOscillator.type = this.currentSettings.waveform;
+        this.leftOscillator.frequency.value = leftFreq;
+        this.rightOscillator.frequency.value = rightFreq;
+        if (this.currentSettings.frequencyModulation) {
+          this.applyFrequencyModulation();
+        }
+        this.leftOscillator.connect(this.leftGain!);
+        this.rightOscillator.connect(this.rightGain!);
       }
-
-      // Connect oscillators to their respective channels
-      this.leftOscillator.connect(this.leftGain!);
-      this.rightOscillator.connect(this.rightGain!);
 
       // Apply spatial audio effects
       if (this.currentSettings.spatialAudio) {
@@ -145,9 +167,11 @@ export class EnhancedAudioEngine {
         await this.startBackgroundNoise();
       }
 
-      // Start oscillators
-      this.leftOscillator.start();
-      this.rightOscillator.start();
+      // Start oscillators if using fallback
+      if (!this.useWorklet) {
+        this.leftOscillator!.start();
+        this.rightOscillator!.start();
+      }
 
       this.isPlaying = true;
     } catch (error) {
@@ -302,6 +326,15 @@ export class EnhancedAudioEngine {
       this.rightOscillator = null;
     }
 
+    if (this.workletNode) {
+      try { this.workletNode.disconnect(); } catch {}
+      this.workletNode = null;
+    }
+    if (this.splitter) {
+      try { this.splitter.disconnect(); } catch {}
+      this.splitter = null;
+    }
+
     if (this.backgroundSource) {
       this.backgroundSource.stop();
       this.backgroundSource = null;
@@ -324,13 +357,17 @@ export class EnhancedAudioEngine {
     this.currentSettings.baseFrequency = baseFrequency;
     this.currentSettings.binauralFrequency = binauralFrequency;
 
-    if (this.leftOscillator && this.rightOscillator && this.audioContext) {
+    const leftFreq = baseFrequency;
+    const rightFreq = baseFrequency + binauralFrequency;
+
+    if (this.useWorklet && this.workletNode && this.audioContext) {
+      const t = this.audioContext.currentTime;
+      this.workletNode.parameters.get('leftFreq')?.setValueAtTime(leftFreq, t);
+      this.workletNode.parameters.get('rightFreq')?.setValueAtTime(rightFreq, t);
+    } else if (this.leftOscillator && this.rightOscillator && this.audioContext) {
       const currentTime = this.audioContext.currentTime;
-      this.leftOscillator.frequency.setValueAtTime(baseFrequency, currentTime);
-      this.rightOscillator.frequency.setValueAtTime(
-        baseFrequency + binauralFrequency,
-        currentTime
-      );
+      this.leftOscillator.frequency.setValueAtTime(leftFreq, currentTime);
+      this.rightOscillator.frequency.setValueAtTime(rightFreq, currentTime);
     }
   }
 

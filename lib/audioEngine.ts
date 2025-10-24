@@ -129,19 +129,22 @@ export class EnhancedAudioEngine {
       const rightFreq = this.currentSettings.baseFrequency + this.currentSettings.binauralFrequency;
 
       if (this.useWorklet) {
+        const ctx = this.audioContext!;
         // Worklet-based generator -> Splitter -> left/right gains
-        this.workletNode = new (window as any).AudioWorkletNode(this.audioContext, 'beat-processor', {
+        this.workletNode = new (window as any).AudioWorkletNode(ctx, 'beat-processor', {
           numberOfInputs: 0,
           numberOfOutputs: 1,
           outputChannelCount: [2],
         });
-        this.splitter = this.audioContext.createChannelSplitter(2);
-        this.workletNode.parameters.get('leftFreq')?.setValueAtTime(leftFreq, this.audioContext.currentTime);
-        this.workletNode.parameters.get('rightFreq')?.setValueAtTime(rightFreq, this.audioContext.currentTime);
-        this.workletNode.parameters.get('gain')?.setValueAtTime(1.0, this.audioContext.currentTime);
-        this.workletNode.connect(this.splitter);
-        this.splitter.connect(this.leftGain!, 0);
-        this.splitter.connect(this.rightGain!, 1);
+        this.splitter = ctx.createChannelSplitter(2);
+        const node = this.workletNode!;
+        const splitter = this.splitter!;
+        node.parameters.get('leftFreq')?.setValueAtTime(leftFreq, ctx.currentTime);
+        node.parameters.get('rightFreq')?.setValueAtTime(rightFreq, ctx.currentTime);
+        node.parameters.get('gain')?.setValueAtTime(1.0, ctx.currentTime);
+        node.connect(splitter);
+        splitter.connect(this.leftGain!, 0);
+        splitter.connect(this.rightGain!, 1);
       } else {
         // Oscillator fallback
         this.leftOscillator = this.audioContext.createOscillator();

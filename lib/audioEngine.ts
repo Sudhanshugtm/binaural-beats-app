@@ -27,6 +27,8 @@ export class EnhancedAudioEngine {
   private masterGain: GainNode | null = null;
   private leftGain: GainNode | null = null;
   private rightGain: GainNode | null = null;
+  private crossLeft: GainNode | null = null; // Right -> Left
+  private crossRight: GainNode | null = null; // Left -> Right
   private backgroundGain: GainNode | null = null;
   private merger: ChannelMergerNode | null = null;
   private effects: Map<string, AudioNode> = new Map();
@@ -79,14 +81,25 @@ export class EnhancedAudioEngine {
     // Create individual gain nodes for left and right channels
     this.leftGain = this.audioContext.createGain();
     this.rightGain = this.audioContext.createGain();
+    // Create crossfeed gains (very mild)
+    this.crossLeft = this.audioContext.createGain();
+    this.crossRight = this.audioContext.createGain();
+    this.crossLeft.gain.value = 0.08; // right -> left
+    this.crossRight.gain.value = 0.08; // left -> right
 
     // Background noise gain
     this.backgroundGain = this.audioContext.createGain();
     this.backgroundGain.gain.value = this.currentSettings.backgroundVolume;
 
     // Connect the audio graph
+    // Direct paths
     this.leftGain.connect(this.merger, 0, 0);
     this.rightGain.connect(this.merger, 0, 1);
+    // Crossfeed paths
+    this.leftGain.connect(this.crossRight);
+    this.rightGain.connect(this.crossLeft);
+    this.crossRight.connect(this.merger, 0, 1);
+    this.crossLeft.connect(this.merger, 0, 0);
     this.backgroundGain.connect(this.masterGain);
     this.merger.connect(this.masterGain);
     this.masterGain.connect(this.audioContext.destination);

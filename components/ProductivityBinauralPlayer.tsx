@@ -13,6 +13,7 @@ import { AudioVisualization } from "./AudioVisualization";
 import Link from "next/link";
 
 import { ModeType } from "../lib/recommendations";
+import { EnhancedAudioEngine } from "@/lib/audioEngine";
 import AmbientFloatingElements from "./AmbientFloatingElements";
 
 interface WorkMode {
@@ -109,6 +110,7 @@ export default function ProductivityBinauralPlayer() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const deepFocusTimerRef = useRef<NodeJS.Timeout | null>(null);
   const sessionEndAtRef = useRef<number | null>(null);
+  const audioEngineRef = useRef<EnhancedAudioEngine | null>(null);
   
   // Enhanced touch gesture tracking
   const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
@@ -185,7 +187,22 @@ export default function ProductivityBinauralPlayer() {
 
     try {
       console.log('Starting audio with frequency:', frequency);
-      
+      // Use shared audio engine for binaural; direct oscillators for pure tone
+      if (!isPureTone) {
+        if (!audioEngineRef.current) {
+          audioEngineRef.current = new EnhancedAudioEngine();
+          await audioEngineRef.current.initialize();
+        }
+        await audioEngineRef.current.startBinauralBeats({
+          baseFrequency: 250,
+          binauralFrequency: frequency,
+          volume: isMuted ? 0 : volume,
+          waveform: 'sine',
+        });
+        console.log('Audio started via engine');
+        return;
+      }
+
       if (!audioContextRef.current) {
         console.log('Creating new AudioContext');
         audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -207,16 +224,9 @@ export default function ProductivityBinauralPlayer() {
       oscillatorRightRef.current = ctx.createOscillator();
       gainNodeRef.current = ctx.createGain();
 
-      const baseFrequency = 250;
-      if (isPureTone) {
-        // Play the same carrier in both ears (pure tone, no binaural beat)
-        oscillatorLeftRef.current.frequency.setValueAtTime(frequency, ctx.currentTime);
-        oscillatorRightRef.current.frequency.setValueAtTime(frequency, ctx.currentTime);
-      } else {
-        // Standard binaural beat: right ear = base + beat frequency
-        oscillatorLeftRef.current.frequency.setValueAtTime(baseFrequency, ctx.currentTime);
-        oscillatorRightRef.current.frequency.setValueAtTime(baseFrequency + frequency, ctx.currentTime);
-      }
+      // Pure tone: play same frequency in both ears
+      oscillatorLeftRef.current.frequency.setValueAtTime(frequency, ctx.currentTime);
+      oscillatorRightRef.current.frequency.setValueAtTime(frequency, ctx.currentTime);
 
       const merger = ctx.createChannelMerger(2);
       oscillatorLeftRef.current.connect(merger, 0, 0);
@@ -243,7 +253,11 @@ export default function ProductivityBinauralPlayer() {
   };
 
   const stopAudio = () => {
-    // Smooth fade-out then stop oscillators
+    // Stop engine if used
+    if (audioEngineRef.current && audioEngineRef.current.getIsPlaying()) {
+      try { audioEngineRef.current.stop(); } catch {}
+    }
+    // Smooth fade-out then stop oscillators (pure tone path)
     if (gainNodeRef.current && audioContextRef.current) {
       const ctx = audioContextRef.current;
       try {
@@ -375,6 +389,9 @@ export default function ProductivityBinauralPlayer() {
   const toggleMute = () => {
     const newMuted = !isMuted;
     setIsMuted(newMuted);
+    if (audioEngineRef.current) {
+      audioEngineRef.current.updateVolume(newMuted ? 0 : volume);
+    }
     if (gainNodeRef.current && audioContextRef.current) {
       gainNodeRef.current.gain.setValueAtTime(
         newMuted ? 0 : volume,
@@ -394,6 +411,9 @@ export default function ProductivityBinauralPlayer() {
   const updateVolume = (newVolume: number) => {
     const clamped = Math.max(0, Math.min(0.85, newVolume));
     setVolume(clamped);
+    if (audioEngineRef.current && !isMuted) {
+      audioEngineRef.current.updateVolume(clamped);
+    }
     if (gainNodeRef.current && audioContextRef.current && !isMuted) {
       gainNodeRef.current.gain.setValueAtTime(
         clamped,

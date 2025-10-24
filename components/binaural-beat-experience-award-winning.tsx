@@ -275,6 +275,35 @@ export default function AwardWinningBinauralExperience() {
     } catch {}
   };
 
+  // Persist preferences (volume, mute, duration, mode)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('beatful-award-prefs');
+      if (raw) {
+        const prefs = JSON.parse(raw);
+        if (typeof prefs.volume === 'number') setVolume(Math.max(0, Math.min(0.85, prefs.volume)));
+        if (typeof prefs.isMuted === 'boolean') setIsMuted(prefs.isMuted);
+        if (typeof prefs.selectedDuration === 'number') setSelectedDuration(prefs.selectedDuration);
+        if (typeof prefs.isPureToneMode === 'boolean') setIsPureToneMode(prefs.isPureToneMode);
+        if (typeof prefs.pureToneFrequency === 'number') setPureToneFrequency(prefs.pureToneFrequency);
+        if (typeof prefs.beatFrequency === 'number') setBeatFrequency(prefs.beatFrequency);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('beatful-award-prefs', JSON.stringify({
+        volume,
+        isMuted,
+        selectedDuration,
+        isPureToneMode,
+        pureToneFrequency,
+        beatFrequency,
+      }));
+    } catch {}
+  }, [volume, isMuted, selectedDuration, isPureToneMode, pureToneFrequency, beatFrequency]);
+
   const updateFrequency = (newFrequency: number) => {
     setIsPureToneMode(false);
     setBeatFrequency(newFrequency);

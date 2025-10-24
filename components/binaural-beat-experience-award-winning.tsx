@@ -606,6 +606,13 @@ export default function AwardWinningBinauralExperience() {
         role="main"
         aria-label="Binaural beats player interface"
       >
+        {isPlaying && selectedDuration > 0 && (
+          <div className="absolute top-0 left-0 right-0 px-4 sm:px-6">
+            <div className="h-1 rounded-full bg-muted/50">
+              <div className="h-1 rounded-full bg-primary transition-all duration-200" style={{ width: `${Math.min(100, Math.max(0, (timer / selectedDuration) * 100))}%` }} />
+            </div>
+          </div>
+        )}
         <div className="text-center space-y-6 md:space-y-8 max-w-4xl w-full">
           {!hasStartedSession ? (
             /* Welcome state with modern design */

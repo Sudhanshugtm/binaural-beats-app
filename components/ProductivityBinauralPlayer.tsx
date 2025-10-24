@@ -613,11 +613,11 @@ export default function ProductivityBinauralPlayer() {
                 <div className="w-16 sm:w-20 h-0.5 bg-gray-300 mx-auto"></div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12 max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 md:gap-10 max-w-6xl mx-auto">
                 {WORK_MODES.map((mode, index) => (
                   <Card
                     key={mode.id}
-                    className="group card-premium cursor-pointer card-focus touch-target relative transition-all duration-500 hover:shadow-zen-lg"
+                    className="group cursor-pointer touch-target relative transition-all duration-300 hover:shadow-md rounded-2xl border bg-card hover:bg-muted/50"
                     onClick={() => handleModeSelect(mode)}
                     role="button"
                     tabIndex={0}
@@ -691,6 +691,14 @@ export default function ProductivityBinauralPlayer() {
               onTouchEnd={handleTouchEnd}
               data-testid="session-container"
             >
+              {isPlaying && (
+                <div className="mb-3 sm:mb-4">
+                  <div className="h-1.5 w-full rounded-full bg-muted/60">
+                    <div className="h-1.5 rounded-full bg-primary transition-all duration-200" style={{ width: `${Math.min(100, Math.max(0, sessionProgress))}%` }} />
+                  </div>
+                </div>
+              )}
+
               <div className="text-center mb-3 sm:mb-4">
                 <div className="mb-3 sm:mb-4">
                   <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">{selectedMode.icon}</div>

@@ -28,6 +28,7 @@ export default function WebGLVisualizer({
   const timeRef = useRef<number>(0);
   const frequencyDataRef = useRef<Uint8Array>();
   const [isWebGLSupported, setIsWebGLSupported] = useState(true);
+  const isVisibleRef = useRef<boolean>(true);
 
   // Vertex shader source
   const vertexShaderSource = `
@@ -330,11 +331,26 @@ export default function WebGLVisualizer({
     const handleResize = () => resizeCanvas();
     window.addEventListener('resize', handleResize);
 
+    const handleVisibility = () => {
+      const hidden = document.hidden;
+      isVisibleRef.current = !hidden;
+      if (hidden) {
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
+        animationRef.current = undefined;
+      } else {
+        if (!animationRef.current) {
+          render();
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, []);
 

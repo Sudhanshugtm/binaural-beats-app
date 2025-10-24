@@ -9,6 +9,7 @@ import { Play } from "lucide-react";
 import ParticleSystem from "@/components/ParticleSystem";
 import AmbientFloatingElements from "@/components/AmbientFloatingElements";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
+import QuickStartDock from "@/components/QuickStartDock";
 
 export default function Home() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-forest-mist animated-gradient ambient-bg serene-overlay relative overflow-hidden mobile-safe-area">
+    <div className="min-h-screen relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -82,41 +83,37 @@ export default function Home() {
 
       {/* Main Content */}
       <main id="main-content" className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-8 lg:px-16" role="main">
-        <div className="container-zen-narrow text-center space-y-8 sm:space-y-10">
-          
-          {/* Welcome Section */}
+        <div className="container-zen text-center space-y-8 sm:space-y-10">
           <header className="space-y-6">
-            <div className="space-y-4">
-              <h1 className="font-heading text-fluid-3xl lg:text-fluid-4xl font-semibold text-gray-800 leading-tight tracking-wide mb-8 sm:mb-12">
-                Welcome to Your
-                <br />
-                <span className="text-gray-700">Mindful Practice</span>
+            <div className="space-y-5">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                Science‑inspired focus and calm
+              </div>
+              <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-semibold text-gray-800 dark:text-foreground leading-tight tracking-tight">
+                Binaural beats for world‑class focus
               </h1>
-              
-              <p className="text-fluid-lg md:text-fluid-xl text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide px-4 sm:px-0">
-                Take a breath. Find your center. Let the gentle sounds guide you to clarity.
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-medium leading-relaxed">
+                Beautiful, distraction‑free experience. Set a timer, choose a frequency, and sink into deep clarity.
               </p>
             </div>
-
-            
           </header>
 
-          {/* Call to Action */}
-          <section className="space-y-4" aria-labelledby="cta-heading">
+          <section className="flex flex-col items-center gap-4" aria-labelledby="cta-heading">
             <h2 id="cta-heading" className="sr-only">Start Your Meditation Practice</h2>
             <Button
               onClick={handleBeginSession}
               size="lg"
-              className="group px-8 sm:px-12 md:px-16 py-6 sm:py-8 text-fluid-lg font-normal rounded-2xl tracking-wide mb-6 sm:mb-8 touch-target w-full sm:w-auto max-w-sm sm:max-w-none zen-ripple"
+              className="group px-8 sm:px-12 md:px-16 py-6 sm:py-7 text-base md:text-lg font-medium rounded-2xl tracking-wide touch-target w-full sm:w-auto shadow-zen-md bg-gradient-to-tr from-primary to-gradient-middle hover:brightness-110"
               aria-label="Begin your meditation practice with binaural beats"
             >
               <Play className="w-5 h-5 sm:w-6 sm:h-6 mr-3 sm:mr-4 transition-transform duration-300 group-hover:scale-110" aria-hidden="true" />
-              Begin Your Practice
+              Start a Session
             </Button>
-            
+            <div className="text-xs text-gray-500 dark:text-gray-400">No signup. Works offline as a PWA.</div>
           </section>
         </div>
       </main>
+      <QuickStartDock />
       {showOnboarding && (
         <OnboardingFlow onComplete={handleOnboardingComplete} />
       )}

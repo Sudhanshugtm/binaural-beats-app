@@ -102,6 +102,7 @@ export default function ProductivityBinauralPlayer() {
   
   const [isDeepFocusMode, setIsDeepFocusMode] = useState(false);
   const [lastInteractionTime, setLastInteractionTime] = useState(Date.now());
+  const [resumeMode, setResumeMode] = useState<WorkMode | null>(null);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorLeftRef = useRef<OscillatorNode | null>(null);
@@ -439,12 +440,8 @@ export default function ProductivityBinauralPlayer() {
         if (typeof prefs.volume === 'number') setVolume(prefs.volume);
         if (typeof prefs.isMuted === 'boolean') setIsMuted(prefs.isMuted);
         if (typeof prefs.lastModeId === 'string') {
-          const mode = WORK_MODES.find(m => m.id === prefs.lastModeId);
-          if (mode) {
-            setSelectedMode(mode);
-            setTimeRemaining(mode.duration * 60);
-            setSessionProgress(0);
-          }
+          const mode = WORK_MODES.find(m => m.id === prefs.lastModeId) || null;
+          setResumeMode(mode);
         }
       }
     } catch {}
@@ -587,6 +584,27 @@ export default function ProductivityBinauralPlayer() {
                 Select a mindful practice to cultivate your inner awareness
               </p>
             </div>
+
+            {/* Resume last session banner */}
+            {resumeMode && (
+              <div className="max-w-3xl mx-auto mb-6 sm:mb-10 px-4">
+                <div className="flex items-center justify-between p-4 sm:p-5 rounded-xl border bg-white/70 backdrop-blur-md shadow-sm">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="text-2xl" aria-hidden>
+                      {resumeMode.icon}
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Resume last session</div>
+                      <div className="text-base sm:text-lg font-semibold text-gray-800">{resumeMode.name}</div>
+                      <div className="text-xs text-gray-500">{resumeMode.isPureTone ? `${resumeMode.frequency}Hz (Pure tone)` : `${resumeMode.frequency}Hz beat • ${resumeMode.duration} min`}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <Button onClick={() => handleModeSelect(resumeMode)} className="rounded-lg">Resume</Button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Mindfulness Practices */}
             <div className="space-zen-2xl">

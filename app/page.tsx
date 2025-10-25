@@ -101,7 +101,7 @@ export default function Home() {
               initial="hidden"
               animate="visible"
               variants={slideUp}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass dark:glass-dark border border-primary/20"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full glass dark:glass-dark border border-primary/20"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -114,7 +114,7 @@ export default function Home() {
               initial="hidden"
               animate="visible"
               variants={staggerContainer}
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6 max-w-[24rem] sm:max-w-3xl mx-auto px-2"
             >
               <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                 <motion.span variants={staggerItem} className="block text-gray-900 dark:text-white">
@@ -143,7 +143,7 @@ export default function Home() {
             animate="visible"
             variants={slideUp}
             transition={{ delay: 0.4 }}
-            className="flex flex-col items-center gap-4"
+            className="flex flex-col items-center gap-3 sm:gap-4"
             aria-labelledby="cta-heading"
           >
             <h2 id="cta-heading" className="sr-only">Start Your Meditation Practice</h2>

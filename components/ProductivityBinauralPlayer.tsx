@@ -593,7 +593,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                 {/* Audio Visualization - Removed wavy animations */}
               </div>
 
-              {/* Central Breathing Circle with Integrated Timer */
+              {/* Central Breathing Circle with Integrated Timer */}
               <div className="flex items-center justify-center py-3 sm:py-4 md:py-6">
                 <div className="relative flex items-center justify-center">
                   {/* Main Breathing Circle */}

@@ -527,8 +527,8 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
   }, []);
 
 
-  
-  
+  // Derive active mode for rendering
+  const modeToShow: WorkMode | null = selectedMode || (initialModeId ? (WORK_MODES.find(m => m.id === initialModeId) || null) : null);
 
   return (
     <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
@@ -541,7 +541,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
 
       {/* Main Content */}
       <main className={`container-zen ${selectedMode ? 'h-screen flex flex-col justify-center p-2 sm:p-4' : 'min-h-screen flex flex-col py-2 sm:py-4 md:py-6'} relative z-10`}>
-        {!selectedMode && !initialModeId ? (
+        {!modeToShow ? (
           <div className="space-zen-3xl">
             {/* Gentle Welcome */}
             <div className="text-center py-6 sm:py-8">
@@ -587,21 +587,6 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
             </div>
           </div>
         ) : (
-          // Derive mode to display from state or route; show a gentle skeleton until ready
-          (() => {
-            const modeToShow = selectedMode || (initialModeId ? WORK_MODES.find(m => m.id === initialModeId) || null : null);
-            if (!modeToShow) {
-              return (
-                <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
-                  <div className="p-5 animate-pulse">
-                    <div className="h-6 w-24 bg-muted rounded mb-3" />
-                    <div className="h-10 w-64 bg-muted rounded mb-6" />
-                    <div className="h-40 w-40 bg-muted/70 rounded-full mx-auto" />
-                  </div>
-                </div>
-              );
-            }
-            return (
           <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 sm:px-6">
             {/* Premium Active Session with Glassmorphism */}
             <div 
@@ -845,8 +830,6 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
             </div>
 
           </div>
-            );
-          })()
         )}
       </main>
 

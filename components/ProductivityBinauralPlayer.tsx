@@ -518,7 +518,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
   }, []);
 
 
-
+  
   
 
   return (
@@ -578,6 +578,21 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
             </div>
           </div>
         ) : (
+          // Derive mode to display from state or route; show a gentle skeleton until ready
+          (() => {
+            const modeToShow = selectedMode || (initialModeId ? WORK_MODES.find(m => m.id === initialModeId) || null : null);
+            if (!modeToShow) {
+              return (
+                <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
+                  <div className="p-5 animate-pulse">
+                    <div className="h-6 w-24 bg-muted rounded mb-3" />
+                    <div className="h-10 w-64 bg-muted rounded mb-6" />
+                    <div className="h-40 w-40 bg-muted/70 rounded-full mx-auto" />
+                  </div>
+                </div>
+              );
+            }
+            return (
           <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
             {/* Premium Active Session with Glassmorphism */}
             <div 
@@ -597,9 +612,9 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
 
               <div className="text-center mb-3 sm:mb-4">
                 <div className="mb-3 sm:mb-4">
-                  <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">{selectedMode.icon}</div>
-                  <h2 className="font-heading text-fluid-lg font-semibold text-gray-800 mb-2 sm:mb-3 tracking-wide leading-tight">{selectedMode.name}</h2>
-                  <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed tracking-wide px-2 sm:px-4">{selectedMode.description}</p>
+                  <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">{modeToShow.icon}</div>
+                  <h2 className="font-heading text-fluid-lg font-semibold text-gray-800 mb-2 sm:mb-3 tracking-wide leading-tight">{modeToShow.name}</h2>
+                  <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed tracking-wide px-2 sm:px-4">{modeToShow.description}</p>
                 </div>
                 
                 {/* Audio Visualization - Removed wavy animations */}
@@ -756,6 +771,8 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
             </div>
 
           </div>
+            );
+          })()
         )}
       </main>
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { Brain, Timer, Waves, Headphones, CloudOff, Shield } from "lucide-react";
+import { motion } from "framer-motion";
+import { staggerContainer, staggerItem } from "@/lib/animation-variants";
 
 export default function FeatureGrid() {
   const features = [
@@ -39,20 +41,33 @@ export default function FeatureGrid() {
   return (
     <section aria-labelledby="features" className="py-8 sm:py-12">
       <h2 id="features" className="sr-only">Features</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={staggerContainer}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+      >
         {features.map(({ icon: Icon, title, desc }) => (
-          <div
+          <motion.div
             key={title}
-            className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-5 sm:p-6 text-left shadow-sm hover:shadow-md transition-shadow"
+            variants={staggerItem}
+            whileHover={{ scale: 1.02, y: -4 }}
+            transition={{ duration: 0.3 }}
+            className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6 sm:p-8 text-left shadow-sm hover:shadow-xl transition-shadow"
           >
-            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary mb-3">
-              <Icon className="h-5 w-5" aria-hidden />
-            </div>
-            <div className="text-base sm:text-lg font-semibold text-foreground mb-1">{title}</div>
-            <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
-          </div>
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ duration: 0.3 }}
+              className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4"
+            >
+              <Icon className="h-6 w-6" aria-hidden />
+            </motion.div>
+            <div className="text-lg sm:text-xl font-semibold text-foreground mb-2">{title}</div>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{desc}</p>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

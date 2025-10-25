@@ -12,7 +12,7 @@ export default function DashboardPage() {
   }, [router]);
 
   return (
-    <div className="flex h-screen w-full items-center justify-center">
+    <div className="flex min-h-[100svh] w-full items-center justify-center">
       <Icons.spinner className="h-8 w-8 animate-spin" />
       <span className="ml-2">Redirecting...</span>
     </div>

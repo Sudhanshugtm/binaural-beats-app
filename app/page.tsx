@@ -161,14 +161,14 @@ export default function Home() {
               <Slider
                 id="frequency"
                 min={1}
-                max={40}
-                step={0.5}
+                max={1000}
+                step={1}
                 value={[customFrequency]}
                 onValueChange={([value]) => setCustomFrequency(value)}
                 className="w-full"
               />
               <p className="text-xs text-gray-500">
-                Delta: 1-4 Hz • Theta: 4-8 Hz • Alpha: 8-13 Hz • Beta: 13-30 Hz • Gamma: 30+ Hz
+                Delta: 1-4 Hz • Theta: 4-8 Hz • Alpha: 8-13 Hz • Beta: 13-30 Hz • Gamma: 30-100 Hz • High: 100-1000 Hz
               </p>
             </div>
             <Button

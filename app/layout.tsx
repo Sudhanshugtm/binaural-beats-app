@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Source_Sans_3 } from "next/font/google";
+import { Inter, Crimson_Pro } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { LayoutWrapper } from "@/components/layout-wrapper";
@@ -9,7 +9,7 @@ import { AccessibilityProvider } from "@/components/AccessibilityProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 
 // Primary font for body text - peaceful and readable
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
@@ -18,14 +18,14 @@ const inter = Inter({
   fallback: ["ui-sans-serif", "system-ui", "sans-serif"]
 });
 
-// Secondary font for headings - calming and elegant
-const sourceSans = Source_Sans_3({ 
+// Accent serif font for headlines - sophisticated and elegant
+const crimsonPro = Crimson_Pro({
   subsets: ["latin"],
-  variable: "--font-source-sans",
+  variable: "--font-crimson",
   display: "swap",
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "600", "700"],
   preload: true,
-  fallback: ["ui-sans-serif", "system-ui", "sans-serif"]
+  fallback: ["Georgia", "serif"]
 });
 
 export const metadata: Metadata = {
@@ -255,7 +255,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${sourceSans.variable} font-sans antialiased`} itemScope itemType="https://schema.org/WebApplication">
+      <body className={`${inter.variable} ${crimsonPro.variable} font-sans antialiased`} itemScope itemType="https://schema.org/WebApplication">
         <ErrorBoundary>
           <ThemeProvider>
             <AccessibilityProvider>

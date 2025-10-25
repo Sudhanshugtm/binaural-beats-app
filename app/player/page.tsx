@@ -36,9 +36,9 @@ function PlayerSelectorInner() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
+    <div className="min-h-[100svh] relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
       <AmbientFloatingElements density="light" isPlaying={false} className="z-1" />
-      <main className="relative z-10 min-h-screen flex items-start justify-center px-4 sm:px-8 lg:px-16 py-10 sm:py-16">
+      <main className="relative z-10 min-h-[100svh] flex items-start justify-center px-4 sm:px-8 lg:px-16 py-10 sm:py-16">
         <div className="container-zen w-full">
           <ModeSelector />
         </div>
@@ -49,7 +49,7 @@ function PlayerSelectorInner() {
 
 export default function PlayerSelectorPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen" />}>
+    <Suspense fallback={<div className="min-h-[100svh]" />}>
       <PlayerSelectorInner />
     </Suspense>
   )

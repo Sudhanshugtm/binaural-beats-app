@@ -531,9 +531,9 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
   const modeToShow: WorkMode | null = selectedMode || (initialModeId ? (WORK_MODES.find(m => m.id === initialModeId) || null) : null);
 
   if (!modeToShow) {
-    return <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
+    return <div className="min-h-[100svh] bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
         <AmbientFloatingElements density="light" isPlaying={isPlaying} className="z-1" />
-        <main className={`container-zen min-h-screen flex flex-col py-2 sm:py-4 md:py-6 relative z-10`}>
+        <main className={`container-zen min-h-[100svh] flex flex-col py-2 sm:py-4 md:py-6 relative z-10`}>
           <div className="space-zen-3xl">
             <div className="text-center py-6 sm:py-8">
               <h1 className="font-heading text-fluid-2xl md:text-fluid-3xl font-semibold text-gray-800 mb-6 sm:mb-8 tracking-wide leading-tight px-4 sm:px-0">Choose Your Practice</h1>

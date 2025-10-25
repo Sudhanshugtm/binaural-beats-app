@@ -32,7 +32,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
+    <div className="min-h-[100svh] relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -67,7 +67,7 @@ export default function Home() {
             }
           })
         }}
-      />"
+      />
       {/* Skip to main content for accessibility */}
       <a href="#main-content" className="skip-to-main sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-gray-900 px-4 py-2 rounded-md z-50">
         Skip to main content
@@ -89,7 +89,7 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <main id="main-content" className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-8 lg:px-16 py-32" role="main">
+      <main id="main-content" className="relative z-10 min-h-[100svh] flex items-center justify-center px-4 sm:px-8 lg:px-16 py-32" role="main">
         <div className="container-zen text-center space-y-12 sm:space-y-16">
           <header className="space-y-8">
             <motion.div

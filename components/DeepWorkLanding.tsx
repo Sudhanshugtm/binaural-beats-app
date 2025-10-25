@@ -10,11 +10,11 @@ const ParticleSystem = dynamic(() => import('@/components/ParticleSystem'), { ss
 
 export default function DeepWorkLanding() {
   return (
-    <div className="min-h-screen relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
+    <div className="min-h-[100svh] relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
       <ParticleSystem isPlaying={true} beatFrequency={10} volume={0.08} className="z-0" />
       <AmbientFloatingElements density="light" isPlaying={false} className="z-1" />
 
-      <main className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-8 lg:px-16 py-24">
+      <main className="relative z-10 min-h-[100svh] flex items-center justify-center px-4 sm:px-8 lg:px-16 py-24">
         <div className="container-zen text-center space-y-10 sm:space-y-14">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -79,4 +79,3 @@ export default function DeepWorkLanding() {
     </div>
   )
 }
-

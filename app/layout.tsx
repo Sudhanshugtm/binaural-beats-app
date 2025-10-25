@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { AccessibilityProvider } from "@/components/AccessibilityProvider";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from "@vercel/analytics/next";
 
 // Primary font for body text - peaceful and readable
 const inter = Inter({
@@ -267,6 +268,7 @@ export default function RootLayout({
                   {children}
                 </LayoutWrapper>
                 <Toaster />
+                <Analytics />
               </TooltipProvider>
             </AccessibilityProvider>
           </ThemeProvider>

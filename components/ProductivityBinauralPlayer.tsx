@@ -531,8 +531,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
   const modeToShow: WorkMode | null = selectedMode || (initialModeId ? (WORK_MODES.find(m => m.id === initialModeId) || null) : null);
 
   if (!modeToShow) {
-    return (
-      <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
+    return <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
         <AmbientFloatingElements density="light" isPlaying={isPlaying} className="z-1" />
         <main className={`container-zen min-h-screen flex flex-col py-2 sm:py-4 md:py-6 relative z-10`}>
           <div className="space-zen-3xl">
@@ -569,11 +568,9 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
           </div>
         </main>
       </div>
-    )
   }
 
-  return (
-    <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
+  return <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
       <AmbientFloatingElements density="light" isPlaying={isPlaying} className="z-1" />
       <main className={`container-zen h-screen flex flex-col justify-center p-2 sm:p-4 relative z-10`}>
         <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 sm:px-6">
@@ -857,5 +854,4 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
         </div>
       )}
     </div>
-  );
 }

@@ -7,9 +7,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { AccessibilityProvider } from "@/components/AccessibilityProvider";
 import { ThemeProvider } from "@/components/theme-provider";
-// Use React entrypoints for broader compatibility across versions
+// Use React entrypoint for Analytics; omit Speed Insights if module unavailable
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Primary font for body text - peaceful and readable
 const inter = Inter({
@@ -272,7 +271,6 @@ export default function RootLayout({
                 </LayoutWrapper>
                 <Toaster />
                 <Analytics />
-                <SpeedInsights />
               </TooltipProvider>
             </AccessibilityProvider>
           </ThemeProvider>

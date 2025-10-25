@@ -818,7 +818,6 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
             </div>
 
           </div>
-        )}
       </main>
 
       {/* Keyboard Shortcuts Guide */}

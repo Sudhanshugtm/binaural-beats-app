@@ -7,16 +7,7 @@ import { useState, useRef, MouseEvent } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Check } from 'lucide-react';
-
-interface WorkMode {
-  id: string;
-  name: string;
-  icon: string;
-  frequency: number;
-  duration: number;
-  description: string;
-  isPureTone?: boolean;
-}
+import { WorkMode } from '@/types/player';
 
 interface ModeCardProps {
   mode: WorkMode;

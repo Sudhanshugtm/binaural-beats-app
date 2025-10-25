@@ -17,17 +17,7 @@ import Link from "next/link";
 import { ModeType } from "../lib/recommendations";
 import { EnhancedAudioEngine } from "@/lib/audioEngine";
 import AmbientFloatingElements from "./AmbientFloatingElements";
-
-interface WorkMode {
-  id: string;
-  name: string;
-  icon: string;
-  frequency: number;
-  duration: number; // in minutes
-  description: string;
-  // When true, treat `frequency` as a pure tone carrier (no binaural offset)
-  isPureTone?: boolean;
-}
+import { WorkMode } from "@/types/player";
 
 const WORK_MODES: WorkMode[] = [
   {
@@ -93,6 +83,16 @@ const WORK_MODES: WorkMode[] = [
 export default function ProductivityBinauralPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedMode, setSelectedMode] = useState<WorkMode | null>(null);
+
+  const renderModeCard = (mode: WorkMode, index: number) => (
+    <ModeCard
+      key={mode.id}
+      mode={mode}
+      isSelected={selectedMode?.id === mode.id}
+      onClick={() => handleModeSelect(mode)}
+      index={index}
+    />
+  );
   const [volume, setVolume] = useState(0.7);
   const [isMuted, setIsMuted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -616,15 +616,7 @@ export default function ProductivityBinauralPlayer() {
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
-                {WORK_MODES.map((mode: WorkMode, index: number) => (
-                  <ModeCard
-                    key={mode.id}
-                    mode={mode}
-                    isSelected={selectedMode?.id === mode.id}
-                    onClick={() => handleModeSelect(mode)}
-                    index={index}
-                  />
-                ))}
+                {(WORK_MODES as WorkMode[]).map(renderModeCard)}
               </div>
             </div>
           </div>

@@ -39,8 +39,8 @@ function PlayerInner() {
 
   if (loading || !protocol) {
     return (
-      <div className="min-h-[100svh] flex items-center justify-center bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
-        <div className="animate-pulse text-gray-600 dark:text-gray-400">
+      <div className="min-h-[100svh] flex items-center justify-center bg-gradient-to-b from-white via-white to-primary/5">
+        <div className="animate-pulse text-gray-600">
           Loading session...
         </div>
       </div>
@@ -54,7 +54,7 @@ export default function PlayerPage() {
   return (
     <Suspense fallback={
       <div className="min-h-[100svh] flex items-center justify-center">
-        <div className="animate-pulse text-gray-600 dark:text-gray-400">
+        <div className="animate-pulse text-gray-600">
           Loading...
         </div>
       </div>

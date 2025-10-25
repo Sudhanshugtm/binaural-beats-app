@@ -530,37 +530,21 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
   // Derive active mode for rendering
   const modeToShow: WorkMode | null = selectedMode || (initialModeId ? (WORK_MODES.find(m => m.id === initialModeId) || null) : null);
 
-  return (
-    <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
-      {/* Dynamic floating nature elements for ambient atmosphere */}
-      <AmbientFloatingElements 
-        density="light" 
-        isPlaying={isPlaying}
-        className="z-1" 
-      />
-
-      {/* Main Content */}
-      <main className={`container-zen ${selectedMode ? 'h-screen flex flex-col justify-center p-2 sm:p-4' : 'min-h-screen flex flex-col py-2 sm:py-4 md:py-6'} relative z-10`}>
-        {!modeToShow ? (
+  if (!modeToShow) {
+    return (
+      <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
+        <AmbientFloatingElements density="light" isPlaying={isPlaying} className="z-1" />
+        <main className={`container-zen min-h-screen flex flex-col py-2 sm:py-4 md:py-6 relative z-10`}>
           <div className="space-zen-3xl">
-            {/* Gentle Welcome */}
             <div className="text-center py-6 sm:py-8">
-              <h1 className="font-heading text-fluid-2xl md:text-fluid-3xl font-semibold text-gray-800 mb-6 sm:mb-8 tracking-wide leading-tight px-4 sm:px-0">
-                Choose Your Practice
-              </h1>
-              <p className="text-fluid-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide px-4 sm:px-0">
-                Select a mindful practice to cultivate your inner awareness
-              </p>
+              <h1 className="font-heading text-fluid-2xl md:text-fluid-3xl font-semibold text-gray-800 mb-6 sm:mb-8 tracking-wide leading-tight px-4 sm:px-0">Choose Your Practice</h1>
+              <p className="text-fluid-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide px-4 sm:px-0">Select a mindful practice to cultivate your inner awareness</p>
             </div>
-
-            {/* Resume last session banner */}
             {resumeMode && (
               <div className="max-w-3xl mx-auto mb-6 sm:mb-10 px-4">
                 <div className="flex items-center justify-between p-4 sm:p-5 rounded-xl border bg-white/70 backdrop-blur-md shadow-sm">
                   <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="text-2xl" aria-hidden>
-                      {resumeMode.icon}
-                    </div>
+                    <div className="text-2xl" aria-hidden>{resumeMode.icon}</div>
                     <div>
                       <div className="text-sm text-gray-500">Resume last session</div>
                       <div className="text-base sm:text-lg font-semibold text-gray-800">{resumeMode.name}</div>
@@ -573,29 +557,33 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                 </div>
               </div>
             )}
-
-            {/* Mindfulness Practices */}
             <div className="space-zen-2xl">
               <div className="text-center mb-16 sm:mb-20">
                 <h2 className="font-heading text-fluid-lg font-semibold text-gray-700 mb-6 sm:mb-8 tracking-wide">Mindfulness Practices</h2>
                 <div className="w-16 sm:w-20 h-0.5 bg-gray-300 mx-auto"></div>
               </div>
-              
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
                 {(WORK_MODES as WorkMode[]).map(renderModeCard)}
               </div>
             </div>
           </div>
-        ) : (
-          <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 sm:px-6">
-            {/* Premium Active Session with Glassmorphism */}
-            <div 
-              className={`p-4 sm:p-6 md:p-8 glass dark:glass-dark rounded-3xl border border-primary/10 shadow-xl ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              data-testid="session-container"
-            >
+        </main>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
+      <AmbientFloatingElements density="light" isPlaying={isPlaying} className="z-1" />
+      <main className={`container-zen h-screen flex flex-col justify-center p-2 sm:p-4 relative z-10`}>
+        <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 sm:px-6">
+          <div 
+            className={`p-4 sm:p-6 md:p-8 glass dark:glass-dark rounded-3xl border border-primary/10 shadow-xl ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            data-testid="session-container"
+          >
               {/* Removed thin top bar to avoid confusion with volume/timeline */}
 
               <div className="text-center mb-5 sm:mb-6">
@@ -670,10 +658,10 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
               </div>
 
               {/* Explicit, labeled session timeline */}
-              {selectedMode && (
+              {modeToShow && (
                 <div className="mt-4 sm:mt-6">
                   <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 font-medium mb-2 px-1">
-                    <span aria-label="elapsed time">{formatTime(Math.max(0, (sessionTotalSeconds ?? (selectedMode.duration * 60)) - timeRemaining))} elapsed</span>
+                    <span aria-label="elapsed time">{formatTime(Math.max(0, (sessionTotalSeconds ?? (modeToShow.duration * 60)) - timeRemaining))} elapsed</span>
                     <span aria-label="time remaining">{formatTime(timeRemaining)} left</span>
                   </div>
                   <div
@@ -684,10 +672,10 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                     aria-valuemax={100}
                     aria-valuenow={Math.round(Math.min(100, Math.max(0, sessionProgress)))}
                     onClick={(e) => {
-                      if (!selectedMode) return;
+                      if (!modeToShow) return;
                       const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
                       const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-                      const total = sessionTotalSeconds ?? (selectedMode.duration * 60);
+                      const total = sessionTotalSeconds ?? (modeToShow.duration * 60);
                       const newRemaining = Math.round(total * (1 - ratio));
                       setTimeRemaining(newRemaining);
                       setSessionProgress(((total - newRemaining) / total) * 100);
@@ -705,7 +693,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                   <div className="mt-3 flex items-center justify-center gap-2 flex-wrap">
                     {[15, 30, 45, 60, 90].map((m) => {
                       const total = m * 60;
-                      const active = (sessionTotalSeconds ?? (selectedMode.duration * 60)) === total;
+                      const active = (sessionTotalSeconds ?? (modeToShow.duration * 60)) === total;
                       return (
                         <button
                           key={m}

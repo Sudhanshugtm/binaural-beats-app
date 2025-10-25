@@ -1003,7 +1003,7 @@
 /* Mobile-specific improvements */
 body {
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
-  touch-action: manipulation; /* Prevent zoom on buttons */
+  /* Allow default touch interactions (pinch/double-tap zoom) for accessibility */
 }
 
 /* Better spacing for mobile */

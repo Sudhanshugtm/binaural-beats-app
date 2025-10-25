@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from 'next/navigation'
 import { Play, Pause, Volume2, VolumeX, ArrowLeft, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
@@ -18,69 +19,9 @@ import { ModeType } from "../lib/recommendations";
 import { EnhancedAudioEngine } from "@/lib/audioEngine";
 import AmbientFloatingElements from "./AmbientFloatingElements";
 import { WorkMode } from "@/types/player";
-
-const WORK_MODES: WorkMode[] = [
-  {
-    id: "deep-work",
-    name: "Concentrated Mind",
-    icon: "🍃",
-    frequency: 10,
-    duration: 90,
-    description: "Deep stillness for sustained awareness and clarity"
-  },
-  {
-    id: "creative",
-    name: "Creative Awareness",
-    icon: "🌊",
-    frequency: 8,
-    duration: 45,
-    description: "Open, flowing consciousness for inspiration"
-  },
-  {
-    id: "gentle",
-    name: "Gentle Presence",
-    icon: "🌸",
-    frequency: 6,
-    duration: 30,
-    description: "Soft mindfulness for peaceful contemplation"
-  },
-  {
-    id: "meditation",
-    name: "Mindful Intervals",
-    icon: "🧘",
-    frequency: 4,
-    duration: 20,
-    description: "Rhythmic practice for deepening awareness"
-  },
-  {
-    id: "study",
-    name: "Learning Flow",
-    icon: "🌱",
-    frequency: 10,
-    duration: 60,
-    description: "Centered attention for mindful absorption"
-  },
-  {
-    id: "recharge",
-    name: "Restorative Peace",
-    icon: "🌿",
-    frequency: 3,
-    duration: 15,
-    description: "Gentle restoration for inner harmony"
-  }
-  ,
-  {
-    id: "solfeggio-852",
-    name: "Solfeggio 852Hz",
-    icon: "🔮",
-    frequency: 852,
-    duration: 90,
-    description: "Awakening intuition and inner alignment",
-    isPureTone: true,
-  }
-];
-
-export default function ProductivityBinauralPlayer() {
+import { WORK_MODES } from "@/lib/workModes";
+export default function ProductivityBinauralPlayer({ initialModeId }: { initialModeId?: string } = {}) {
+  const router = useRouter()
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedMode, setSelectedMode] = useState<WorkMode | null>(null);
 
@@ -128,6 +69,18 @@ export default function ProductivityBinauralPlayer() {
 
 
 
+  // Seed selected mode from route (if provided)
+  useEffect(() => {
+    if (initialModeId && !selectedMode) {
+      const mode = WORK_MODES.find((m) => m.id === initialModeId) || null
+      if (mode) {
+        setSelectedMode(mode)
+        setTimeRemaining(mode.duration * 60)
+        setSessionProgress(0)
+      }
+    }
+  }, [initialModeId, selectedMode])
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -146,10 +99,14 @@ export default function ProductivityBinauralPlayer() {
           if (selectedMode) {
             stopAudio();
             setIsPlaying(false);
-            setSelectedMode(null);
             setTimeRemaining(0);
             setSessionProgress(0);
-                        exitDeepFocusMode();
+            exitDeepFocusMode();
+            if (initialModeId) {
+              router.push('/player')
+            } else {
+              setSelectedMode(null);
+            }
           }
           break;
         case 'm':
@@ -166,7 +123,7 @@ export default function ProductivityBinauralPlayer() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedMode, showKeyboardShortcuts]);
+  }, [selectedMode, showKeyboardShortcuts, initialModeId, router]);
 
 
   // Deep focus mode management
@@ -575,7 +532,7 @@ export default function ProductivityBinauralPlayer() {
 
       {/* Main Content */}
       <main className={`container-zen ${selectedMode ? 'h-screen flex flex-col justify-center p-2 sm:p-4' : 'min-h-screen flex flex-col py-2 sm:py-4 md:py-6'} relative z-10`}>
-        {!selectedMode ? (
+        {!selectedMode && !initialModeId ? (
           <div className="space-zen-3xl">
             {/* Gentle Welcome */}
             <div className="text-center py-6 sm:py-8">
@@ -765,10 +722,14 @@ export default function ProductivityBinauralPlayer() {
                     onClick={() => {
                       stopAudio();
                       setIsPlaying(false);
-                      setSelectedMode(null);
                       setTimeRemaining(0);
                       setSessionProgress(0);
-                                            exitDeepFocusMode();
+                      exitDeepFocusMode();
+                      if (initialModeId) {
+                        router.push('/player')
+                      } else {
+                        setSelectedMode(null);
+                      }
                     }}
                     className={`h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
                       isDeepFocusMode ? 'opacity-0 invisible' : 'opacity-100 visible'

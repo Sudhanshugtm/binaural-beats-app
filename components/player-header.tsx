@@ -4,18 +4,20 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Home, Waves } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { usePathname } from 'next/navigation'
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 
 export function PlayerHeader() {
+  const pathname = usePathname()
+  const backHref = pathname.startsWith('/player/') ? '/player' : '/'
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm">
       <div className="mx-auto px-6 max-w-full">
         <div className="flex h-16 items-center">
           {/* Left: Back Button */}
           <Link 
-            href="/"
+            href={backHref}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors p-2 -ml-2 rounded-lg hover:bg-gray-50"
           >
             <ArrowLeft className="w-5 h-5" />

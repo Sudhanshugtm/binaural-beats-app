@@ -12,7 +12,7 @@ interface LayoutWrapperProps {
 
 export function LayoutWrapper({ children }: LayoutWrapperProps) {
   const pathname = usePathname();
-  const isPlayerPage = pathname === '/player';
+  const isPlayerPage = pathname.startsWith('/player/');
 
   return (
     <div className="relative min-h-screen bg-background prevent-horizontal-scroll">

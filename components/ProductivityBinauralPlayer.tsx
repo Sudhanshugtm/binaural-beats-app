@@ -593,10 +593,10 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
               );
             }
             return (
-          <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 sm:px-6">
             {/* Premium Active Session with Glassmorphism */}
             <div 
-              className={`p-3 sm:p-4 md:p-5 ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
+              className={`p-4 sm:p-6 md:p-8 glass dark:glass-dark rounded-3xl border border-primary/10 shadow-xl ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
@@ -610,35 +610,35 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                 </div>
               )}
 
-              <div className="text-center mb-3 sm:mb-4">
+              <div className="text-center mb-5 sm:mb-6">
                 <div className="mb-3 sm:mb-4">
                   <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">{modeToShow.icon}</div>
-                  <h2 className="font-heading text-fluid-lg font-semibold text-gray-800 mb-2 sm:mb-3 tracking-wide leading-tight">{modeToShow.name}</h2>
-                  <p className="text-fluid-sm text-gray-600 font-medium leading-relaxed tracking-wide px-2 sm:px-4">{modeToShow.description}</p>
+                  <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight mb-1 sm:mb-2 bg-gradient-to-r from-primary via-[#4a9b7f] to-[#3d8a6f] bg-clip-text text-transparent">{modeToShow.name}</h2>
+                  <p className="text-base sm:text-lg text-gray-600 font-medium leading-relaxed tracking-wide px-2 sm:px-4">{modeToShow.description}</p>
                 </div>
                 
                 {/* Audio Visualization - Removed wavy animations */}
               </div>
 
               {/* Central Breathing Circle with Integrated Timer */}
-              <div className="flex items-center justify-center py-1 sm:py-2 md:py-3">
+              <div className="flex items-center justify-center py-3 sm:py-4 md:py-6">
                 <div className="relative flex items-center justify-center">
                   {/* Main Breathing Circle */}
-                  <div className={`w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full flex items-center justify-center transition-all duration-2000 ${
+                  <div className={`w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 rounded-full flex items-center justify-center transition-all duration-2000 ${
                     isPlaying 
-                      ? 'bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 breathe-gentle shadow-2xl' 
+                      ? 'bg-gradient-to-br from-primary/15 via-primary/10 to-accent/10 breathe-gentle shadow-2xl' 
                       : 'bg-gradient-to-br from-gray-100 to-gray-50 shadow-lg'
                   }`}>
                     
                     {/* Inner Circle */}
-                    <div className={`w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
+                    <div className={`w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
                       isPlaying 
-                        ? 'bg-white/80 backdrop-blur-sm border-2 border-primary/20' 
-                        : 'bg-white/60 backdrop-blur-sm border-2 border-gray-200'
+                        ? 'bg-white/80 backdrop-blur-sm border border-primary/20 shadow-inner' 
+                        : 'bg-white/70 backdrop-blur-sm border border-gray-200'
                     }`}>
                       
                       {/* Timer Display */}
-                      <div className={`font-mono text-base sm:text-lg md:text-xl font-bold mb-1 tracking-wider leading-none tabular-nums transition-all duration-500 ${
+                      <div className={`font-mono text-lg sm:text-xl md:text-2xl font-bold mb-1 tracking-wider leading-none tabular-nums transition-all duration-500 ${
                         isPlaying 
                           ? 'text-primary' 
                           : 'text-gray-700'
@@ -651,15 +651,15 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                       
                       {/* Progress Ring */}
                       <div className="absolute inset-0 rounded-full">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                        <svg className="w-full h-full transform -rotate-90 drop-shadow-sm" viewBox="0 0 100 100">
                           <circle
                             cx="50"
                             cy="50"
                             r="47"
                             fill="none"
                             stroke="currentColor"
-                            strokeWidth="1"
-                            className="text-gray-200"
+                            strokeWidth="1.25"
+                            className="text-gray-200/80"
                           />
                           <circle
                             cx="50"
@@ -667,7 +667,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                             r="47"
                             fill="none"
                             stroke="currentColor"
-                            strokeWidth="2"
+                            strokeWidth="2.5"
                             className={`transition-all duration-500 ${
                               isPlaying ? 'text-primary' : 'text-gray-300'
                             }`}
@@ -687,16 +687,16 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                 className="transition-all duration-300 opacity-100"
                 data-testid="audio-controls"
               >
-                <div className="flex items-center justify-center space-x-3 sm:space-x-4 md:space-x-5 mb-2 sm:mb-3">
+                <div className="flex items-center justify-center space-x-4 sm:space-x-5 md:space-x-6 mb-3 sm:mb-4">
                   {/* Premium Mute Control */}
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={toggleMute}
-                    className={`h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-12 w-12 sm:h-12 sm:w-12 md:h-12 md:w-12 rounded-full zen-ripple touch-target backdrop-blur-sm border transition-all duration-300 hover:shadow-zen-md ${
                       isMuted 
                         ? 'text-destructive border-destructive/30 hover:border-destructive/50 hover:bg-destructive/10' 
-                        : 'text-muted-foreground border-transparent hover:border-primary/30 hover:bg-primary/10'
+                        : 'text-muted-foreground border-primary/20 hover:border-primary/40 hover:bg-primary/10'
                     }`}
                     aria-label={isMuted ? "Unmute audio" : "Mute audio"}
                   >
@@ -709,7 +709,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                       onClick={togglePlayPause}
                       disabled={isLoading}
                       size="lg"
-                      className={`h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-full p-0 flex items-center justify-center shadow-lg ${isPlaying ? 'bg-primary/90 hover:bg-primary' : ''}`}
+                      className={`h-14 w-14 sm:h-16 sm:w-16 md:h-16 md:w-16 rounded-full p-0 flex items-center justify-center shadow-lg ${isPlaying ? 'bg-primary/90 hover:bg-primary' : 'bg-primary'}`}
                       aria-label={isPlaying ? "Pause session" : "Start session"}
                     >
                       {isLoading ? (
@@ -746,7 +746,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                         setSelectedMode(null);
                       }
                     }}
-                    className={`h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-full zen-ripple touch-target backdrop-blur-sm border-2 border-transparent hover:border-muted/30 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
+                    className={`h-12 w-12 sm:h-12 sm:w-12 md:h-12 md:w-12 rounded-full zen-ripple touch-target backdrop-blur-sm border hover:border-muted/40 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${
                       isDeepFocusMode ? 'opacity-0 invisible' : 'opacity-100 visible'
                     }`}
                     aria-label="Stop and return to mode selection"
@@ -756,13 +756,13 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                 </div>
 
                 {/* Elegant Volume Control */}
-                <div className="max-w-xs sm:max-w-sm md:max-w-md mx-auto px-3 sm:px-4">
+                <div className="max-w-sm sm:max-w-md md:max-w-lg mx-auto px-3 sm:px-4">
                   <Slider
                     value={[volume]}
                     onValueChange={([v]) => updateVolume(v)}
                     max={0.85}
                     step={0.01}
-                    className="w-full transition-all duration-300 opacity-80 hover:opacity-100"
+                    className="w-full transition-all duration-300 opacity-90 hover:opacity-100"
                     aria-label={`Volume control, currently ${Math.round(volume * 100)}%`}
                     aria-valuenow={Math.round(volume * 100)}
                   />

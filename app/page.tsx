@@ -74,19 +74,24 @@ export default function Home() {
       </a>
       
       {/* Gentle animated background */}
-      <ParticleSystem
-        isPlaying={true}
-        beatFrequency={8}
-        volume={0.1}
-        className="z-0"
-      />
+      {/* Hide heavy visuals on very small screens */}
+      <div className="hidden sm:block">
+        <ParticleSystem
+          isPlaying={true}
+          beatFrequency={8}
+          volume={0.1}
+          className="z-0"
+        />
+      </div>
 
       {/* Dynamic floating nature elements */}
-      <AmbientFloatingElements 
-        density="light" 
-        isPlaying={false}
-        className="z-1" 
-      />
+      <div className="hidden sm:block">
+        <AmbientFloatingElements 
+          density="light" 
+          isPlaying={false}
+          className="z-1" 
+        />
+      </div>
 
       {/* Main Content */}
       <main id="main-content" className="relative z-10 min-h-[100svh] flex items-center justify-center px-4 sm:px-8 lg:px-16 py-16 sm:py-24 lg:py-32 pb-28 sm:pb-16" role="main">
@@ -111,7 +116,7 @@ export default function Home() {
               variants={staggerContainer}
               className="space-y-6"
             >
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                 <motion.span variants={staggerItem} className="block text-gray-900 dark:text-white">
                   Binaural beats for
                 </motion.span>

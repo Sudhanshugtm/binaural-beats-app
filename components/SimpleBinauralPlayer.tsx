@@ -209,15 +209,15 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
 
         {/* Protocol Info */}
         <div className="text-center mb-12 space-y-2">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent">
             {protocol.name}
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-md mx-auto leading-relaxed">
             {protocol.description}
           </p>
           <div className="flex items-center justify-center gap-4 text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-3">
             <span>{protocol.beatFrequency} Hz</span>
-            <span>•</span>
+            <span className="text-gray-300 dark:text-gray-600">•</span>
             <span>{protocol.carrierLeft} / {protocol.carrierRight} Hz carriers</span>
           </div>
         </div>
@@ -245,14 +245,14 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
             {/* Main circle */}
             <div className={`relative w-64 h-64 sm:w-80 sm:h-80 rounded-full flex items-center justify-center transition-all duration-1000 ${
               isPlaying
-                ? 'bg-gradient-to-br from-primary/10 via-primary/5 to-accent/5 shadow-2xl'
-                : 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 shadow-xl'
+                ? 'bg-gradient-to-br from-primary/15 via-primary/8 to-accent/8 dark:from-primary/20 dark:via-primary/12 dark:to-accent/12 shadow-2xl dark:shadow-primary/5'
+                : 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 shadow-xl dark:shadow-black/20'
             }`}>
               {/* Inner content circle */}
-              <div className={`w-56 h-56 sm:w-72 sm:h-72 rounded-full flex flex-col items-center justify-center transition-all duration-1000 ${
+              <div className={`w-56 h-56 sm:w-72 sm:h-72 rounded-full flex flex-col items-center justify-center transition-all duration-1000 border ${
                 isPlaying
-                  ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-inner'
-                  : 'bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm'
+                  ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-inner border-primary/10 dark:border-primary/20'
+                  : 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50'
               }`}>
                 <div className={`text-6xl sm:text-7xl font-mono font-bold tracking-tight tabular-nums transition-colors duration-500 ${
                   isPlaying ? 'text-primary' : 'text-gray-400 dark:text-gray-600'
@@ -272,8 +272,8 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
                   r="48"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="0.5"
-                  className="text-gray-200 dark:text-gray-700"
+                  strokeWidth="0.8"
+                  className="text-gray-200/60 dark:text-gray-700/40"
                 />
                 <circle
                   cx="50"
@@ -281,9 +281,9 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
                   r="48"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.5"
-                  className={`transition-all duration-500 ${
-                    isPlaying ? 'text-primary' : 'text-gray-300 dark:text-gray-600'
+                  strokeWidth="2"
+                  className={`transition-all duration-500 drop-shadow-sm ${
+                    isPlaying ? 'text-primary dark:text-primary' : 'text-gray-300 dark:text-gray-600'
                   }`}
                   strokeDasharray={`${progress * 3.015} 301.5`}
                   strokeLinecap="round"
@@ -315,18 +315,22 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
 
           {/* Volume Control */}
           <div className="max-w-md mx-auto px-4">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50/50 dark:bg-gray-800/30 border border-gray-200/50 dark:border-gray-700/50">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleMute}
-                className="rounded-full touch-target flex-shrink-0"
+                className={`rounded-full touch-target flex-shrink-0 transition-colors ${
+                  isMuted
+                    ? 'text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'
+                }`}
                 aria-label={isMuted ? "Unmute" : "Mute"}
               >
                 {isMuted ? (
-                  <VolumeX className="h-5 w-5 text-gray-400" />
+                  <VolumeX className="h-5 w-5" />
                 ) : (
-                  <Volume2 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                  <Volume2 className="h-5 w-5" />
                 )}
               </Button>
               <Slider
@@ -337,7 +341,7 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
                 className="flex-1"
                 aria-label="Volume"
               />
-              <span className="text-sm text-gray-500 dark:text-gray-400 w-10 text-right tabular-nums">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300 w-12 text-right tabular-nums">
                 {Math.round((isMuted ? 0 : volume) * 100)}%
               </span>
             </div>

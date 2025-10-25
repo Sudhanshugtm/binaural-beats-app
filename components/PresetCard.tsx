@@ -13,11 +13,11 @@ interface PresetCardProps {
 }
 
 const categoryColors = {
-  anxiety: "from-blue-500/10 to-blue-600/5 border-blue-500/20",
-  relaxation: "from-green-500/10 to-green-600/5 border-green-500/20",
-  mood: "from-purple-500/10 to-purple-600/5 border-purple-500/20",
-  sleep: "from-indigo-500/10 to-indigo-600/5 border-indigo-500/20",
-  custom: "from-gray-500/10 to-gray-600/5 border-gray-500/20"
+  anxiety: "from-blue-500/10 to-blue-600/5 dark:from-blue-400/10 dark:to-blue-500/5 border-blue-500/20 dark:border-blue-400/30",
+  relaxation: "from-green-500/10 to-green-600/5 dark:from-green-400/10 dark:to-green-500/5 border-green-500/20 dark:border-green-400/30",
+  mood: "from-purple-500/10 to-purple-600/5 dark:from-purple-400/10 dark:to-purple-500/5 border-purple-500/20 dark:border-purple-400/30",
+  sleep: "from-indigo-500/10 to-indigo-600/5 dark:from-indigo-400/10 dark:to-indigo-500/5 border-indigo-500/20 dark:border-indigo-400/30",
+  custom: "from-gray-500/10 to-gray-600/5 dark:from-gray-400/10 dark:to-gray-500/5 border-gray-500/20 dark:border-gray-400/30"
 };
 
 const categoryTextColors = {

@@ -14,7 +14,7 @@ export function CustomSessionCard({ onClick }: CustomSessionCardProps) {
   return (
     <motion.button
       onClick={onClick}
-      className="w-full text-left p-6 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-900/50 hover:border-primary dark:hover:border-primary hover:scale-[1.02] transition-all duration-200 touch-target"
+      className="w-full text-left p-6 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/30 dark:to-gray-900/30 hover:border-primary dark:hover:border-primary hover:bg-gray-100/70 dark:hover:bg-gray-800/50 hover:scale-[1.02] transition-all duration-200 touch-target"
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.98 }}
     >

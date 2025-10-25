@@ -1,7 +1,7 @@
-const CACHE_NAME = 'beatful-v1.0.0';
-const CACHE_VERSION = '1.0.0';
-const AUDIO_CACHE_NAME = 'beatful-audio-v1.0.0';
-const STATIC_CACHE_NAME = 'beatful-static-v1.0.0';
+const CACHE_VERSION = '1.0.1';
+const CACHE_NAME = `beatful-v${CACHE_VERSION}`;
+const AUDIO_CACHE_NAME = `beatful-audio-v${CACHE_VERSION}`;
+const STATIC_CACHE_NAME = `beatful-static-v${CACHE_VERSION}`;
 
 // Resources to cache immediately
 const STATIC_RESOURCES = [

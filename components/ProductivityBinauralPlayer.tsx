@@ -4,12 +4,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Play, Pause, Volume2, VolumeX, ArrowLeft, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { AudioVisualization } from "./AudioVisualization";
+import { ModeCard } from "./ModeCard";
 import Link from "next/link";
 
 import { ModeType } from "../lib/recommendations";
@@ -613,70 +615,15 @@ export default function ProductivityBinauralPlayer() {
                 <div className="w-16 sm:w-20 h-0.5 bg-gray-300 mx-auto"></div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 md:gap-10 max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
                 {WORK_MODES.map((mode, index) => (
-                  <Card
+                  <ModeCard
                     key={mode.id}
-                    className="group cursor-pointer touch-target relative transition-all duration-300 hover:shadow-md rounded-2xl border bg-card hover:bg-muted/50"
+                    mode={mode}
+                    isSelected={selectedMode?.id === mode.id}
                     onClick={() => handleModeSelect(mode)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleModeSelect(mode);
-                      }
-                    }}
-                    style={{ 
-                      animationDelay: `${index * 0.1}s`,
-                      backgroundImage: `radial-gradient(circle at 70% 30%, hsl(var(--primary) / 0.05) 0%, transparent 50%)`
-                    }}
-                  >
-                    <div className="p-6 sm:p-8 text-center space-zen-sm relative z-10">
-                      {/* Enhanced icon with breathing effect */}
-                      <div className="relative mb-6 sm:mb-8">
-                        <div 
-                          className="text-4xl sm:text-5xl transition-all duration-700 group-hover:scale-110 breathe-gentle" 
-                          role="img" 
-                          aria-label={mode.name}
-                        >
-                          {mode.icon}
-                        </div>
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/10 to-accent/10 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700 scale-150" />
-                      </div>
-                      
-                      {/* Enhanced title with gradient text */}
-                      <h3 className="font-heading font-semibold text-fluid-lg mb-4 sm:mb-6 tracking-wide leading-tight text-foreground">
-                        {mode.name}
-                      </h3>
-                      
-                      {/* Enhanced description with better typography */}
-                      <p className="text-fluid-sm text-muted-foreground mb-6 sm:mb-8 font-medium leading-relaxed px-1 sm:px-2 tracking-wide">
-                        {mode.description}
-                      </p>
-                      
-                      {/* Premium frequency indicator */}
-                      <div className="mb-4 sm:mb-6">
-                        <div className="text-xs text-muted-foreground font-medium mb-2 tracking-wider uppercase">
-                          Frequency
-                        </div>
-                        <div className="text-lg font-mono font-semibold text-foreground tracking-wide">
-                          {mode.frequency} Hz
-                        </div>
-                      </div>
-                      
-                      {/* Enhanced duration badge */}
-                      <div className="relative">
-                        <div className="text-xs text-primary-foreground font-semibold bg-gradient-to-r from-primary to-gradient-middle py-3 px-6 rounded-full inline-block tracking-wide shadow-zen-sm backdrop-blur-sm border border-primary/20">
-                          {mode.duration} minutes of practice
-                        </div>
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-gradient-middle opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-sm" />
-                      </div>
-                    </div>
-                    
-                    {/* Subtle corner accent */}
-                    <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary/20 group-hover:bg-primary/40 transition-colors duration-500" />
-                  </Card>
+                    index={index}
+                  />
                 ))}
               </div>
             </div>
@@ -793,21 +740,31 @@ export default function ProductivityBinauralPlayer() {
                   </Button>
 
                   {/* Premium Play/Pause Control */}
-                  <Button
-                    onClick={togglePlayPause}
-                    disabled={isLoading}
-                    size="lg"
-                    className={`h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-full p-0 flex items-center justify-center ${isPlaying ? 'bg-primary/90 hover:bg-primary' : ''}`}
-                    aria-label={isPlaying ? "Pause session" : "Start session"}
-                  >
-                    {isLoading ? (
-                      <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 border-2 border-current border-t-transparent" />
-                    ) : isPlaying ? (
-                      <Pause className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
-                    ) : (
-                      <Play className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
-                    )}
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button
+                      onClick={togglePlayPause}
+                      disabled={isLoading}
+                      size="lg"
+                      className={`h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-full p-0 flex items-center justify-center shadow-lg ${isPlaying ? 'bg-primary/90 hover:bg-primary' : ''}`}
+                      aria-label={isPlaying ? "Pause session" : "Start session"}
+                    >
+                      {isLoading ? (
+                        <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 border-2 border-current border-t-transparent" />
+                      ) : (
+                        <motion.div
+                          initial={false}
+                          animate={{ rotate: isPlaying ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {isPlaying ? (
+                            <Pause className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
+                          ) : (
+                            <Play className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
+                          )}
+                        </motion.div>
+                      )}
+                    </Button>
+                  </motion.div>
 
                   {/* Premium Stop Control */}
                   <Button

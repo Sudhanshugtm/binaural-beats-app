@@ -38,6 +38,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
   const [isMuted, setIsMuted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [sessionProgress, setSessionProgress] = useState(0);
+  const [sessionTotalSeconds, setSessionTotalSeconds] = useState<number | null>(null);
   const [totalFocusTime, setTotalFocusTime] = useState(127); // minutes today
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
@@ -75,7 +76,9 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
       const mode = WORK_MODES.find((m) => m.id === initialModeId) || null
       if (mode) {
         setSelectedMode(mode)
-        setTimeRemaining(mode.duration * 60)
+        const initial = mode.duration * 60
+        setSessionTotalSeconds(initial)
+        setTimeRemaining(initial)
         setSessionProgress(0)
       }
     }
@@ -259,11 +262,17 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
     }
     
     setSelectedMode(mode);
-    setTimeRemaining(mode.duration * 60);
+    const initial = mode.duration * 60;
+    setSessionTotalSeconds(initial);
+    setTimeRemaining(initial);
     setSessionProgress(0);
     try {
+      const raw = localStorage.getItem('beatful-productivity-player-prefs');
+      const prev = raw ? JSON.parse(raw) : {};
       localStorage.setItem('beatful-productivity-player-prefs', JSON.stringify({
+        ...prev,
         lastModeId: mode.id,
+        lastSessionSeconds: initial,
         volume,
         isMuted,
       }));
@@ -326,7 +335,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
       }
       
       const now = Date.now();
-      const totalSeconds = selectedMode.duration * 60;
+      const totalSeconds = (sessionTotalSeconds ?? (selectedMode.duration * 60));
       sessionEndAtRef.current = now + totalSeconds * 1000;
       timerRef.current = setInterval(() => {
         const remaining = Math.max(0, Math.round(((sessionEndAtRef.current ?? now) - Date.now()) / 1000));
@@ -337,7 +346,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
           stopAudio();
           setIsPlaying(false);
           exitDeepFocusMode();
-          const newTotalTime = totalFocusTime + selectedMode.duration;
+          const newTotalTime = totalFocusTime + Math.round(totalSeconds / 60);
           setTotalFocusTime(newTotalTime);
           setSessionStartTime(null);
         }
@@ -466,7 +475,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
       // Adjust timer based on pinch (pinch out to extend, pinch in to reduce)
       if (Math.abs(distanceChange) > 20) {
         const adjustment = distanceChange > 0 ? 5 * 60 : -5 * 60; // 5 minutes
-        const total = selectedMode.duration * 60;
+        const total = sessionTotalSeconds ?? (selectedMode.duration * 60);
         const newTime = Math.max(0, Math.min(total, timeRemaining + adjustment));
         setTimeRemaining(newTime);
         setSessionProgress(((total - newTime) / total) * 100);
@@ -679,7 +688,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
               {selectedMode && (
                 <div className="mt-4 sm:mt-6">
                   <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 font-medium mb-2 px-1">
-                    <span aria-label="elapsed time">{formatTime(Math.max(0, (selectedMode.duration * 60) - timeRemaining))} elapsed</span>
+                    <span aria-label="elapsed time">{formatTime(Math.max(0, (sessionTotalSeconds ?? (selectedMode.duration * 60)) - timeRemaining))} elapsed</span>
                     <span aria-label="time remaining">{formatTime(timeRemaining)} left</span>
                   </div>
                   <div
@@ -689,11 +698,55 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                     aria-valuemin={0}
                     aria-valuemax={100}
                     aria-valuenow={Math.round(Math.min(100, Math.max(0, sessionProgress)))}
+                    onClick={(e) => {
+                      if (!selectedMode) return;
+                      const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+                      const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                      const total = sessionTotalSeconds ?? (selectedMode.duration * 60);
+                      const newRemaining = Math.round(total * (1 - ratio));
+                      setTimeRemaining(newRemaining);
+                      setSessionProgress(((total - newRemaining) / total) * 100);
+                      if (isPlaying) {
+                        sessionEndAtRef.current = Date.now() + newRemaining * 1000;
+                      }
+                    }}
                   >
                     <div
                       className="h-full bg-primary/90 transition-all duration-300"
                       style={{ width: `${Math.min(100, Math.max(0, sessionProgress))}%` }}
                     />
+                  </div>
+                  {/* Quick duration chips */}
+                  <div className="mt-3 flex items-center justify-center gap-2 flex-wrap">
+                    {[15, 30, 45, 60, 90].map((m) => {
+                      const total = m * 60;
+                      const active = (sessionTotalSeconds ?? (selectedMode.duration * 60)) === total;
+                      return (
+                        <button
+                          key={m}
+                          onClick={() => {
+                            setSessionTotalSeconds(total);
+                            setTimeRemaining(total);
+                            setSessionProgress(0);
+                            try {
+                              const raw = localStorage.getItem('beatful-productivity-player-prefs');
+                              const prefs = raw ? JSON.parse(raw) : {};
+                              localStorage.setItem('beatful-productivity-player-prefs', JSON.stringify({
+                                ...prefs,
+                                lastSessionSeconds: total,
+                              }));
+                            } catch {}
+                            if (isPlaying) {
+                              sessionEndAtRef.current = Date.now() + total * 1000;
+                            }
+                          }}
+                          className={`px-3 py-1.5 text-xs sm:text-sm rounded-full border transition-colors ${active ? 'bg-primary text-white border-primary' : 'glass dark:glass-dark border-primary/20 text-gray-700 hover:border-primary/40'}`}
+                          aria-pressed={active}
+                        >
+                          {m}m
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}

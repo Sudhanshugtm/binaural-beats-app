@@ -572,7 +572,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
 
   return <div className="min-h-screen bg-morning-dew animated-gradient ambient-bg serene-overlay mobile-safe-area relative">
       <AmbientFloatingElements density="light" isPlaying={isPlaying} className="z-1" />
-      <main className={`container-zen h-screen flex flex-col justify-center p-2 sm:p-4 relative z-10`}>
+      <main className={`container-zen min-h-[100svh] flex flex-col justify-center p-2 sm:p-4 relative z-10`}>
         <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 sm:px-6">
           <div 
             className={`p-4 sm:p-6 md:p-8 glass dark:glass-dark rounded-3xl border border-primary/10 shadow-xl ${isDeepFocusMode ? 'deep-focus-mode' : ''}`}

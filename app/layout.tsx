@@ -8,6 +8,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { AccessibilityProvider } from "@/components/AccessibilityProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Primary font for body text - peaceful and readable
 const inter = Inter({
@@ -139,8 +140,9 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  // Allow user zoom for accessibility and better mobile UX
+  // Remove maximumScale and userScalable restrictions
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -269,6 +271,7 @@ export default function RootLayout({
                 </LayoutWrapper>
                 <Toaster />
                 <Analytics />
+                <SpeedInsights />
               </TooltipProvider>
             </AccessibilityProvider>
           </ThemeProvider>

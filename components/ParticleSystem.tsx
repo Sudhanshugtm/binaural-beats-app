@@ -82,8 +82,12 @@ export default function ParticleSystem({
   const initParticles = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
-    const particleCount = isPlaying ? Math.floor(beatFrequency * 8 + 50) : 30;
+
+    // Reduce particle density on small screens for smoother mobile performance
+    const isSmall = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
+    const densityFactor = isSmall ? 3 : 8;
+    const baseCount = isSmall ? 10 : 50;
+    const particleCount = isPlaying ? Math.floor(beatFrequency * densityFactor + baseCount) : (isSmall ? 12 : 30);
     particlesRef.current = [];
     
     for (let i = 0; i < particleCount; i++) {

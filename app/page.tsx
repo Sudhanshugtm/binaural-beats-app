@@ -89,8 +89,8 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <main id="main-content" className="relative z-10 min-h-[100svh] flex items-center justify-center px-4 sm:px-8 lg:px-16 py-32" role="main">
-        <div className="container-zen text-center space-y-12 sm:space-y-16">
+      <main id="main-content" className="relative z-10 min-h-[100svh] flex items-center justify-center px-4 sm:px-8 lg:px-16 py-16 sm:py-24 lg:py-32 pb-28 sm:pb-16" role="main">
+        <div className="container-zen text-center space-y-8 sm:space-y-12">
           <header className="space-y-8">
             <motion.div
               initial="hidden"
@@ -111,7 +111,7 @@ export default function Home() {
               variants={staggerContainer}
               className="space-y-6"
             >
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                 <motion.span variants={staggerItem} className="block text-gray-900 dark:text-white">
                   Binaural beats for
                 </motion.span>
@@ -126,7 +126,7 @@ export default function Home() {
 
               <motion.p
                 variants={staggerItem}
-                className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-light leading-relaxed"
+                className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl sm:max-w-3xl mx-auto font-light leading-relaxed"
               >
                 Beautiful, distraction‑free experience. Set a timer, choose a frequency, and sink into deep clarity.
               </motion.p>
@@ -146,7 +146,7 @@ export default function Home() {
               <Button
                 onClick={handleBeginSession}
                 size="lg"
-                className="group px-12 md:px-16 py-7 text-lg font-semibold rounded-full bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 touch-target w-full sm:w-auto"
+                className="group px-8 sm:px-10 md:px-16 py-5 sm:py-6 md:py-7 text-base sm:text-lg font-semibold rounded-full bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 touch-target w-full sm:w-auto"
                 aria-label="Begin your meditation practice with binaural beats"
               >
                 <Play className="w-5 h-5 mr-3 fill-current transition-transform group-hover:rotate-12 group-hover:scale-110" aria-hidden="true" />

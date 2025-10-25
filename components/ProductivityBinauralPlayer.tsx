@@ -602,13 +602,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
               onTouchEnd={handleTouchEnd}
               data-testid="session-container"
             >
-              {isPlaying && (
-                <div className="mb-3 sm:mb-4">
-                  <div className="h-1.5 w-full rounded-full bg-muted/60">
-                    <div className="h-1.5 rounded-full bg-primary transition-all duration-200" style={{ width: `${Math.min(100, Math.max(0, sessionProgress))}%` }} />
-                  </div>
-                </div>
-              )}
+              {/* Removed thin top bar to avoid confusion with volume/timeline */}
 
               <div className="text-center mb-5 sm:mb-6">
                 <div className="mb-3 sm:mb-4">
@@ -620,7 +614,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                 {/* Audio Visualization - Removed wavy animations */}
               </div>
 
-              {/* Central Breathing Circle with Integrated Timer */}
+              {/* Central Breathing Circle with Integrated Timer */
               <div className="flex items-center justify-center py-3 sm:py-4 md:py-6">
                 <div className="relative flex items-center justify-center">
                   {/* Main Breathing Circle */}
@@ -680,6 +674,29 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                   </div>
                 </div>
               </div>
+
+              {/* Explicit, labeled session timeline */}
+              {selectedMode && (
+                <div className="mt-4 sm:mt-6">
+                  <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 font-medium mb-2 px-1">
+                    <span aria-label="elapsed time">{formatTime(Math.max(0, (selectedMode.duration * 60) - timeRemaining))} elapsed</span>
+                    <span aria-label="time remaining">{formatTime(timeRemaining)} left</span>
+                  </div>
+                  <div
+                    className="h-2 w-full rounded-full bg-muted/60 overflow-hidden"
+                    role="progressbar"
+                    aria-label="Session progress"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={Math.round(Math.min(100, Math.max(0, sessionProgress)))}
+                  >
+                    <div
+                      className="h-full bg-primary/90 transition-all duration-300"
+                      style={{ width: `${Math.min(100, Math.max(0, sessionProgress))}%` }}
+                    />
+                  </div>
+                </div>
+              )}
                 
 
               {/* Essential Controls with Auto-fade */}
@@ -756,7 +773,11 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
                 </div>
 
                 {/* Elegant Volume Control */}
-                <div className="max-w-sm sm:max-w-md md:max-w-lg mx-auto px-3 sm:px-4">
+                <div className="max-w-sm sm:max-w-md md:max-w-lg mx-auto px-3 sm:px-4 mt-4">
+                  <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 font-medium mb-1 px-1">
+                    <span>Volume</span>
+                    <span>{Math.round(volume * 100)}%</span>
+                  </div>
                   <Slider
                     value={[volume]}
                     onValueChange={([v]) => updateVolume(v)}

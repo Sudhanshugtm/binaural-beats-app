@@ -1,30 +1,26 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { OnboardingFlow } from '@/components/OnboardingFlow';
 import { useSearchParams, useRouter } from 'next/navigation'
 import AmbientFloatingElements from '@/components/AmbientFloatingElements'
 import ModeSelector from '@/components/ModeSelector'
 
-export default function PlayerSelectorPage() {
+function PlayerSelectorInner() {
   const search = useSearchParams()
   const router = useRouter()
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(true)
 
   useEffect(() => {
-    const onboardingCompleted = localStorage.getItem('focusbeats-onboarding-completed');
+    const onboardingCompleted = localStorage.getItem('focusbeats-onboarding-completed')
     if (onboardingCompleted) {
-      setShowOnboarding(false);
+      setShowOnboarding(false)
     }
-  }, []);
+  }, [])
 
   const handleOnboardingComplete = () => {
-    setShowOnboarding(false);
-    localStorage.setItem('focusbeats-onboarding-completed', 'true');
-  };
-
-  if (showOnboarding) {
-    return <OnboardingFlow onComplete={handleOnboardingComplete} />;
+    setShowOnboarding(false)
+    localStorage.setItem('focusbeats-onboarding-completed', 'true')
   }
 
   // Backward compat: if mode is specified as query, redirect to /player/[mode]
@@ -35,6 +31,10 @@ export default function PlayerSelectorPage() {
     }
   }, [search, router, showOnboarding])
 
+  if (showOnboarding) {
+    return <OnboardingFlow onComplete={handleOnboardingComplete} />
+  }
+
   return (
     <div className="min-h-screen relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
       <AmbientFloatingElements density="light" isPlaying={false} className="z-1" />
@@ -44,5 +44,13 @@ export default function PlayerSelectorPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function PlayerSelectorPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <PlayerSelectorInner />
+    </Suspense>
   )
 }

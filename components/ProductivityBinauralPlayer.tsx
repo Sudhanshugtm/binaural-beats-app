@@ -20,10 +20,10 @@ import { EnhancedAudioEngine } from "@/lib/audioEngine";
 import AmbientFloatingElements from "./AmbientFloatingElements";
 import { WorkMode } from "@/types/player";
 import { WORK_MODES } from "@/lib/workModes";
-export default function ProductivityBinauralPlayer({ initialModeId }: { initialModeId?: string } = {}) {
+export default function ProductivityBinauralPlayer({ initialModeId, initialMode }: { initialModeId?: string; initialMode?: WorkMode } = {}) {
   const router = useRouter()
   const [isPlaying, setIsPlaying] = useState(false);
-  const [selectedMode, setSelectedMode] = useState<WorkMode | null>(null);
+  const [selectedMode, setSelectedMode] = useState<WorkMode | null>(initialMode || null);
 
   const renderModeCard = (mode: WorkMode, index: number) => (
     <ModeCard
@@ -70,9 +70,17 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
 
 
 
-  // Seed selected mode from route (if provided)
+  // Seed selected mode from route or protocol (if provided)
   useEffect(() => {
-    if (initialModeId && !selectedMode) {
+    if (initialMode && !selectedMode) {
+      // Direct mode object provided (from protocol)
+      setSelectedMode(initialMode)
+      const initial = initialMode.duration * 60
+      setSessionTotalSeconds(initial)
+      setTimeRemaining(initial)
+      setSessionProgress(0)
+    } else if (initialModeId && !selectedMode) {
+      // Mode ID provided (from legacy route)
       const mode = WORK_MODES.find((m) => m.id === initialModeId) || null
       if (mode) {
         setSelectedMode(mode)
@@ -82,7 +90,7 @@ export default function ProductivityBinauralPlayer({ initialModeId }: { initialM
         setSessionProgress(0)
       }
     }
-  }, [initialModeId, selectedMode])
+  }, [initialModeId, initialMode, selectedMode])
 
   // Keyboard shortcuts
   useEffect(() => {

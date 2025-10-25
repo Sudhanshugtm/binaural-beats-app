@@ -1,33 +1,51 @@
-// ABOUTME: Serene welcome page creating peaceful atmosphere for focus and meditation
-// ABOUTME: Features minimal design with calming elements and direct access to binaural beats
+// ABOUTME: Mobile-first utility page with research protocol presets
+// ABOUTME: Pure utility interface - no marketing, instant access to evidence-based protocols
+
 "use client";
 
 import { useState } from "react";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
-import { slideUp, staggerContainer, staggerItem } from "@/lib/animation-variants";
-const ParticleSystem = dynamic(() => import("@/components/ParticleSystem"), { ssr: false, loading: () => null });
-import AmbientFloatingElements from "@/components/AmbientFloatingElements";
-import { OnboardingFlow } from "@/components/OnboardingFlow";
-import QuickStartDock from "@/components/QuickStartDock";
-import FeatureGrid from "@/components/sections/FeatureGrid";
-import TrustStrip from "@/components/sections/TrustStrip";
-import Testimonials from "@/components/sections/Testimonials";
+import { PresetCard } from "@/components/PresetCard";
+import { CustomSessionCard } from "@/components/CustomSessionCard";
+import { RESEARCH_PROTOCOLS } from "@/types/research-protocols";
+import { staggerContainer, staggerItem } from "@/lib/animation-variants";
 import Footer from "@/components/Footer";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
 export default function Home() {
   const router = useRouter();
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showCustomDialog, setShowCustomDialog] = useState(false);
+  const [customDuration, setCustomDuration] = useState(20);
+  const [customFrequency, setCustomFrequency] = useState(10);
 
-  const handleBeginSession = () => {
-    setShowOnboarding(true);
+  const handleStartProtocol = (protocol: typeof RESEARCH_PROTOCOLS[0]) => {
+    // Store protocol data in session storage for player
+    sessionStorage.setItem('current-protocol', JSON.stringify({
+      name: protocol.name,
+      duration: protocol.duration,
+      beatFrequency: protocol.beatFrequency,
+      carrierLeft: protocol.carrierLeft,
+      carrierRight: protocol.carrierRight,
+      disclaimer: protocol.disclaimer,
+      studyReference: protocol.studyReference
+    }));
+    router.push('/player');
   };
 
-  const handleOnboardingComplete = () => {
-    localStorage.setItem('focusbeats-onboarding-completed', 'true');
+  const handleStartCustom = () => {
+    sessionStorage.setItem('current-protocol', JSON.stringify({
+      name: 'Custom Session',
+      duration: customDuration,
+      beatFrequency: customFrequency,
+      carrierLeft: 200,
+      carrierRight: 200 + customFrequency,
+      disclaimer: 'Custom session. Effects not validated by research studies.',
+      studyReference: null
+    }));
     router.push('/player');
   };
 
@@ -39,138 +57,130 @@ export default function Home() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebPage",
-            "name": "Beatful - Binaural Beats for Focus & Meditation",
-            "description": "Transform your focus and meditation practice with scientifically-designed binaural beats. Free web app for mindful productivity and relaxation.",
-            "url": "https://beatful.app",
-            "mainEntity": {
-              "@type": "SoftwareApplication",
-              "name": "Beatful",
-              "applicationCategory": "HealthApplication",
-              "operatingSystem": "Web Browser",
-              "description": "Interactive binaural beats application for meditation, focus, and relaxation",
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "USD"
-              }
-            },
-            "breadcrumb": {
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "name": "Home",
-                  "item": "https://beatful.app"
-                }
-              ]
-            }
+            "name": "Beatful - Evidence-Based Binaural Beats",
+            "description": "Research protocol-based binaural beats for stress relief and relaxation. Science-backed frequencies with study citations.",
+            "url": "https://beatful.app"
           })
         }}
       />
+
       {/* Skip to main content for accessibility */}
       <a href="#main-content" className="skip-to-main sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-gray-900 px-4 py-2 rounded-md z-50">
         Skip to main content
       </a>
-      
-      {/* Gentle animated background */}
-      {/* Hide heavy visuals on very small screens */}
-      <div className="hidden sm:block">
-        <ParticleSystem
-          isPlaying={true}
-          beatFrequency={8}
-          volume={0.1}
-          className="z-0"
-        />
-      </div>
-
-      {/* Dynamic floating nature elements */}
-      <div className="hidden sm:block">
-        <AmbientFloatingElements 
-          density="light" 
-          isPlaying={false}
-          className="z-1" 
-        />
-      </div>
 
       {/* Main Content */}
-      <main id="main-content" className="relative z-10 min-h-[100svh] flex items-center justify-center px-4 sm:px-8 lg:px-16 py-16 sm:py-24 lg:py-32 pb-28 sm:pb-16" role="main">
-        <div className="container-zen text-center space-y-8 sm:space-y-12">
-          <header className="space-y-8">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={slideUp}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full glass dark:glass-dark border border-primary/20"
+      <main id="main-content" className="relative z-10 min-h-[100svh] flex items-center justify-center px-4 sm:px-8 lg:px-16 py-16 sm:py-24" role="main">
+        <div className="container-zen w-full max-w-4xl mx-auto space-y-8">
+          {/* Minimal Header */}
+          <header className="text-center space-y-3">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              <span className="text-sm font-medium text-primary">Science‑inspired focus and calm</span>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerContainer}
-              className="space-y-4 sm:space-y-6 max-w-[24rem] sm:max-w-3xl mx-auto px-2"
+              Research Protocol Sessions
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
             >
-              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
-                <motion.span variants={staggerItem} className="block text-gray-900 dark:text-white">
-                  Binaural beats for
-                </motion.span>
-                <motion.span
-                  variants={staggerItem}
-                  className="block mt-2 font-accent bg-gradient-to-r from-primary via-[#4a9b7f] to-[#3d8a6f] bg-clip-text text-transparent"
-                  style={{ letterSpacing: '0.05em' }}
-                >
-                  world‑class focus
-                </motion.span>
-              </h1>
-
-              <motion.p
-                variants={staggerItem}
-                className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl sm:max-w-3xl mx-auto font-light leading-relaxed"
-              >
-                Beautiful, distraction‑free experience. Set a timer, choose a frequency, and sink into deep clarity.
-              </motion.p>
-            </motion.div>
+              Evidence-based binaural beat protocols from peer-reviewed studies. Tap to start.
+            </motion.p>
           </header>
 
+          {/* Preset Cards Grid */}
           <motion.section
             initial="hidden"
             animate="visible"
-            variants={slideUp}
-            transition={{ delay: 0.4 }}
-            className="flex flex-col items-center gap-3 sm:gap-4"
-            aria-labelledby="cta-heading"
+            variants={staggerContainer}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
+            aria-label="Research protocol presets"
           >
-            <h2 id="cta-heading" className="sr-only">Start Your Meditation Practice</h2>
-            <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button
-                onClick={handleBeginSession}
-                size="lg"
-                className="group px-8 sm:px-10 md:px-16 py-5 sm:py-6 md:py-7 text-base sm:text-lg font-semibold rounded-full bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 touch-target w-full sm:w-auto"
-                aria-label="Begin your meditation practice with binaural beats"
-              >
-                <Play className="w-5 h-5 mr-3 fill-current transition-transform group-hover:rotate-12 group-hover:scale-110" aria-hidden="true" />
-                Start a Session
-              </Button>
+            {RESEARCH_PROTOCOLS.map((protocol) => (
+              <motion.div key={protocol.id} variants={staggerItem}>
+                <PresetCard
+                  protocol={protocol}
+                  onStart={handleStartProtocol}
+                />
+              </motion.div>
+            ))}
+            <motion.div variants={staggerItem}>
+              <CustomSessionCard onClick={() => setShowCustomDialog(true)} />
             </motion.div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">No signup. Works offline as a PWA.</div>
           </motion.section>
 
-          <TrustStrip />
-          <FeatureGrid />
-          <Testimonials />
+          {/* Scientific Disclaimer */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-center text-xs text-gray-500 dark:text-gray-400 max-w-2xl mx-auto px-4 py-6 rounded-lg bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800"
+          >
+            <p className="font-medium mb-2">Scientific Transparency</p>
+            <p>
+              These protocols are based on published research studies. Evidence for binaural beats shows
+              modest effects for relaxation and anxiety reduction. Individual results vary. Not a substitute
+              for medical treatment.{" "}
+              <a
+                href="/about"
+                className="underline hover:text-primary transition-colors"
+              >
+                Learn more
+              </a>
+            </p>
+          </motion.div>
         </div>
       </main>
+
       <Footer />
-      <QuickStartDock />
-      {showOnboarding && (
-        <OnboardingFlow onComplete={handleOnboardingComplete} />
-      )}
+
+      {/* Custom Session Dialog */}
+      <Dialog open={showCustomDialog} onOpenChange={setShowCustomDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Custom Session</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6 py-4">
+            <div className="space-y-3">
+              <Label htmlFor="duration">Duration: {customDuration} minutes</Label>
+              <Slider
+                id="duration"
+                min={5}
+                max={90}
+                step={5}
+                value={[customDuration]}
+                onValueChange={([value]) => setCustomDuration(value)}
+                className="w-full"
+              />
+            </div>
+            <div className="space-y-3">
+              <Label htmlFor="frequency">Beat Frequency: {customFrequency} Hz</Label>
+              <Slider
+                id="frequency"
+                min={1}
+                max={40}
+                step={0.5}
+                value={[customFrequency]}
+                onValueChange={([value]) => setCustomFrequency(value)}
+                className="w-full"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Delta: 1-4 Hz • Theta: 4-8 Hz • Alpha: 8-13 Hz • Beta: 13-30 Hz • Gamma: 30+ Hz
+              </p>
+            </div>
+            <Button
+              onClick={handleStartCustom}
+              className="w-full"
+              size="lg"
+            >
+              Start Custom Session
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

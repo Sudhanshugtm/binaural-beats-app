@@ -1,56 +1,65 @@
+// ABOUTME: Simplified player page that reads protocol from sessionStorage
+// ABOUTME: Starts playing immediately upon arrival (mobile-first instant start)
+
 "use client";
 
 import { Suspense, useState, useEffect } from 'react';
-import { OnboardingFlow } from '@/components/OnboardingFlow';
-import { useSearchParams, useRouter } from 'next/navigation'
-import AmbientFloatingElements from '@/components/AmbientFloatingElements'
-import ModeSelector from '@/components/ModeSelector'
+import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 
-function PlayerSelectorInner() {
-  const search = useSearchParams()
-  const router = useRouter()
-  const [showOnboarding, setShowOnboarding] = useState(true)
+const SimpleBinauralPlayer = dynamic(
+  () => import('@/components/SimpleBinauralPlayer'),
+  { ssr: false }
+);
+
+function PlayerInner() {
+  const router = useRouter();
+  const [protocol, setProtocol] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const onboardingCompleted = localStorage.getItem('focusbeats-onboarding-completed')
-    if (onboardingCompleted) {
-      setShowOnboarding(false)
+    // Read protocol from sessionStorage
+    const storedProtocol = sessionStorage.getItem('current-protocol');
+
+    if (!storedProtocol) {
+      // No protocol selected, redirect to home
+      router.replace('/');
+      return;
     }
-  }, [])
 
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false)
-    localStorage.setItem('focusbeats-onboarding-completed', 'true')
-  }
-
-  // Backward compat: if mode is specified as query, redirect to /player/[mode]
-  useEffect(() => {
-    const mode = search?.get('mode')
-    if (!showOnboarding && mode) {
-      router.replace(`/player/${mode}`)
+    try {
+      const parsedProtocol = JSON.parse(storedProtocol);
+      setProtocol(parsedProtocol);
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to parse protocol:', error);
+      router.replace('/');
     }
-  }, [search, router, showOnboarding])
+  }, [router]);
 
-  if (showOnboarding) {
-    return <OnboardingFlow onComplete={handleOnboardingComplete} />
-  }
-
-  return (
-    <div className="min-h-[100svh] relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
-      <AmbientFloatingElements density="light" isPlaying={false} className="z-1" />
-      <main className="relative z-10 min-h-[100svh] flex items-start justify-center px-4 sm:px-8 lg:px-16 py-10 sm:py-16">
-        <div className="container-zen w-full">
-          <ModeSelector />
+  if (loading || !protocol) {
+    return (
+      <div className="min-h-[100svh] flex items-center justify-center bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
+        <div className="animate-pulse text-gray-600 dark:text-gray-400">
+          Loading session...
         </div>
-      </main>
-    </div>
-  )
+      </div>
+    );
+  }
+
+  return <SimpleBinauralPlayer protocol={protocol} />;
 }
 
-export default function PlayerSelectorPage() {
+export default function PlayerPage() {
   return (
-    <Suspense fallback={<div className="min-h-[100svh]" />}>
-      <PlayerSelectorInner />
+    <Suspense fallback={
+      <div className="min-h-[100svh] flex items-center justify-center">
+        <div className="animate-pulse text-gray-600 dark:text-gray-400">
+          Loading...
+        </div>
+      </div>
+    }>
+      <PlayerInner />
     </Suspense>
-  )
+  );
 }

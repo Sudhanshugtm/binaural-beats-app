@@ -5,8 +5,10 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
+import { slideUp, staggerContainer, staggerItem } from "@/lib/animation-variants";
 const ParticleSystem = dynamic(() => import("@/components/ParticleSystem"), { ssr: false, loading: () => null });
 import AmbientFloatingElements from "@/components/AmbientFloatingElements";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
@@ -87,35 +89,72 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <main id="main-content" className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-8 lg:px-16" role="main">
-        <div className="container-zen text-center space-y-8 sm:space-y-10">
-          <header className="space-y-6">
-            <div className="space-y-5">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                Science‑inspired focus and calm
-              </div>
-              <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-semibold text-gray-800 dark:text-foreground leading-tight tracking-tight">
-                Binaural beats for world‑class focus
+      <main id="main-content" className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-8 lg:px-16 py-32" role="main">
+        <div className="container-zen text-center space-y-12 sm:space-y-16">
+          <header className="space-y-8">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={slideUp}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass dark:glass-dark border border-primary/20"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              <span className="text-sm font-medium text-primary">Science‑inspired focus and calm</span>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+              className="space-y-6"
+            >
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
+                <motion.span variants={staggerItem} className="block text-gray-900 dark:text-white">
+                  Binaural beats for
+                </motion.span>
+                <motion.span
+                  variants={staggerItem}
+                  className="block mt-2 font-accent bg-gradient-to-r from-primary via-[#4a9b7f] to-[#3d8a6f] bg-clip-text text-transparent"
+                  style={{ letterSpacing: '0.05em' }}
+                >
+                  world‑class focus
+                </motion.span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-medium leading-relaxed">
+
+              <motion.p
+                variants={staggerItem}
+                className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-light leading-relaxed"
+              >
                 Beautiful, distraction‑free experience. Set a timer, choose a frequency, and sink into deep clarity.
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
           </header>
 
-          <section className="flex flex-col items-center gap-4" aria-labelledby="cta-heading">
+          <motion.section
+            initial="hidden"
+            animate="visible"
+            variants={slideUp}
+            transition={{ delay: 0.4 }}
+            className="flex flex-col items-center gap-4"
+            aria-labelledby="cta-heading"
+          >
             <h2 id="cta-heading" className="sr-only">Start Your Meditation Practice</h2>
-            <Button
-              onClick={handleBeginSession}
-              size="lg"
-              className="group px-8 sm:px-12 md:px-16 py-6 sm:py-7 text-base md:text-lg font-medium rounded-2xl tracking-wide touch-target w-full sm:w-auto shadow-zen-md bg-gradient-to-tr from-primary to-gradient-middle hover:brightness-110"
-              aria-label="Begin your meditation practice with binaural beats"
-            >
-              <Play className="w-5 h-5 sm:w-6 sm:h-6 mr-3 sm:mr-4 transition-transform duration-300 group-hover:scale-110" aria-hidden="true" />
-              Start a Session
-            </Button>
-            <div className="text-xs text-gray-500 dark:text-gray-400">No signup. Works offline as a PWA.</div>
-          </section>
+            <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                onClick={handleBeginSession}
+                size="lg"
+                className="group px-12 md:px-16 py-7 text-lg font-semibold rounded-full bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 touch-target w-full sm:w-auto"
+                aria-label="Begin your meditation practice with binaural beats"
+              >
+                <Play className="w-5 h-5 mr-3 fill-current transition-transform group-hover:rotate-12 group-hover:scale-110" aria-hidden="true" />
+                Start a Session
+              </Button>
+            </motion.div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">No signup. Works offline as a PWA.</div>
+          </motion.section>
 
           <TrustStrip />
           <FeatureGrid />

@@ -50,7 +50,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-[100svh] relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
+    <div className="min-h-[100svh] relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -77,7 +77,7 @@ export default function Home() {
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent"
+              className="text-2xl sm:text-3xl font-bold text-gray-900"
             >
               Research Protocol Sessions
             </motion.h1>
@@ -85,7 +85,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed"
+              className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed"
             >
               Evidence-based binaural beat protocols from peer-reviewed studies. Tap to start.
             </motion.p>
@@ -117,16 +117,16 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-center text-xs sm:text-sm text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4 sm:px-6 py-5 sm:py-6 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-900/50 border border-gray-200/80 dark:border-gray-700/50 backdrop-blur-sm"
+            className="text-center text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto px-4 sm:px-6 py-5 sm:py-6 rounded-xl bg-gradient-to-br from-gray-50 to-white border border-gray-200 shadow-sm"
           >
-            <p className="font-semibold mb-2 text-gray-800 dark:text-gray-200">Scientific Transparency</p>
+            <p className="font-semibold mb-2 text-gray-800">Scientific Transparency</p>
             <p className="leading-relaxed">
               These protocols are based on published research studies. Evidence for binaural beats shows
               modest effects for relaxation and anxiety reduction. Individual results vary. Not a substitute
               for medical treatment.{" "}
               <a
                 href="/about"
-                className="underline underline-offset-2 hover:text-primary dark:hover:text-primary transition-colors font-medium"
+                className="underline underline-offset-2 hover:text-primary transition-colors font-medium"
               >
                 Learn more
               </a>
@@ -167,7 +167,7 @@ export default function Home() {
                 onValueChange={([value]) => setCustomFrequency(value)}
                 className="w-full"
               />
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-gray-500">
                 Delta: 1-4 Hz • Theta: 4-8 Hz • Alpha: 8-13 Hz • Beta: 13-30 Hz • Gamma: 30+ Hz
               </p>
             </div>

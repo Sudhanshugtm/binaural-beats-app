@@ -13,19 +13,19 @@ interface PresetCardProps {
 }
 
 const categoryColors = {
-  anxiety: "from-blue-500/10 to-blue-600/5 dark:from-blue-400/10 dark:to-blue-500/5 border-blue-500/20 dark:border-blue-400/30",
-  relaxation: "from-green-500/10 to-green-600/5 dark:from-green-400/10 dark:to-green-500/5 border-green-500/20 dark:border-green-400/30",
-  mood: "from-purple-500/10 to-purple-600/5 dark:from-purple-400/10 dark:to-purple-500/5 border-purple-500/20 dark:border-purple-400/30",
-  sleep: "from-indigo-500/10 to-indigo-600/5 dark:from-indigo-400/10 dark:to-indigo-500/5 border-indigo-500/20 dark:border-indigo-400/30",
-  custom: "from-gray-500/10 to-gray-600/5 dark:from-gray-400/10 dark:to-gray-500/5 border-gray-500/20 dark:border-gray-400/30"
+  anxiety: "from-blue-50 to-blue-100/50 border-blue-200",
+  relaxation: "from-green-50 to-green-100/50 border-green-200",
+  mood: "from-purple-50 to-purple-100/50 border-purple-200",
+  sleep: "from-indigo-50 to-indigo-100/50 border-indigo-200",
+  custom: "from-gray-50 to-gray-100/50 border-gray-200"
 };
 
 const categoryTextColors = {
-  anxiety: "text-blue-700 dark:text-blue-300",
-  relaxation: "text-green-700 dark:text-green-300",
-  mood: "text-purple-700 dark:text-purple-300",
-  sleep: "text-indigo-700 dark:text-indigo-300",
-  custom: "text-gray-700 dark:text-gray-300"
+  anxiety: "text-blue-700",
+  relaxation: "text-green-700",
+  mood: "text-purple-700",
+  sleep: "text-indigo-700",
+  custom: "text-gray-700"
 };
 
 export function PresetCard({ protocol, onStart }: PresetCardProps) {
@@ -42,31 +42,31 @@ export function PresetCard({ protocol, onStart }: PresetCardProps) {
           <h3 className={`text-xl font-semibold ${categoryTextColors[protocol.category]}`}>
             {protocol.name}
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-600 mt-1">
             {protocol.description}
           </p>
         </div>
 
         {/* Protocol Details */}
         <div className="flex items-center gap-4 text-sm">
-          <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+          <div className="flex items-center gap-1.5 text-gray-700">
             <Clock className="w-4 h-4" />
             <span>{protocol.duration} min</span>
           </div>
-          <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+          <div className="flex items-center gap-1.5 text-gray-700">
             <Waves className="w-4 h-4" />
             <span>{protocol.beatFrequency} Hz</span>
           </div>
         </div>
 
         {/* Study Reference */}
-        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+        <div className="pt-2 border-t border-gray-200">
           <a
             href={protocol.studyReference.url}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-primary transition-colors"
           >
             <span>{protocol.studyReference.authors} ({protocol.studyReference.year})</span>
             <ExternalLink className="w-3 h-3" />

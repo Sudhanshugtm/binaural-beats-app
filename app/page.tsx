@@ -5,7 +5,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PresetCard } from "@/components/PresetCard";
 import { CustomSessionCard } from "@/components/CustomSessionCard";
 import { RESEARCH_PROTOCOLS } from "@/types/research-protocols";
@@ -21,6 +21,7 @@ export default function Home() {
   const [showCustomDialog, setShowCustomDialog] = useState(false);
   const [customDuration, setCustomDuration] = useState(20);
   const [customFrequency, setCustomFrequency] = useState(10);
+  const prefersReducedMotion = useReducedMotion();
 
   const handleStartProtocol = (protocol: typeof RESEARCH_PROTOCOLS[0]) => {
     // Store protocol data in session storage for player
@@ -50,7 +51,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-[100svh] relative overflow-hidden mobile-safe-area bg-gradient-to-b from-white via-white to-primary/5">
+    <div className="min-h-[100svh] relative overflow-hidden mobile-safe-area bg-surface text-slate-900">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -70,14 +71,18 @@ export default function Home() {
       </a>
 
       {/* Main Content */}
-      <main id="main-content" className="relative z-10 min-h-[100svh] flex items-center justify-center px-4 sm:px-8 lg:px-16 py-16 sm:py-24" role="main">
-        <div className="container-zen w-full max-w-4xl mx-auto space-y-8">
+      <main
+        id="main-content"
+        className="relative z-10 min-h-[100svh] flex items-start justify-center px-6 sm:px-10 lg:px-16 pt-20 sm:pt-28 pb-32 lg:pb-28"
+        role="main"
+      >
+        <div className="w-full max-w-[1100px] space-y-12">
           {/* Minimal Header */}
-          <header className="text-center space-y-3">
+          <header className="mx-auto max-w-[65ch] text-center space-y-4">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-3xl font-bold text-gray-900"
+              className="text-balance text-[clamp(2.25rem,2vw+2rem,2.8rem)] leading-[1.2] font-semibold text-slate-900"
             >
               Research Protocol Sessions
             </motion.h1>
@@ -85,7 +90,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed"
+              className="mx-auto text-sm sm:text-base leading-relaxed text-slate-600"
             >
               Evidence-based binaural beat protocols from peer-reviewed studies. Tap to start.
             </motion.p>
@@ -96,7 +101,7 @@ export default function Home() {
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
+            className="grid gap-5 sm:gap-6 lg:grid-cols-2"
             aria-label="Research protocol presets"
           >
             {RESEARCH_PROTOCOLS.map((protocol) => (
@@ -117,16 +122,16 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-center text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto px-4 sm:px-6 py-5 sm:py-6 rounded-xl bg-gradient-to-br from-gray-50 to-white border border-gray-200 shadow-sm"
+            className="mx-auto max-w-[65ch] rounded-3xl border border-slate-200 bg-white/90 px-6 py-6 text-center text-xs sm:text-sm text-slate-600 shadow-soft"
           >
-            <p className="font-semibold mb-2 text-gray-800">Scientific Transparency</p>
+            <p className="mb-2 font-semibold text-slate-800">Scientific Transparency</p>
             <p className="leading-relaxed">
               These protocols are based on published research studies. Evidence for binaural beats shows
               modest effects for relaxation and anxiety reduction. Individual results vary. Not a substitute
               for medical treatment.{" "}
               <a
                 href="/about"
-                className="underline underline-offset-2 hover:text-primary transition-colors font-medium"
+                className="font-medium underline underline-offset-2 text-primary hover:text-primary/80 transition-colors"
               >
                 Learn more
               </a>
@@ -136,6 +141,23 @@ export default function Home() {
       </main>
 
       <Footer />
+
+      {!showCustomDialog && (
+        <motion.div
+          initial={prefersReducedMotion ? false : { y: 40, opacity: 0 }}
+          animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+          transition={{ duration: 0.18, ease: "easeOut" }}
+          className="lg:hidden fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/85 px-6 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] pt-4 backdrop-blur"
+        >
+          <Button
+            size="lg"
+            className="w-full"
+            onClick={() => setShowCustomDialog(true)}
+          >
+            Start Custom Session
+          </Button>
+        </motion.div>
+      )}
 
       {/* Custom Session Dialog */}
       <Dialog open={showCustomDialog} onOpenChange={setShowCustomDialog}>

@@ -29,5 +29,11 @@
     "**/*.d.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "components/__tests__/**/*",
+    "components/**/__mocks__/**/*",
+    "lib/__tests__/**/*",
+    "e2e/**/*"
+  ]
 }

@@ -14,22 +14,25 @@ export function CustomSessionCard({ onClick }: CustomSessionCardProps) {
   return (
     <motion.button
       onClick={onClick}
-      className="w-full text-left p-6 rounded-2xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-white hover:border-primary hover:from-gray-100 hover:to-gray-50 hover:scale-[1.02] transition-all duration-200 touch-target"
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.98 }}
+      className="group w-full rounded-3xl border border-slate-200 bg-white/90 p-7 text-left shadow-soft transition-all duration-200 ease-out touch-target focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50 motion-safe:pointer-fine:hover:-translate-y-1 motion-safe:pointer-fine:hover:shadow-lg"
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.99 }}
     >
-      <div className="flex flex-col items-center justify-center gap-3 py-4">
-        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-          <Plus className="w-6 h-6 text-primary" />
-        </div>
-        <div className="text-center">
-          <h3 className="text-lg font-semibold text-gray-900">
-            Custom Session
-          </h3>
-          <p className="text-sm text-gray-600 mt-1">
-            Choose your own duration and frequency
+      <div className="flex flex-col items-center justify-center gap-5 py-3 text-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 transition-colors motion-safe:pointer-fine:group-hover:bg-primary/15">
+            <Plus className="h-5 w-5 text-primary" />
+          </div>
+          <p className="text-[0.675rem] uppercase tracking-[0.2em] text-slate-500">
+            Custom Protocol
           </p>
         </div>
+        <h3 className="text-lg font-semibold tracking-tight text-slate-900">
+          Custom Session
+        </h3>
+        <p className="text-sm leading-relaxed text-slate-600">
+          Choose your own duration and frequency
+        </p>
       </div>
     </motion.button>
   );

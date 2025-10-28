@@ -127,6 +127,10 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        surface: "#F9FBFD",
+      },
+      boxShadow: {
+        soft: "0 8px 20px -12px rgba(15,23,42,0.18), 0 24px 44px -24px rgba(15,23,42,0.14)",
       },
       borderRadius: {
         lg: "var(--radius)",

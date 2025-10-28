@@ -350,9 +350,10 @@ describe('Accessibility Compliance Tests', () => {
 
       const buttons = screen.getAllByRole('button')
       const links = screen.getAllByRole('link')
-      
+      const interactiveElements = [...buttons, ...links]
+
       // Check that interactive elements have touch-target class
-      [...buttons, ...links].forEach(element => {
+      interactiveElements.forEach(element => {
         expect(element).toHaveClass('touch-target')
       })
     })

@@ -623,7 +623,6 @@ async function createAudioWorkletNoise(ctx: AudioContext, noiseType: string) {
     }
     
     // Create the node
-    // @ts-ignore - TypeScript might not know about AudioWorkletNode
     const workletNode = new AudioWorkletNode(ctx, 'noise-processor', {
       outputChannelCount: [2]
     });

@@ -36,9 +36,18 @@ export default function ProgressDashboardPage() {
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [view, setView] = useState<"daily" | "sessions">("daily");
 
+  const isConfigured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+
   useEffect(() => {
     let mounted = true;
     async function load() {
+      if (!isConfigured) {
+        setError("Supabase not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in environment variables.");
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       setError(null);
       try {
@@ -78,7 +87,7 @@ export default function ProgressDashboardPage() {
     return () => {
       mounted = false;
     };
-  }, [supabase, deviceId]);
+  }, [supabase, deviceId, isConfigured]);
 
   const thisWeek = useMemo(() => {
     const byDay = daily.slice(0, 7).reverse();
@@ -160,7 +169,16 @@ export default function ProgressDashboardPage() {
               <div className="py-10 text-center text-gray-600">Loading…</div>
             )}
             {error && !loading && (
-              <div className="py-6 text-sm text-red-600">{error}</div>
+              <div className="py-6 text-sm text-red-600">
+                {error}
+                {error.includes("not configured") && (
+                  <div className="mt-2 text-xs text-gray-600">
+                    In Vercel, set Project → Settings → Environment Variables:
+                    <div><code>NEXT_PUBLIC_SUPABASE_URL</code> and <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></div>
+                    Then redeploy.
+                  </div>
+                )}
+              </div>
             )}
 
             {!loading && !error && view === "daily" && (

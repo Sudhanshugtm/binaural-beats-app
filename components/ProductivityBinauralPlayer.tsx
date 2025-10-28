@@ -382,7 +382,8 @@ export default function ProductivityBinauralPlayer({ initialModeId, initialMode 
           setSessionStartTime(null);
           // Log completed session
           if (sessionIdRef.current) {
-            try { await logSessionEnd(sessionIdRef.current, true); } catch {}
+            // fire-and-forget, interval callback isn't async
+            void logSessionEnd(sessionIdRef.current, true);
             sessionIdRef.current = null;
           }
         }

@@ -44,18 +44,18 @@ export default function ProgressDashboardPage() {
       try {
         // Fetch last 30 days daily totals
         const { data: dailyData, error: dailyErr } = await supabase
-          .from<DailyTotal>("progress_daily_totals")
+          .from("progress_daily_totals")
           .select("owner_key, day, sessions, total_completed_seconds, total_logged_seconds")
           .order("day", { ascending: false })
           .limit(30);
 
         if (dailyErr) throw dailyErr;
         // Filter client-side by owner (device or user) for clarity
-        const filteredDaily = (dailyData || []).filter((d) => !deviceId || d.owner_key === deviceId);
+        const filteredDaily = ((dailyData || []) as DailyTotal[]).filter((d) => !deviceId || d.owner_key === deviceId);
 
         // Fetch recent sessions (device/user filtering via RLS)
         const { data: sessionsData, error: sessErr } = await supabase
-          .from<SessionRow>("progress_sessions")
+          .from("progress_sessions")
           .select(
             "id, name, mode_id, protocol_id, duration_seconds, started_at, ended_at, completed, beat_frequency, carrier_left, carrier_right"
           )
@@ -65,8 +65,8 @@ export default function ProgressDashboardPage() {
         if (sessErr) throw sessErr;
 
         if (!mounted) return;
-        setDaily(filteredDaily || []);
-        setSessions(sessionsData || []);
+        setDaily((filteredDaily || []) as DailyTotal[]);
+        setSessions((sessionsData || []) as SessionRow[]);
       } catch (e: any) {
         if (!mounted) return;
         setError(e?.message || "Failed to load progress");
@@ -228,4 +228,3 @@ export default function ProgressDashboardPage() {
     </div>
   );
 }
-

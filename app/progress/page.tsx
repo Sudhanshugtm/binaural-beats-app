@@ -28,13 +28,15 @@ type SessionRow = {
 };
 
 export default function ProgressDashboardPage() {
-  const supabase = getSupabaseClient();
-  const deviceId = getDeviceId();
+  // Keep stable client + device id to avoid refetch flicker
+  const supabase = useMemo(() => getSupabaseClient(), []);
+  const deviceId = useMemo(() => getDeviceId(), []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [daily, setDaily] = useState<DailyTotal[]>([]);
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [view, setView] = useState<"daily" | "sessions">("daily");
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const isConfigured = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -106,7 +108,7 @@ export default function ProgressDashboardPage() {
   };
 
   return (
-    <div className="min-h-[100svh] bg-gradient-to-br from-slate-50 to-blue-50 px-4 py-8">
+    <div className="min-h-[100svh] bg-gradient-to-br from-slate-50 to-blue-50 px-4 py-8 pt-20 sm:pt-24">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Your Progress</h1>
@@ -129,7 +131,7 @@ export default function ProgressDashboardPage() {
         </div>
 
         {/* Summary */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Card>
             <CardHeader>
               <CardTitle className="text-sm text-gray-600">Minutes This Week</CardTitle>
@@ -148,16 +150,29 @@ export default function ProgressDashboardPage() {
               <div className="text-xs text-gray-500">Total sessions (last 7 days)</div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Advanced – collapsed by default to avoid visual noise */}
+        <div className="flex justify-end -mt-2">
+          <button
+            className="text-xs text-gray-500 hover:text-gray-700 underline underline-offset-2"
+            onClick={() => setShowAdvanced((v) => !v)}
+          >
+            {showAdvanced ? "Hide details" : "Show advanced details"}
+          </button>
+        </div>
+        {showAdvanced && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm text-gray-600">Device</CardTitle>
+              <CardTitle className="text-sm text-gray-600">Advanced</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xs break-all text-gray-700">{deviceId || "unknown"}</div>
-              <div className="text-xs text-gray-500">Used for anonymous tracking</div>
+              <div className="text-xs text-gray-600">Device ID:</div>
+              <div className="text-xs break-all text-gray-800">{deviceId || "unknown"}</div>
+              <div className="text-xs text-gray-500 mt-2">Used only for anonymous per-device RLS. Not shared.</div>
             </CardContent>
           </Card>
-        </div>
+        )}
 
         {/* Content */}
         <Card>

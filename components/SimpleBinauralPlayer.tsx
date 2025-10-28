@@ -9,6 +9,7 @@ import { Play, Pause, Volume2, VolumeX, ArrowLeft, ExternalLink } from 'lucide-r
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { logSessionStart, logSessionEnd } from "@/lib/progress";
 
 interface SimpleBinauralPlayerProps {
   protocol: {
@@ -41,6 +42,7 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
   const gainNodeRef = useRef<GainNode | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const sessionEndAtRef = useRef<number | null>(null);
+  const sessionIdRef = useRef<string | null>(null);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -120,6 +122,11 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
     if (isPlaying) {
       stopAudio();
       setIsPlaying(false);
+      // Log partial session end if we were tracking one
+      if (sessionIdRef.current) {
+        try { await logSessionEnd(sessionIdRef.current, false); } catch {}
+        sessionIdRef.current = null;
+      }
     } else {
       await startAudio();
       setIsPlaying(true);
@@ -127,6 +134,23 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
       const now = Date.now();
       const totalSeconds = timeRemaining;
       sessionEndAtRef.current = now + totalSeconds * 1000;
+
+      // Log session start if not already
+      if (!sessionIdRef.current) {
+        try {
+          const id = await logSessionStart({
+            modeId: null,
+            protocolId: null,
+            name: protocol.name,
+            beatFrequency: protocol.beatFrequency ?? null,
+            carrierLeft: protocol.carrierLeft ?? null,
+            carrierRight: protocol.carrierRight ?? null,
+            durationSeconds: protocol.duration * 60,
+            startedAt: new Date(),
+          });
+          sessionIdRef.current = id;
+        } catch {}
+      }
 
       timerRef.current = setInterval(() => {
         const remaining = Math.max(0, Math.round(((sessionEndAtRef.current ?? now) - Date.now()) / 1000));
@@ -141,6 +165,11 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
           setIsPlaying(false);
           if (timerRef.current) {
             clearInterval(timerRef.current);
+          }
+          // Log completed session
+          if (sessionIdRef.current) {
+            try { await logSessionEnd(sessionIdRef.current, true); } catch {}
+            sessionIdRef.current = null;
           }
         }
       }, 100);
@@ -169,12 +198,21 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
 
   const handleBack = () => {
     stopAudio();
+    // Log partial end if in-session
+    if (sessionIdRef.current) {
+      logSessionEnd(sessionIdRef.current, false);
+      sessionIdRef.current = null;
+    }
     router.push('/');
   };
 
   useEffect(() => {
     return () => {
       stopAudio();
+      if (sessionIdRef.current) {
+        logSessionEnd(sessionIdRef.current, false);
+        sessionIdRef.current = null;
+      }
     };
   }, []);
 

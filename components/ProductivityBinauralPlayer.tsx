@@ -20,6 +20,7 @@ import { EnhancedAudioEngine } from "@/lib/audioEngine";
 import AmbientFloatingElements from "./AmbientFloatingElements";
 import { WorkMode } from "@/types/player";
 import { WORK_MODES } from "@/lib/workModes";
+import { logSessionStart, logSessionEnd } from "@/lib/progress";
 export default function ProductivityBinauralPlayer({ initialModeId, initialMode }: { initialModeId?: string; initialMode?: WorkMode } = {}) {
   const router = useRouter()
   const [isPlaying, setIsPlaying] = useState(false);
@@ -56,6 +57,7 @@ export default function ProductivityBinauralPlayer({ initialModeId, initialMode 
   const deepFocusTimerRef = useRef<NodeJS.Timeout | null>(null);
   const sessionEndAtRef = useRef<number | null>(null);
   const audioEngineRef = useRef<EnhancedAudioEngine | null>(null);
+  const sessionIdRef = useRef<string | null>(null);
   
   // Enhanced touch gesture tracking
   const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
@@ -323,6 +325,11 @@ export default function ProductivityBinauralPlayer({ initialModeId, initialMode 
       if (sessionStartTime) {
         setSessionStartTime(null);
       }
+      // Log partial session end if tracking
+      if (sessionIdRef.current) {
+        try { await logSessionEnd(sessionIdRef.current, false); } catch {}
+        sessionIdRef.current = null;
+      }
       
       // Clear timers
       if (deepFocusTimerRef.current) {
@@ -334,6 +341,22 @@ export default function ProductivityBinauralPlayer({ initialModeId, initialMode 
       setIsPlaying(true);
       setSessionStartTime(new Date());
       setIsLoading(false);
+      // Log session start
+      if (!sessionIdRef.current) {
+        try {
+          const id = await logSessionStart({
+            modeId: selectedMode.id,
+            protocolId: null,
+            name: selectedMode.name,
+            beatFrequency: selectedMode.isPureTone ? null : selectedMode.frequency,
+            carrierLeft: selectedMode.isPureTone ? selectedMode.frequency : null,
+            carrierRight: selectedMode.isPureTone ? selectedMode.frequency : null,
+            durationSeconds: (sessionTotalSeconds ?? (selectedMode.duration * 60)),
+            startedAt: new Date(),
+          });
+          sessionIdRef.current = id;
+        } catch {}
+      }
       
       // Set up deep focus mode timer (30 seconds for deep work modes)
       if (selectedMode.id === 'deep-work' || selectedMode.id === 'study') {
@@ -357,6 +380,11 @@ export default function ProductivityBinauralPlayer({ initialModeId, initialMode 
           const newTotalTime = totalFocusTime + Math.round(totalSeconds / 60);
           setTotalFocusTime(newTotalTime);
           setSessionStartTime(null);
+          // Log completed session
+          if (sessionIdRef.current) {
+            try { await logSessionEnd(sessionIdRef.current, true); } catch {}
+            sessionIdRef.current = null;
+          }
         }
       }, 250);
     }
@@ -530,6 +558,10 @@ export default function ProductivityBinauralPlayer({ initialModeId, initialMode 
       stopAudio();
       if (deepFocusTimerRef.current) {
         clearTimeout(deepFocusTimerRef.current);
+      }
+      if (sessionIdRef.current) {
+        logSessionEnd(sessionIdRef.current, false);
+        sessionIdRef.current = null;
       }
     };
   }, []);
@@ -792,6 +824,11 @@ export default function ProductivityBinauralPlayer({ initialModeId, initialMode 
                         router.push('/player')
                       } else {
                         setSelectedMode(null);
+                      }
+                      // Log partial end if tracking
+                      if (sessionIdRef.current) {
+                        logSessionEnd(sessionIdRef.current, false);
+                        sessionIdRef.current = null;
                       }
                     }}
                     className={`h-12 w-12 sm:h-12 sm:w-12 md:h-12 md:w-12 rounded-full zen-ripple touch-target backdrop-blur-sm border hover:border-muted/40 hover:bg-muted/20 text-muted-foreground hover:text-foreground transition-all duration-300 hover:shadow-zen-md ${

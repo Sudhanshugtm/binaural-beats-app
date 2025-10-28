@@ -15,6 +15,7 @@
     "generate-icons": "node scripts/generate-pwa-icons.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.47.4",
     "@auth/mongodb-adapter": "^3.7.4",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "^1.2.2",

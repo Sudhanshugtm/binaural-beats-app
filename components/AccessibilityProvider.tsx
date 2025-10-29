@@ -82,19 +82,27 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
   }, [settings]);
 
   const detectSystemPreferences = () => {
+    const matchMedia = typeof window !== "undefined" && typeof window.matchMedia === "function"
+      ? window.matchMedia.bind(window)
+      : null;
+
+    if (!matchMedia) {
+      return;
+    }
+
     // Detect reduced motion preference
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setSettings(prev => ({ ...prev, reducedMotion: true }));
     }
 
     // Detect high contrast preference
-    if (window.matchMedia('(prefers-contrast: high)').matches) {
+    if (matchMedia('(prefers-contrast: high)').matches) {
       setSettings(prev => ({ ...prev, highContrast: true }));
     }
 
     // Listen for changes
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const contrastQuery = window.matchMedia('(prefers-contrast: high)');
+    const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+    const contrastQuery = matchMedia('(prefers-contrast: high)');
 
     motionQuery.addEventListener('change', (e) => {
       setSettings(prev => ({ ...prev, reducedMotion: e.matches }));

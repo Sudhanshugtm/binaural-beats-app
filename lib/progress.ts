@@ -1,6 +1,6 @@
 "use client";
 
-import { getSupabaseClient, getDeviceId } from "./supabaseClient";
+import { getSupabaseClient } from "./supabaseClient";
 
 export type StartSessionParams = {
   modeId?: string | null;
@@ -16,17 +16,21 @@ export type StartSessionParams = {
 export async function logSessionStart(params: StartSessionParams): Promise<string | null> {
   const supabase = getSupabaseClient();
   try {
-    const deviceId = getDeviceId();
-    const startedAt = (params.startedAt ?? new Date()).toISOString();
     const {
       data: { session },
     } = await supabase.auth.getSession();
 
+    const userId = session?.user?.id ?? null;
+    if (!userId) {
+      return null;
+    }
+
+    const startedAt = (params.startedAt ?? new Date()).toISOString();
     const { data, error } = await supabase
       .from("progress_sessions")
       .insert({
-        user_id: session?.user?.id ?? null,
-        device_id: session?.user?.id ? null : deviceId ?? null,
+        user_id: userId,
+        device_id: null,
         mode_id: params.modeId ?? null,
         protocol_id: params.protocolId ?? null,
         name: params.name ?? null,

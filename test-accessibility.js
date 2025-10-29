@@ -122,7 +122,7 @@ async function analyzeAccessibility() {
 
     // Check form elements
     console.log('\n7. FORM ACCESSIBILITY:');
-    await page.goto('http://localhost:3000/auth/login');
+    await page.goto('http://localhost:3000/login');
     await page.waitForLoadState('networkidle');
     
     const formInputs = await page.$$eval('input', inputs => 

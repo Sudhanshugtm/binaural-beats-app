@@ -17,18 +17,24 @@ export async function logSessionStart(params: StartSessionParams): Promise<strin
   const supabase = getSupabaseClient();
   try {
     const deviceId = getDeviceId();
+    const startedAt = (params.startedAt ?? new Date()).toISOString();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     const { data, error } = await supabase
       .from("progress_sessions")
       .insert({
+        user_id: session?.user?.id ?? null,
+        device_id: session?.user?.id ? null : deviceId ?? null,
         mode_id: params.modeId ?? null,
         protocol_id: params.protocolId ?? null,
         name: params.name ?? null,
         beat_frequency: params.beatFrequency ?? null,
         carrier_left: params.carrierLeft ?? null,
         carrier_right: params.carrierRight ?? null,
-        device_id: deviceId ?? null,
         duration_seconds: Math.max(0, Math.floor(params.durationSeconds)),
-        started_at: params.startedAt ?? new Date(),
+        started_at: startedAt,
         completed: false,
       })
       .select("id")
@@ -49,7 +55,7 @@ export async function logSessionEnd(id: string, completed: boolean, endedAt?: Da
     const { error } = await supabase
       .from("progress_sessions")
       .update({
-        ended_at: endedAt ?? new Date(),
+        ended_at: (endedAt ?? new Date()).toISOString(),
         completed,
       })
       .eq("id", id);

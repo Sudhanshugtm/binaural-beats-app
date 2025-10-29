@@ -1,10 +1,27 @@
 "use client";
 
-import { createClient } from "@supabase/supabase-js";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Database } from "@/types/supabase";
 
-// Reads public envs. Ensure these are set in .env.local
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+function initSupabaseClient(deviceId: string | null) {
+  if (deviceId) {
+    return createClientComponentClient<Database>({
+      options: {
+        global: {
+          headers: {
+            "x-device-id": deviceId,
+          },
+        },
+      },
+    });
+  }
+
+  return createClientComponentClient<Database>();
+}
+
+type SupabaseBrowserClient = ReturnType<typeof initSupabaseClient>;
+
+let browserClient: SupabaseBrowserClient | null = null;
 
 export function getDeviceId(): string | undefined {
   if (typeof window === "undefined") return undefined;
@@ -22,19 +39,12 @@ export function getDeviceId(): string | undefined {
   }
 }
 
-// Create a client with per-call header for device-based RLS policies
-export function getSupabaseClient() {
-  const deviceId = typeof window !== "undefined" ? (getDeviceId() || "") : "";
-  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    global: {
-      headers: {
-        "x-device-id": deviceId,
-      },
-    },
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-    },
-  });
+export function getSupabaseClient(): SupabaseBrowserClient {
+  if (browserClient) return browserClient;
+
+  const deviceId = typeof window !== "undefined" ? getDeviceId() ?? null : null;
+
+  browserClient = initSupabaseClient(deviceId);
+
+  return browserClient;
 }

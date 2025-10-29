@@ -1,8 +1,9 @@
-"use client"
+"use client";
 
-import { signOut } from "next-auth/react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,24 +11,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { Database } from "@/types/supabase";
 
 interface UserNavProps {
   user: {
-    name?: string | null
-    email?: string | null
-    image?: string | null
-  }
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
 }
 
 export function UserNav({ user }: UserNavProps) {
+  const router = useRouter();
+  const supabase = createClientComponentClient<Database>();
   const initials = user.name
     ? user.name
         .split(" ")
         .map((n) => n[0])
         .join("")
-    : user.email?.charAt(0)
+    : user.email?.charAt(0);
 
   return (
     <DropdownMenu>
@@ -71,11 +75,14 @@ export function UserNav({ user }: UserNavProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem 
           className="cursor-pointer text-red-600 focus:text-red-600"
-          onClick={() => signOut()}
+          onClick={async () => {
+            await supabase.auth.signOut();
+            router.refresh();
+          }}
         >
           Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

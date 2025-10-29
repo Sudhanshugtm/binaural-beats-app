@@ -29,6 +29,21 @@ Object.defineProperty(global, 'localStorage', {
   value: localStorageMock,
 });
 
+// Mock matchMedia used by components to detect reduced motion or color scheme
+const matchMediaMock = vi.fn().mockImplementation((query: string) => ({
+  matches: false,
+  media: query,
+  onchange: null,
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  addListener: vi.fn(), // deprecated but kept for compatibility
+  removeListener: vi.fn(),
+  dispatchEvent: vi.fn(),
+}));
+
+(window as any).matchMedia = matchMediaMock;
+(global as any).matchMedia = matchMediaMock;
+
 // Mock ResizeObserver for Radix UI components
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),

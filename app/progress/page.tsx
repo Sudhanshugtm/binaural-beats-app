@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { User } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import { getSupabaseClient, getDeviceId } from "@/lib/supabaseClient";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -30,15 +31,14 @@ type SessionRow = {
 };
 
 export default function ProgressDashboardPage() {
-  // Keep stable client + device id to avoid refetch flicker
-  const supabase = useMemo(() => getSupabaseClient(), []);
-  const deviceId = useMemo(() => getDeviceId(), []);
+  const supabase = getSupabaseClient();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [daily, setDaily] = useState<DailyTotal[]>([]);
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [view, setView] = useState<"daily" | "sessions">("daily");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [sessionUser, setSessionUser] = useState<User | null>(null);
 
   const isConfigured = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -55,31 +55,44 @@ export default function ProgressDashboardPage() {
       setLoading(true);
       setError(null);
       try {
-        // Fetch last 30 days daily totals
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const ownerKey = session?.user?.id ?? null;
+        setSessionUser(session?.user ?? null);
+
+        if (!ownerKey) {
+          if (!mounted) return;
+          setDaily([]);
+          setSessions([]);
+          setError("Please sign in with your invitation to view progress data.");
+          setLoading(false);
+          return;
+        }
+
         const { data: dailyData, error: dailyErr } = await supabase
           .from("progress_daily_totals")
           .select("owner_key, day, sessions, total_completed_seconds, total_logged_seconds")
+          .eq("owner_key", ownerKey)
           .order("day", { ascending: false })
           .limit(30);
 
         if (dailyErr) throw dailyErr;
-        // Filter client-side by owner (device or user) for clarity
-        const filteredDaily = ((dailyData || []) as DailyTotal[]).filter((d) => !deviceId || d.owner_key === deviceId);
 
-        // Fetch recent sessions (device/user filtering via RLS)
         const { data: sessionsData, error: sessErr } = await supabase
           .from("progress_sessions")
           .select(
             "id, name, mode_id, protocol_id, duration_seconds, started_at, ended_at, completed, beat_frequency, carrier_left, carrier_right"
           )
+          .eq("user_id", ownerKey)
           .order("started_at", { ascending: false })
           .limit(25);
 
         if (sessErr) throw sessErr;
 
         if (!mounted) return;
-        setDaily((filteredDaily || []) as DailyTotal[]);
-        setSessions((sessionsData || []) as SessionRow[]);
+        setDaily(((dailyData || []) as DailyTotal[]));
+        setSessions(((sessionsData || []) as SessionRow[]));
       } catch (e: any) {
         if (!mounted) return;
         setError(e?.message || "Failed to load progress");
@@ -91,7 +104,7 @@ export default function ProgressDashboardPage() {
     return () => {
       mounted = false;
     };
-  }, [supabase, deviceId, isConfigured]);
+  }, [supabase, isConfigured]);
 
   const thisWeek = useMemo(() => {
     const byDay = daily.slice(0, 7).reverse();
@@ -997,12 +1010,12 @@ export default function ProgressDashboardPage() {
 
             {showAdvanced && (
               <div className="rounded-3xl border border-slate-200 bg-white/80 px-5 py-4 text-sm text-slate-600 shadow-soft">
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Device fingerprint</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Account</p>
                 <p className="mt-2 break-all font-mono text-xs text-slate-800">
-                  {deviceId || "unknown"}
+                  {sessionUser?.email || sessionUser?.id || "Signed out"}
                 </p>
                 <p className="mt-3 text-xs text-slate-500">
-                  Used only for per-device filtering via Supabase Row Level Security. Never shared.
+                  Supabase authentication protects your personal progress data.
                 </p>
               </div>
             )}

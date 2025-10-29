@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import { PresetCard } from "@/components/PresetCard";
@@ -15,13 +15,28 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Database } from "@/types/supabase";
 
 export default function Home() {
   const router = useRouter();
   const [showCustomDialog, setShowCustomDialog] = useState(false);
   const [customDuration, setCustomDuration] = useState(20);
   const [customFrequency, setCustomFrequency] = useState(10);
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const supabase = useMemo(() => createClientComponentClient<Database>(), []);
+
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!active) return;
+      setIsSignedIn(Boolean(session));
+    });
+    return () => {
+      active = false;
+    };
+  }, [supabase]);
 
   const handleStartProtocol = (protocol: typeof RESEARCH_PROTOCOLS[0]) => {
     // Store protocol data in session storage for player
@@ -104,6 +119,31 @@ export default function Home() {
             className="grid gap-5 sm:gap-6 lg:grid-cols-2"
             aria-label="Research protocol presets"
           >
+            {isSignedIn && (
+              <motion.div variants={staggerItem}>
+                <button
+                  onClick={() => router.push("/programs/deep-work-sprint")}
+                  className="group flex h-full flex-col justify-between rounded-3xl border border-slate-200 bg-slate-900 p-7 text-left shadow-soft transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50"
+                >
+                  <div className="space-y-3 text-slate-100">
+                    <p className="text-[0.675rem] uppercase tracking-[0.2em] text-primary/60">
+                      Programs
+                    </p>
+                    <h3 className="text-lg font-semibold tracking-tight">Deep Work Sprint</h3>
+                    <p className="text-sm leading-relaxed text-slate-200/80">
+                      A guided 7-day cadence alternating sprints and resets to sharpen your shipping
+                      energy.
+                    </p>
+                  </div>
+                  <div className="mt-6 flex items-center justify-between text-sm text-slate-200/70">
+                    <span>7-day focus journey</span>
+                    <span className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-100">
+                      Start
+                    </span>
+                  </div>
+                </button>
+              </motion.div>
+            )}
             {RESEARCH_PROTOCOLS.map((protocol) => (
               <motion.div key={protocol.id} variants={staggerItem}>
                 <PresetCard

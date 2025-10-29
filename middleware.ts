@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "@/types/supabase";
 
-const PROTECTED_PREFIXES = ["/progress"];
+const PROTECTED_PREFIXES = ["/progress", "/programs"];
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
@@ -34,5 +34,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/progress/:path*", "/login"],
+  matcher: ["/progress/:path*", "/programs/:path*", "/login"],
 };

@@ -2,12 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { getDeepWorkSprint, loadProgramState } from "@/lib/programs";
 
 type DailyTotal = {
   owner_key: string;
@@ -33,11 +35,22 @@ type SessionRow = {
 
 export default function ProgressDashboardPage() {
   const supabase = getSupabaseClient();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [daily, setDaily] = useState<DailyTotal[]>([]);
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [sessionUser, setSessionUser] = useState<User | null>(null);
+  const [programDayIndex, setProgramDayIndex] = useState<number | null>(null);
+  const deepWorkProgram = useMemo(() => getDeepWorkSprint(), []);
+
+  useEffect(() => {
+    const state = loadProgramState();
+    if (state) {
+      const maxIndex = deepWorkProgram.totalDays - 1;
+      setProgramDayIndex(Math.max(0, Math.min(state.dayIndex, maxIndex)));
+    }
+  }, [deepWorkProgram]);
 
   const isConfigured = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -241,6 +254,28 @@ export default function ProgressDashboardPage() {
           </section>
 
           <section className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+            {programDayIndex !== null && (
+              <div className="lg:col-span-2 rounded-3xl border border-primary/30 bg-primary/5 px-5 py-4 text-sm text-primary-900 shadow-soft backdrop-blur-sm">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.22em] text-primary/70">
+                      Deep Work Sprint
+                    </p>
+                    <p className="text-sm text-primary-900">
+                      Day {programDayIndex + 1} of {deepWorkProgram.totalDays} ·{" "}
+                      {deepWorkProgram.days[programDayIndex].durationMinutes} min planned today.
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => router.push("/programs/deep-work-sprint")}
+                  >
+                    View plan
+                  </Button>
+                </div>
+              </div>
+            )}
             <Card className="border-none bg-white/90 shadow-soft backdrop-blur">
               <CardHeader className="space-y-1">
                 <p className="text-[0.675rem] uppercase tracking-[0.22em] text-slate-500">

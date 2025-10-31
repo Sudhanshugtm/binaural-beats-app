@@ -59,5 +59,18 @@ export async function POST(request: Request) {
     return NextResponse.json(body, { status: result.status });
   }
 
-  return NextResponse.json({ success: true }, { status: 200 });
+  const session = (result.data as any)?.session;
+
+  return NextResponse.json(
+    {
+      success: true,
+      session: session
+        ? {
+            access_token: session.access_token,
+            refresh_token: session.refresh_token,
+          }
+        : null,
+    },
+    { status: 200 }
+  );
 }

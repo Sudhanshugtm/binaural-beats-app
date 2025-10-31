@@ -9,7 +9,7 @@ import { Icons } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { useAccessibility } from "@/components/AccessibilityProvider";
 import { useLoginThrottle } from "./use-login-throttle";
-import { getDeviceId } from "@/lib/supabaseClient";
+import { getDeviceId, getSupabaseClient } from "@/lib/supabaseClient";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
@@ -111,6 +111,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const { announceToScreenReader } = useAccessibility();
 
+  const supabase = useMemo(() => getSupabaseClient(), []);
   const throttle = useLoginThrottle();
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -168,7 +169,15 @@ export function LoginForm() {
         body: JSON.stringify(body),
       });
 
-      const payload = await response.json().catch(() => ({ success: false }));
+      const payload = (await response.json().catch(() => ({ success: false }))) as {
+        success: boolean;
+        error?: string;
+        retryAfter?: number;
+        session?: {
+          access_token: string;
+          refresh_token: string;
+        } | null;
+      };
 
       if (!response.ok) {
         throttle.noteFailure();
@@ -185,6 +194,23 @@ export function LoginForm() {
           setCaptchaToken(null);
         }
         return;
+      }
+
+      if (payload.session?.access_token && payload.session?.refresh_token) {
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: payload.session.access_token,
+          refresh_token: payload.session.refresh_token,
+        });
+
+        if (sessionError) {
+          throttle.noteFailure();
+          const message = "Could not complete sign-in. Please try again.";
+          setFormErrors({ form: message });
+          toast.error(message);
+          announceToScreenReader(message, "assertive");
+          setIsSubmitting(false);
+          return;
+        }
       }
 
       throttle.noteSuccess();

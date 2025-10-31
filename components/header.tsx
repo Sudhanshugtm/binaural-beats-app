@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAccessibility } from "@/components/AccessibilityProvider";
 import Image from "next/image";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import type { Database } from "@/types/supabase";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type NavItem =
   | { href: string; label: string }
@@ -27,7 +26,7 @@ export function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const { announceToScreenReader } = useAccessibility();
-  const supabase = createClientComponentClient<Database>();
+  const supabase = useMemo(() => getSupabaseClient(), []);
 
   const isHomePage = pathname === '/';
 

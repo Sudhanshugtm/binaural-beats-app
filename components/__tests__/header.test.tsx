@@ -10,11 +10,12 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 
-vi.mock("@supabase/auth-helpers-nextjs", () => ({
-  createClientComponentClient: () => ({
+vi.mock("@/lib/supabaseClient", () => ({
+  getSupabaseClient: () => ({
     auth: {
       getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
       onAuthStateChange: () => ({ data: { subscription: { unsubscribe: vi.fn() } } }),
+      signOut: vi.fn(),
     },
   }),
 }));

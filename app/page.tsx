@@ -139,32 +139,30 @@ export default function Home() {
             className="grid gap-5 sm:gap-6 lg:grid-cols-2"
             aria-label="Research protocol presets"
           >
-            {isSignedIn && (
-              <motion.div variants={staggerItem} className="lg:col-span-2">
-                <div className="group flex h-full flex-col rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-white to-accent/5 p-7 text-left shadow-soft transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg hover:border-primary/30">
-                  <div className="space-y-3">
-                    <p className="text-[0.75rem] uppercase tracking-[0.2em] text-primary font-semibold">
-                      Premium Program
-                    </p>
-                    <h2 className="text-lg font-semibold tracking-tight text-slate-900">Deep Work Sprint</h2>
-                    <p className="text-sm leading-relaxed text-slate-700">
-                      A guided 7-day cadence alternating sprints and resets to sharpen your shipping energy.
-                    </p>
-                  </div>
-                  <div className="mt-6 flex items-center justify-between">
-                    <span className="text-sm text-slate-600">7-day journey</span>
-                    <Button
-                      onClick={() => router.push("/programs/deep-work-sprint")}
-                      variant="default"
-                      size="sm"
-                    >
-                      <span className="text-sm font-medium">Start</span>
-                      <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
-                    </Button>
-                  </div>
+            <motion.div variants={staggerItem} className="lg:col-span-2">
+              <div className="group flex h-full flex-col rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-white to-accent/5 p-7 text-left shadow-soft transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg hover:border-primary/30">
+                <div className="space-y-3">
+                  <p className="text-[0.75rem] uppercase tracking-[0.2em] text-primary font-semibold">
+                    Premium Program
+                  </p>
+                  <h2 className="text-lg font-semibold tracking-tight text-slate-900">Deep Work Sprint</h2>
+                  <p className="text-sm leading-relaxed text-slate-700">
+                    A guided 7-day cadence alternating sprints and resets to sharpen your shipping energy.
+                  </p>
                 </div>
-              </motion.div>
-            )}
+                <div className="mt-6 flex items-center justify-between">
+                  <span className="text-sm text-slate-600">7-day journey</span>
+                  <Button
+                    onClick={() => router.push(isSignedIn ? "/programs/deep-work-sprint" : "/login?redirect=/programs/deep-work-sprint")}
+                    variant="default"
+                    size="sm"
+                  >
+                    <span className="text-sm font-medium">{isSignedIn ? "Start" : "Sign in to start"}</span>
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
             {RESEARCH_PROTOCOLS.map((protocol) => (
               <motion.div key={protocol.id} variants={staggerItem}>
                 <PresetCard

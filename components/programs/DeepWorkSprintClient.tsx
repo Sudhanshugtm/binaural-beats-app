@@ -2,7 +2,17 @@
 
 import { useCallback, useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ArrowLeft } from "lucide-react";
 import type { ProgramDefinition } from "@/types/programs";
 import {
   getSessionPayload,
@@ -19,6 +29,7 @@ type DeepWorkSprintClientProps = {
 export function DeepWorkSprintClient({ program }: DeepWorkSprintClientProps) {
   const router = useRouter();
   const [state, setState] = useState(loadProgramState());
+  const [showResetDialog, setShowResetDialog] = useState(false);
 
   useEffect(() => {
     setState(loadProgramState());
@@ -69,10 +80,23 @@ export function DeepWorkSprintClient({ program }: DeepWorkSprintClientProps) {
     resetProgram();
     const restarted = startProgram();
     setState(restarted);
+    setShowResetDialog(false);
+  }, []);
+
+  const confirmReset = useCallback(() => {
+    setShowResetDialog(true);
   }, []);
 
   return (
     <div className="mx-auto max-w-4xl space-y-12 px-6 py-16">
+      <Link
+        href="/programs"
+        className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Programs
+      </Link>
+
       <header className="space-y-6">
         <div className="space-y-3">
           <p className="text-sm uppercase tracking-[0.2em] text-slate-700">Program</p>
@@ -84,8 +108,8 @@ export function DeepWorkSprintClient({ program }: DeepWorkSprintClientProps) {
             {state ? `Start Day ${dayIndex + 1}` : program.heroCta}
           </Button>
           {state && (
-            <Button variant="ghost" size="sm" onClick={handleReset} className="text-slate-600 hover:text-slate-900">
-              Restart
+            <Button variant="ghost" size="sm" onClick={confirmReset} className="text-slate-600 hover:text-slate-900">
+              Reset Progress
             </Button>
           )}
           <Button variant="ghost" size="sm" onClick={() => router.push("/progress")} className="text-slate-600 hover:text-slate-900">
@@ -174,6 +198,25 @@ export function DeepWorkSprintClient({ program }: DeepWorkSprintClientProps) {
           </ol>
         </div>
       </section>
+
+      <Dialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reset Progress?</DialogTitle>
+            <DialogDescription>
+              This will reset your progress back to Day 1. All your current progress will be lost. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setShowResetDialog(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleReset}>
+              Reset Progress
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

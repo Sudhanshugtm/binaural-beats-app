@@ -9,6 +9,7 @@ export default function Footer() {
         <div className="order-2 sm:order-1">© {new Date().getFullYear()} Beatful</div>
         <nav className="order-1 sm:order-2 flex items-center gap-4">
           <Link href="/features" className="hover:text-foreground">Features</Link>
+          <Link href="/programs" className="hover:text-foreground">Programs</Link>
           <Link href="/about" className="hover:text-foreground">About</Link>
           <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
           <Link href="/terms" className="hover:text-foreground">Terms</Link>

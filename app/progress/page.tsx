@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import { CheckCircle2, Clock } from "lucide-react";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getDeepWorkSprint, loadProgramState } from "@/lib/programs";
+import { formatDuration, formatDate, formatDateTime } from "@/lib/utils";
 
 type DailyTotal = {
   owner_key: string;
@@ -79,29 +81,32 @@ export default function ProgressDashboardPage() {
           if (!mounted) return;
           setDaily([]);
           setSessions([]);
-          setError("Please sign in with your invitation to view progress data.");
+          setError("Please sign in to view your progress data.");
           setLoading(false);
           return;
         }
 
-        const { data: dailyData, error: dailyErr } = await supabase
-          .from("progress_daily_totals")
-          .select("owner_key, day, sessions, total_completed_seconds, total_logged_seconds")
-          .eq("owner_key", ownerKey)
-          .order("day", { ascending: false })
-          .limit(30);
+        const [
+          { data: dailyData, error: dailyErr },
+          { data: sessionsData, error: sessionsErr }
+        ] = await Promise.all([
+          supabase
+            .from("progress_daily_totals")
+            .select("owner_key, day, sessions, total_completed_seconds, total_logged_seconds")
+            .eq("owner_key", ownerKey)
+            .order("day", { ascending: false })
+            .limit(30),
+          supabase
+            .from("progress_sessions")
+            .select(
+              "id, name, mode_id, protocol_id, duration_seconds, started_at, ended_at, completed, beat_frequency, carrier_left, carrier_right"
+            )
+            .eq("user_id", ownerKey)
+            .order("started_at", { ascending: false })
+            .limit(50)
+        ]);
 
         if (dailyErr) throw dailyErr;
-
-        const { data: sessionsData, error: sessionsErr } = await supabase
-          .from("progress_sessions")
-          .select(
-            "id, name, mode_id, protocol_id, duration_seconds, started_at, ended_at, completed, beat_frequency, carrier_left, carrier_right"
-          )
-          .eq("user_id", ownerKey)
-          .order("started_at", { ascending: false })
-          .limit(50);
-
         if (sessionsErr) throw sessionsErr;
 
         if (!mounted) return;
@@ -182,27 +187,6 @@ export default function ProgressDashboardPage() {
     }));
   }, [thisWeek.byDay]);
 
-  const formatDuration = (seconds: number) => {
-    if (!seconds) return "0 min";
-    const minutes = Math.round(seconds / 60);
-    return `${minutes} min`;
-  };
-
-  const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString(undefined, {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-
-  const formatDateTime = (iso: string) =>
-    new Date(iso).toLocaleString(undefined, {
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
-
   return (
     <div className="min-h-[100svh] bg-surface text-slate-900">
       <main
@@ -219,7 +203,7 @@ export default function ProgressDashboardPage() {
               className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
             >
               <div className="space-y-5">
-                <p className="text-[0.675rem] uppercase tracking-[0.25em] text-slate-500">
+                <p className="text-xs uppercase tracking-[0.1em] text-slate-500">
                   Progress snapshot
                 </p>
                 <h1 className="text-balance text-[clamp(2.1rem,2vw+2rem,2.8rem)] font-semibold leading-tight">
@@ -242,7 +226,7 @@ export default function ProgressDashboardPage() {
                     key={stat.label}
                     className="rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-soft backdrop-blur-sm"
                   >
-                    <p className="text-[0.65rem] uppercase tracking-[0.22em] text-slate-500">
+                    <p className="text-xs uppercase tracking-[0.1em] text-slate-500">
                       {stat.label}
                     </p>
                     <p className="mt-3 text-2xl font-semibold text-slate-900">{stat.value}</p>
@@ -258,7 +242,7 @@ export default function ProgressDashboardPage() {
               <div className="lg:col-span-2 rounded-3xl border border-primary/30 bg-primary/5 px-5 py-4 text-sm text-primary-900 shadow-soft backdrop-blur-sm">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-primary/70">
+                    <p className="text-xs uppercase tracking-[0.1em] text-primary/70">
                       Deep Work Sprint
                     </p>
                     <p className="text-sm text-primary-900">
@@ -278,7 +262,7 @@ export default function ProgressDashboardPage() {
             )}
             <Card className="border-none bg-white/90 shadow-soft backdrop-blur">
               <CardHeader className="space-y-1">
-                <p className="text-[0.675rem] uppercase tracking-[0.22em] text-slate-500">
+                <p className="text-xs uppercase tracking-[0.1em] text-slate-500">
                   Minutes invested
                 </p>
                 <CardTitle className="text-lg font-semibold text-slate-900">
@@ -292,8 +276,8 @@ export default function ProgressDashboardPage() {
                     <AreaChart data={weeklyTrend}>
                       <defs>
                         <linearGradient id="weeklyMinutesGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#2563eb" stopOpacity={0.35} />
-                          <stop offset="100%" stopColor="#2563eb" stopOpacity={0.05} />
+                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.35} />
+                          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.05} />
                         </linearGradient>
                       </defs>
                       <XAxis
@@ -316,16 +300,19 @@ export default function ProgressDashboardPage() {
                       <Area
                         type="monotone"
                         dataKey="minutes"
-                        stroke="#2563eb"
-                        strokeWidth={2.5}
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={3}
                         fill="url(#weeklyMinutesGradient)"
                         name="Minutes"
                       />
                     </AreaChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="flex h-full flex-col items-center justify-center text-sm text-slate-500">
-                    Log a few sessions to reveal your weekly trend.
+                  <div className="flex h-full flex-col items-center justify-center gap-3 text-sm text-slate-500">
+                    <p>Log a few sessions to reveal your weekly trend.</p>
+                    <Button asChild variant="outline" size="sm">
+                      <Link href="/player">Start a session</Link>
+                    </Button>
                   </div>
                 )}
               </CardContent>
@@ -333,7 +320,7 @@ export default function ProgressDashboardPage() {
 
             <Card className="border-none bg-white/90 shadow-soft backdrop-blur">
               <CardHeader className="space-y-1">
-                <p className="text-[0.675rem] uppercase tracking-[0.22em] text-slate-500">
+                <p className="text-xs uppercase tracking-[0.1em] text-slate-500">
                   Latest log
                 </p>
                 <CardTitle className="text-lg font-semibold text-slate-900">
@@ -344,14 +331,14 @@ export default function ProgressDashboardPage() {
                 {latestSession ? (
                   <>
                     <div>
-                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Started</p>
+                      <p className="text-xs uppercase tracking-[0.1em] text-slate-500">Started</p>
                       <p className="mt-1 font-medium text-slate-900">
                         {formatDateTime(latestSession.started_at)}
                       </p>
                     </div>
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div>
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                        <p className="text-xs uppercase tracking-[0.1em] text-slate-500">
                           Duration
                         </p>
                         <p className="mt-1 font-medium text-slate-900">
@@ -359,7 +346,7 @@ export default function ProgressDashboardPage() {
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                        <p className="text-xs uppercase tracking-[0.1em] text-slate-500">
                           Status
                         </p>
                         <p className="mt-1 font-medium text-slate-900">
@@ -369,7 +356,7 @@ export default function ProgressDashboardPage() {
                     </div>
                     {dailySummary.length > 0 && (
                       <div className="space-y-2">
-                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                        <p className="text-xs uppercase tracking-[0.1em] text-slate-500">
                           This week
                         </p>
                         <ul className="space-y-1 text-[0.9rem]">
@@ -389,9 +376,11 @@ export default function ProgressDashboardPage() {
                     )}
                   </>
                 ) : (
-                  <div className="rounded-2xl border border-slate-200 bg-white/70 px-4 py-5 text-sm text-slate-500">
-                    No Supabase sessions yet. Start a session from the player and it will appear
-                    here instantly.
+                  <div className="rounded-2xl border border-slate-200 bg-white/70 px-4 py-5 text-center text-sm text-slate-500">
+                    <p className="mb-3">No sessions yet. Start your first session to begin tracking your progress.</p>
+                    <Button asChild variant="default" size="sm">
+                      <Link href="/player">Open player</Link>
+                    </Button>
                   </div>
                 )}
               </CardContent>
@@ -403,7 +392,7 @@ export default function ProgressDashboardPage() {
               <CardHeader className="flex flex-col gap-4">
                 <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                   <div>
-                    <p className="text-[0.675rem] uppercase tracking-[0.22em] text-slate-500">
+                    <p className="text-xs uppercase tracking-[0.1em] text-slate-500">
                       Detailed log
                     </p>
                     <CardTitle className="text-lg font-semibold text-slate-900">
@@ -412,8 +401,10 @@ export default function ProgressDashboardPage() {
                   </div>
                 </div>
                 {loading && (
-                  <div className="rounded-2xl border border-slate-100 bg-slate-50/80 px-4 py-3 text-sm text-slate-500">
-                    Loading the latest telemetry…
+                  <div className="space-y-3">
+                    <div className="h-4 w-32 animate-pulse rounded-md bg-slate-200"></div>
+                    <div className="h-4 w-48 animate-pulse rounded-md bg-slate-200"></div>
+                    <div className="h-4 w-40 animate-pulse rounded-md bg-slate-200"></div>
                   </div>
                 )}
                 {error && !loading && (
@@ -421,10 +412,13 @@ export default function ProgressDashboardPage() {
                     {error}
                     {error.includes("not configured") && (
                       <div className="mt-2 text-xs text-red-500/80">
-                        Add <code>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
-                        <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in your environment to enable
-                        telemetry.
+                        Supabase is not configured. Please contact your administrator.
                       </div>
+                    )}
+                    {error.includes("sign in") && (
+                      <Button asChild variant="outline" size="sm" className="mt-3">
+                        <Link href="/login">Sign in</Link>
+                      </Button>
                     )}
                   </div>
                 )}
@@ -433,61 +427,132 @@ export default function ProgressDashboardPage() {
                 {!loading && !error && (
                   <div className="overflow-hidden rounded-2xl border border-slate-200">
                     {sessions.length === 0 ? (
-                      <div className="px-4 py-5 text-sm text-slate-500">
-                        {sessionUser
-                          ? "No sessions logged yet. Start your next session to populate this table."
-                          : "Sign in to view your private session history."}
+                      <div className="px-4 py-8 text-center text-sm text-slate-500">
+                        {sessionUser ? (
+                          <>
+                            <p className="mb-3">No sessions logged yet. Start your next session to populate this table.</p>
+                            <Button asChild variant="outline" size="sm">
+                              <Link href="/player">Start session</Link>
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <p className="mb-3">Sign in to view your private session history.</p>
+                            <Button asChild variant="outline" size="sm">
+                              <Link href="/login">Sign in</Link>
+                            </Button>
+                          </>
+                        )}
                       </div>
                     ) : (
-                      <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-slate-200 text-sm">
-                          <thead className="bg-slate-50/60">
-                            <tr className="text-left text-slate-600">
-                              <th className="px-4 py-3 font-medium">Date</th>
-                              <th className="px-4 py-3 font-medium">Name / Mode</th>
-                              <th className="px-4 py-3 font-medium">Duration</th>
-                              <th className="px-4 py-3 font-medium">Completed</th>
-                              <th className="px-4 py-3 font-medium">Frequency</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100 bg-white">
-                            {sessions.map((session) => (
-                              <tr key={session.id} className="text-slate-700">
-                                <td className="px-4 py-3 font-medium text-slate-800">
-                                  {formatDate(session.started_at)}
-                                </td>
-                                <td className="px-4 py-3">
-                                  {session.name ||
-                                    session.mode_id ||
-                                    session.protocol_id ||
-                                    "—"}
-                                </td>
-                                <td className="px-4 py-3">
-                                  {formatDuration(session.duration_seconds)}
-                                </td>
-                                <td className="px-4 py-3">
-                                  <span
-                                    className={`inline-flex min-w-[70px] justify-center rounded-full px-2 py-1 text-xs font-semibold ${
-                                      session.completed
-                                        ? "bg-emerald-100 text-emerald-700"
-                                        : "bg-slate-100 text-slate-600"
-                                    }`}
-                                  >
-                                    {session.completed ? "Complete" : "Open"}
-                                  </span>
-                                </td>
-                                <td className="px-4 py-3">
+                      <>
+                        {/* Mobile card layout */}
+                        <div className="space-y-3 p-4 md:hidden">
+                          {sessions.map((session) => (
+                            <div key={session.id} className="rounded-lg border border-slate-200 bg-white p-4 space-y-3">
+                              <div className="flex items-start justify-between">
+                                <div>
+                                  <p className="font-medium text-slate-900">
+                                    {session.name || session.mode_id || session.protocol_id || "Unnamed session"}
+                                  </p>
+                                  <p className="text-xs text-slate-500 mt-1">{formatDate(session.started_at)}</p>
+                                </div>
+                                <span
+                                  className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
+                                    session.completed
+                                      ? "bg-emerald-100 text-emerald-700"
+                                      : "bg-slate-100 text-slate-600"
+                                  }`}
+                                >
+                                  {session.completed ? (
+                                    <>
+                                      <CheckCircle2 className="h-3 w-3" />
+                                      Complete
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Clock className="h-3 w-3" />
+                                      Open
+                                    </>
+                                  )}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="text-slate-600">Duration: <span className="font-medium text-slate-900">{formatDuration(session.duration_seconds)}</span></span>
+                                <span className="text-slate-600">
                                   {session.beat_frequency != null
                                     ? `${session.beat_frequency} Hz`
                                     : session.carrier_left != null && session.carrier_right != null
                                     ? `${session.carrier_left}/${session.carrier_right} Hz`
                                     : "—"}
-                                </td>
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Desktop table layout */}
+                        <div className="hidden md:block overflow-x-auto">
+                          <table className="min-w-full divide-y divide-slate-200 text-sm">
+                            <caption className="sr-only">Session history showing date, name, duration, completion status, and frequency for each session</caption>
+                            <thead className="bg-slate-50/60">
+                              <tr className="text-left text-slate-600">
+                                <th scope="col" className="px-4 py-3 font-medium">Date</th>
+                                <th scope="col" className="px-4 py-3 font-medium">Name / Mode</th>
+                                <th scope="col" className="px-4 py-3 font-medium">Duration</th>
+                                <th scope="col" className="px-4 py-3 font-medium">Completed</th>
+                                <th scope="col" className="px-4 py-3 font-medium">Frequency</th>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 bg-white">
+                              {sessions.map((session) => (
+                                <tr key={session.id} className="text-slate-700">
+                                  <td className="px-4 py-3 font-medium text-slate-800">
+                                    {formatDate(session.started_at)}
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    {session.name ||
+                                      session.mode_id ||
+                                      session.protocol_id ||
+                                      "—"}
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    {formatDuration(session.duration_seconds)}
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    <span
+                                      className={`inline-flex min-w-[70px] items-center justify-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
+                                        session.completed
+                                          ? "bg-emerald-100 text-emerald-700"
+                                          : "bg-slate-100 text-slate-600"
+                                      }`}
+                                    >
+                                      {session.completed ? (
+                                        <>
+                                          <CheckCircle2 className="h-3 w-3" />
+                                          Complete
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Clock className="h-3 w-3" />
+                                          Open
+                                        </>
+                                      )}
+                                    </span>
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    {session.beat_frequency != null
+                                      ? `${session.beat_frequency} Hz`
+                                      : session.carrier_left != null && session.carrier_right != null
+                                      ? `${session.carrier_left}/${session.carrier_right} Hz`
+                                      : "—"}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </>
                     )}
                   </div>
                 )}

@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { logSessionStart, logSessionEnd } from "@/lib/progress";
+import { toast } from "sonner";
 
 interface SimpleBinauralPlayerProps {
   protocol: {
@@ -148,8 +149,13 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
             durationSeconds: protocol.duration * 60,
             startedAt: new Date(),
           });
+          if (!id) {
+            toast.info("Sign in to track this session in your progress dashboard.");
+          }
           sessionIdRef.current = id;
-        } catch {}
+        } catch (error) {
+          console.warn("Unable to log session start", error);
+        }
       }
 
       timerRef.current = setInterval(() => {

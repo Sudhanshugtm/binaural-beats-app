@@ -21,6 +21,7 @@ import AmbientFloatingElements from "./AmbientFloatingElements";
 import { WorkMode } from "@/types/player";
 import { WORK_MODES } from "@/lib/workModes";
 import { logSessionStart, logSessionEnd } from "@/lib/progress";
+import { toast } from "sonner";
 export default function ProductivityBinauralPlayer({ initialModeId, initialMode }: { initialModeId?: string; initialMode?: WorkMode } = {}) {
   const router = useRouter()
   const [isPlaying, setIsPlaying] = useState(false);
@@ -354,8 +355,13 @@ export default function ProductivityBinauralPlayer({ initialModeId, initialMode 
             durationSeconds: (sessionTotalSeconds ?? (selectedMode.duration * 60)),
             startedAt: new Date(),
           });
+          if (!id) {
+            toast.info("Sign in to track this session in your progress dashboard.");
+          }
           sessionIdRef.current = id;
-        } catch {}
+        } catch (error) {
+          console.warn("Unable to log session start", error);
+        }
       }
       
       // Set up deep focus mode timer (30 seconds for deep work modes)

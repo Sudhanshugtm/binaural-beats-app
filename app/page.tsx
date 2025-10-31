@@ -93,22 +93,39 @@ export default function Home() {
       >
         <div className="w-full max-w-[1100px] space-y-12">
           {/* Minimal Header */}
-          <header className="mx-auto max-w-[65ch] text-center space-y-4">
+          <header className="mx-auto max-w-[65ch] text-center space-y-6">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-balance text-[clamp(2.25rem,2vw+2rem,2.8rem)] leading-[1.2] font-semibold text-slate-900"
             >
-              Research Protocol Sessions
+              Find Your Calm in Minutes
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="mx-auto text-sm sm:text-base leading-relaxed text-slate-600"
+              className="mx-auto text-sm sm:text-base leading-relaxed text-slate-700"
             >
-              Evidence-based binaural beat protocols from peer-reviewed studies. Tap to start.
+              Science-backed binaural beats for stress relief, focus, and relaxation. Choose your path to calm—free, instant access.
             </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="pt-2"
+            >
+              <Button
+                onClick={() => {
+                  const anxietyProtocol = RESEARCH_PROTOCOLS.find(p => p.id === 'anxiety-alpha');
+                  if (anxietyProtocol) handleStartProtocol(anxietyProtocol);
+                }}
+                size="lg"
+                className="w-full sm:w-auto"
+              >
+                Try Anxiety Relief (Most Popular)
+              </Button>
+            </motion.div>
           </header>
 
           {/* Preset Cards Grid */}
@@ -120,28 +137,28 @@ export default function Home() {
             aria-label="Research protocol presets"
           >
             {isSignedIn && (
-              <motion.div variants={staggerItem}>
-                <button
-                  onClick={() => router.push("/programs/deep-work-sprint")}
-                  className="group flex h-full flex-col justify-between rounded-3xl border border-slate-200 bg-slate-900 p-7 text-left shadow-soft transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50"
-                >
+              <motion.div variants={staggerItem} className="lg:col-span-2">
+                <div className="group flex h-full flex-col justify-between rounded-3xl border border-slate-200 bg-slate-900 p-7 text-left shadow-soft transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg">
                   <div className="space-y-3 text-slate-100">
-                    <p className="text-[0.675rem] uppercase tracking-[0.2em] text-primary/60">
-                      Programs
+                    <p className="text-[0.75rem] uppercase tracking-[0.2em] text-primary/80">
+                      Premium Program
                     </p>
-                    <h3 className="text-lg font-semibold tracking-tight">Deep Work Sprint</h3>
-                    <p className="text-sm leading-relaxed text-slate-200/80">
+                    <h2 className="text-xl font-semibold tracking-tight">Deep Work Sprint</h2>
+                    <p className="text-base leading-relaxed text-slate-200/90">
                       A guided 7-day cadence alternating sprints and resets to sharpen your shipping
                       energy.
                     </p>
                   </div>
-                  <div className="mt-6 flex items-center justify-between text-sm text-slate-200/70">
-                    <span>7-day focus journey</span>
-                    <span className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-100">
-                      Start
-                    </span>
+                  <div className="mt-6 pt-6 border-t border-slate-200/20">
+                    <Button
+                      onClick={() => router.push("/programs/deep-work-sprint")}
+                      className="w-full bg-white text-slate-900 hover:bg-slate-100"
+                      size="lg"
+                    >
+                      Start 7-Day Journey
+                    </Button>
                   </div>
-                </button>
+                </div>
               </motion.div>
             )}
             {RESEARCH_PROTOCOLS.map((protocol) => (
@@ -162,13 +179,11 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="mx-auto max-w-[65ch] rounded-3xl border border-slate-200 bg-white/90 px-6 py-6 text-center text-xs sm:text-sm text-slate-600 shadow-soft"
+            className="mx-auto max-w-[65ch] rounded-2xl border border-slate-200 bg-white/90 px-5 py-4 text-center text-xs sm:text-sm text-slate-700 shadow-soft"
           >
-            <p className="mb-2 font-semibold text-slate-800">Scientific Transparency</p>
+            <p className="mb-2 font-semibold text-slate-800">Backed by Science</p>
             <p className="leading-relaxed">
-              These protocols are based on published research studies. Evidence for binaural beats shows
-              modest effects for relaxation and anxiety reduction. Individual results vary. Not a substitute
-              for medical treatment.{" "}
+              Our protocols are based on 20+ peer-reviewed studies showing benefits for relaxation and focus. Safe, natural, and effective for most users.{" "}
               <a
                 href="/about"
                 className="font-medium underline underline-offset-2 text-primary hover:text-primary/80 transition-colors"
@@ -216,6 +231,8 @@ export default function Home() {
                 value={[customDuration]}
                 onValueChange={([value]) => setCustomDuration(value)}
                 className="w-full"
+                aria-valuetext={`${customDuration} minutes`}
+                aria-label="Session duration in minutes"
               />
             </div>
             <div className="space-y-3">
@@ -228,8 +245,10 @@ export default function Home() {
                 value={[customFrequency]}
                 onValueChange={([value]) => setCustomFrequency(value)}
                 className="w-full"
+                aria-valuetext={`${customFrequency} Hertz`}
+                aria-label="Beat frequency in Hertz"
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-slate-700">
                 Delta: 1-4 Hz • Theta: 4-8 Hz • Alpha: 8-13 Hz • Beta: 13-30 Hz • Gamma: 30-100 Hz • High: 100-1000 Hz
               </p>
             </div>

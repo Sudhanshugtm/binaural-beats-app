@@ -8,8 +8,12 @@ import { Button } from "@/components/ui/button";
 import { useAccessibility } from "@/components/AccessibilityProvider";
 import Image from "next/image";
 
-// Navigation items removed as requested
-const navItems: { href: string; label: string }[] = [];
+// Main navigation items
+const navItems: { href: string; label: string }[] = [
+  { href: "/features", label: "Features" },
+  { href: "/about", label: "About" },
+  { href: "/auth/signin", label: "Sign In" },
+];
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);

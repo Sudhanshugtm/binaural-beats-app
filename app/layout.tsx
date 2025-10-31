@@ -171,7 +171,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-        <link rel="preload" href="/sw.js" as="script" />
+        {/* Service worker fetched during registration; avoid preload warning */}
         <link rel="prefetch" href="/offline.html" />
         <script
           type="application/ld+json"

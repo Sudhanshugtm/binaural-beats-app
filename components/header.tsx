@@ -65,7 +65,7 @@ export function Header() {
     return items;
   }, [handleSignOut, isSignedIn]);
 
-  const desktopNavItemClass = `inline-flex items-center justify-center text-sm font-semibold tracking-wide transition-colors duration-200 touch-target px-0 text-gray-700 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-md`;
+  const desktopNavItemClass = `inline-flex items-center justify-center text-sm font-semibold tracking-wide transition-colors duration-200 px-0 text-gray-700 hover:text-gray-900 focus-visible:outline-none focus-visible:underline focus-visible:text-gray-900`;
 
   useEffect(() => {
     let ticking = false;
@@ -142,7 +142,7 @@ export function Header() {
                     key={item.label}
                     type="button"
                     onClick={item.onClick}
-                    className={`${desktopNavItemClass} bg-transparent border-0`}
+                    className={`${desktopNavItemClass} appearance-none bg-transparent border-0 focus-visible:ring-0`}
                   >
                     {item.label}
                   </button>

@@ -14,7 +14,6 @@ type NavItem =
   | { href: string; label: string; onClick: () => void };
 
 const baseNavItems: NavItem[] = [
-  { href: "/features", label: "Features" },
   { href: "/programs", label: "Programs" },
 ];
 

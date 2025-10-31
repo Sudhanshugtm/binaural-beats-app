@@ -241,7 +241,6 @@ export default function RootLayout({
                 name: "Beatful"
               },
               copyrightYear: "2024",
-              license: "https://beatful.app/privacy",
               mainEntity: {
                 "@type": "WebApplication",
                 name: "Beatful Binaural Beats Player",

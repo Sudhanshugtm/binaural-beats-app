@@ -1,6 +1,12 @@
 export {};
 
 declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      ALLOWLISTED_LOGIN_EMAIL?: string;
+    }
+  }
+
   /**
    * Represents an action button displayed on a notification.
    */

@@ -142,7 +142,16 @@ export function Header() {
                     key={item.label}
                     type="button"
                     onClick={item.onClick}
-                    className={`${desktopNavItemClass} appearance-none bg-transparent border-none outline-none shadow-none focus-visible:ring-0`}
+                    className={desktopNavItemClass}
+                    style={{
+                      border: 0,
+                      outline: 0,
+                      boxShadow: 'none',
+                      background: 'transparent',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      appearance: 'none',
+                    }}
                   >
                     {item.label}
                   </button>
@@ -207,13 +216,20 @@ export function Header() {
                       setIsMobileMenuOpen(false);
                       announceToScreenReader(item.label, 'assertive');
                     }}
-                    className={`block w-full text-left px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target appearance-none bg-transparent border-none outline-none shadow-none ${
+                    className={`block w-full text-left px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target ${
                       isMobileMenuOpen
                         ? 'translate-x-0 opacity-100'
                         : 'translate-x-4 opacity-0'
                     }`}
                     style={{
-                      transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
+                      transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms',
+                      border: 0,
+                      outline: 0,
+                      boxShadow: 'none',
+                      background: 'transparent',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      appearance: 'none',
                     }}
                     tabIndex={isMobileMenuOpen ? 0 : -1}
                   >

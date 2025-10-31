@@ -185,13 +185,7 @@ export default function Home() {
           >
             <p className="mb-2 font-semibold text-slate-800">Backed by Science</p>
             <p className="leading-relaxed">
-              Our protocols are based on 20+ peer-reviewed studies showing benefits for relaxation and focus. Safe, natural, and effective for most users.{" "}
-              <a
-                href="/about"
-                className="font-medium underline underline-offset-2 text-primary hover:text-primary/80 transition-colors"
-              >
-                Learn more
-              </a>
+              Our protocols are based on 20+ peer-reviewed studies showing benefits for relaxation and focus. Safe, natural, and effective for most users.
             </p>
           </motion.div>
         </div>

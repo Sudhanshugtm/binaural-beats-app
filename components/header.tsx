@@ -16,7 +16,6 @@ type NavItem =
 const baseNavItems: NavItem[] = [
   { href: "/features", label: "Features" },
   { href: "/programs", label: "Programs" },
-  { href: "/about", label: "About" },
 ];
 
 export function Header() {

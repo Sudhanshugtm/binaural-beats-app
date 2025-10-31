@@ -461,7 +461,7 @@ export default function ProgressDashboardPage() {
                                   className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
                                     session.completed
                                       ? "bg-emerald-100 text-emerald-700"
-                                      : "bg-slate-100 text-slate-600"
+                                      : "bg-amber-100 text-amber-700"
                                   }`}
                                 >
                                   {session.completed ? (
@@ -472,7 +472,7 @@ export default function ProgressDashboardPage() {
                                   ) : (
                                     <>
                                       <Clock className="h-3 w-3" />
-                                      Open
+                                      Incomplete
                                     </>
                                   )}
                                 </span>
@@ -521,10 +521,10 @@ export default function ProgressDashboardPage() {
                                   </td>
                                   <td className="px-4 py-3">
                                     <span
-                                      className={`inline-flex min-w-[70px] items-center justify-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
+                                      className={`inline-flex min-w-[90px] items-center justify-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
                                         session.completed
                                           ? "bg-emerald-100 text-emerald-700"
-                                          : "bg-slate-100 text-slate-600"
+                                          : "bg-amber-100 text-amber-700"
                                       }`}
                                     >
                                       {session.completed ? (
@@ -535,7 +535,7 @@ export default function ProgressDashboardPage() {
                                       ) : (
                                         <>
                                           <Clock className="h-3 w-3" />
-                                          Open
+                                          Incomplete
                                         </>
                                       )}
                                     </span>

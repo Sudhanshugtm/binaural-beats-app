@@ -35,6 +35,19 @@ type SessionRow = {
   carrier_right: number | null;
 };
 
+function getCompletionPercent(session: SessionRow): number | null {
+  if (!session.completed && session.ended_at) {
+    const planned = Math.max(1, session.duration_seconds);
+    const started = new Date(session.started_at).getTime();
+    const ended = new Date(session.ended_at).getTime();
+    if (Number.isNaN(started) || Number.isNaN(ended) || ended <= started) return 0;
+    const elapsedSeconds = Math.min(planned, Math.max(0, Math.round((ended - started) / 1000)));
+    const percent = Math.round((elapsedSeconds / planned) * 100);
+    return Math.min(100, Math.max(0, percent));
+  }
+  return session.completed ? 100 : null;
+}
+
 export default function ProgressDashboardPage() {
   const supabase = getSupabaseClient();
   const router = useRouter();
@@ -448,35 +461,37 @@ export default function ProgressDashboardPage() {
                       <>
                         {/* Mobile card layout */}
                         <div className="space-y-3 p-4 md:hidden">
-                          {sessions.map((session) => (
-                            <div key={session.id} className="rounded-lg border border-slate-200 bg-white p-4 space-y-3">
-                              <div className="flex items-start justify-between">
-                                <div>
-                                  <p className="font-medium text-slate-900">
-                                    {session.name || session.mode_id || session.protocol_id || "Unnamed session"}
-                                  </p>
-                                  <p className="text-xs text-slate-500 mt-1">{formatDate(session.started_at)}</p>
+                          {sessions.map((session) => {
+                            const incompletePercent = getCompletionPercent(session);
+                            return (
+                              <div key={session.id} className="rounded-lg border border-slate-200 bg-white p-4 space-y-3">
+                                <div className="flex items-start justify-between">
+                                  <div>
+                                    <p className="font-medium text-slate-900">
+                                      {session.name || session.mode_id || session.protocol_id || "Unnamed session"}
+                                    </p>
+                                    <p className="text-xs text-slate-500 mt-1">{formatDate(session.started_at)}</p>
+                                  </div>
+                                  <span
+                                    className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
+                                      session.completed
+                                        ? "bg-emerald-100 text-emerald-700"
+                                        : "bg-amber-100 text-amber-700"
+                                    }`}
+                                  >
+                                    {session.completed ? (
+                                      <>
+                                        <CheckCircle2 className="h-3 w-3" />
+                                        Complete
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Clock className="h-3 w-3" />
+                                        {`Incomplete${typeof incompletePercent === "number" ? ` · ${incompletePercent}%` : ""}`}
+                                      </>
+                                    )}
+                                  </span>
                                 </div>
-                                <span
-                                  className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
-                                    session.completed
-                                      ? "bg-emerald-100 text-emerald-700"
-                                      : "bg-amber-100 text-amber-700"
-                                  }`}
-                                >
-                                  {session.completed ? (
-                                    <>
-                                      <CheckCircle2 className="h-3 w-3" />
-                                      Complete
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Clock className="h-3 w-3" />
-                                      Incomplete
-                                    </>
-                                  )}
-                                </span>
-                              </div>
                               <div className="flex items-center justify-between text-sm">
                                 <span className="text-slate-600">Duration: <span className="font-medium text-slate-900">{formatDuration(session.duration_seconds)}</span></span>
                                 <span className="text-slate-600">
@@ -487,8 +502,9 @@ export default function ProgressDashboardPage() {
                                     : "—"}
                                 </span>
                               </div>
-                            </div>
-                          ))}
+                              </div>
+                            );
+                          })}
                         </div>
 
                         {/* Desktop table layout */}
@@ -505,8 +521,10 @@ export default function ProgressDashboardPage() {
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 bg-white">
-                              {sessions.map((session) => (
-                                <tr key={session.id} className="text-slate-700">
+                              {sessions.map((session) => {
+                                const incompletePercent = getCompletionPercent(session);
+                                return (
+                                  <tr key={session.id} className="text-slate-700">
                                   <td className="px-4 py-3 font-medium text-slate-800">
                                     {formatDate(session.started_at)}
                                   </td>
@@ -521,7 +539,7 @@ export default function ProgressDashboardPage() {
                                   </td>
                                   <td className="px-4 py-3">
                                     <span
-                                      className={`inline-flex min-w-[90px] items-center justify-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
+                                      className={`inline-flex min-w-[110px] items-center justify-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
                                         session.completed
                                           ? "bg-emerald-100 text-emerald-700"
                                           : "bg-amber-100 text-amber-700"
@@ -535,7 +553,7 @@ export default function ProgressDashboardPage() {
                                       ) : (
                                         <>
                                           <Clock className="h-3 w-3" />
-                                          Incomplete
+                                          {`Incomplete${typeof incompletePercent === "number" ? ` · ${incompletePercent}%` : ""}`}
                                         </>
                                       )}
                                     </span>
@@ -547,8 +565,9 @@ export default function ProgressDashboardPage() {
                                       ? `${session.carrier_left}/${session.carrier_right} Hz`
                                       : "—"}
                                   </td>
-                                </tr>
-                              ))}
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                         </div>

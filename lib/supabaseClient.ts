@@ -4,6 +4,12 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "@/types/supabase";
 
 function initSupabaseClient(deviceId: string | null) {
+  const authOptions = {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: false,
+  } as const;
+
   if (deviceId) {
     return createClientComponentClient<Database>({
       options: {
@@ -12,11 +18,16 @@ function initSupabaseClient(deviceId: string | null) {
             "x-device-id": deviceId,
           },
         },
+        auth: authOptions,
       },
     });
   }
 
-  return createClientComponentClient<Database>();
+  return createClientComponentClient<Database>({
+    options: {
+      auth: authOptions,
+    },
+  });
 }
 
 type SupabaseBrowserClient = ReturnType<typeof initSupabaseClient>;

@@ -5,8 +5,14 @@ import type { Database } from "@/types/supabase";
 
 const PROTECTED_PREFIXES = ["/progress", "/programs"];
 
+function applySecurityHeaders(response: NextResponse) {
+  response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  return response;
+}
+
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+  const res = applySecurityHeaders(NextResponse.next());
   const supabase = createMiddlewareClient<Database>({ req, res });
   const {
     data: { session },
@@ -19,15 +25,16 @@ export async function middleware(req: NextRequest) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("redirect", `${pathname}${search || ""}`);
-    return NextResponse.redirect(redirectUrl);
+    return applySecurityHeaders(NextResponse.redirect(redirectUrl));
   }
 
   if (session && pathname === "/login") {
-    const target = req.nextUrl.searchParams.get("redirect") || "/progress";
+    const rawTarget = req.nextUrl.searchParams.get("redirect") || "/progress";
+    const target = rawTarget.startsWith("/") ? rawTarget : "/progress";
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = target;
     redirectUrl.search = "";
-    return NextResponse.redirect(redirectUrl);
+    return applySecurityHeaders(NextResponse.redirect(redirectUrl));
   }
 
   return res;

@@ -15,8 +15,8 @@ export function createServerSupabaseClient(): SupabaseServerClient {
   return initServerSupabaseClient(cookieStore);
 }
 
-export function createRouteSupabaseClient() {
+export function createRouteSupabaseClient(cookieStore: ReturnType<typeof cookies> = cookies()) {
   return createRouteHandlerClient<Database>({
-    cookies,
+    cookies: () => cookieStore,
   });
 }

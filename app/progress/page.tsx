@@ -99,6 +99,8 @@ export default function ProgressDashboardPage() {
           return;
         }
 
+        const ownerKeyValue = ownerKey as string;
+
         const [
           { data: dailyData, error: dailyErr },
           { data: sessionsData, error: sessionsErr }
@@ -106,7 +108,7 @@ export default function ProgressDashboardPage() {
           supabase
             .from("progress_daily_totals")
             .select("owner_key, day, sessions, total_completed_seconds, total_logged_seconds")
-            .eq("owner_key", ownerKey)
+            .eq("owner_key", ownerKeyValue)
             .order("day", { ascending: false })
             .limit(30),
           supabase
@@ -114,7 +116,7 @@ export default function ProgressDashboardPage() {
             .select(
               "id, name, mode_id, protocol_id, duration_seconds, started_at, ended_at, completed, beat_frequency, carrier_left, carrier_right"
             )
-            .eq("user_id", ownerKey)
+            .eq("user_id", ownerKeyValue)
             .order("started_at", { ascending: false })
             .limit(50)
         ]);

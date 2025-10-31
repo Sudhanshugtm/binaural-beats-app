@@ -3,26 +3,62 @@
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAccessibility } from "@/components/AccessibilityProvider";
 import Image from "next/image";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Database } from "@/types/supabase";
 
-// Main navigation items
-const navItems: { href: string; label: string }[] = [
+type NavItem =
+  | { href: string; label: string }
+  | { href: string; label: string; onClick: () => void };
+
+const baseNavItems: NavItem[] = [
   { href: "/features", label: "Features" },
   { href: "/about", label: "About" },
-  { href: "/auth/signin", label: "Sign In" },
 ];
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const { announceToScreenReader } = useAccessibility();
-  
+  const supabase = createClientComponentClient<Database>();
+
   const isHomePage = pathname === '/';
+
+  // Check auth state
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsSignedIn(Boolean(session));
+    };
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsSignedIn(Boolean(session));
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+  };
+
+  const navItems = [
+    ...baseNavItems,
+    isSignedIn
+      ? { href: "#", label: "Sign Out", onClick: handleSignOut }
+      : { href: "/auth/signin", label: "Sign In" }
+  ];
 
   useEffect(() => {
     let ticking = false;
@@ -93,19 +129,33 @@ export function Header() {
           {/* Desktop Navigation */}
           {navItems.length > 0 && (
             <nav className="hidden md:flex items-center space-x-6" aria-label="Main navigation">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
-                    isScrolled
-                      ? 'text-gray-700 hover:text-gray-900'
-                      : 'text-gray-700 hover:text-gray-900'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item) =>
+                'onClick' in item ? (
+                  <button
+                    key={item.label}
+                    onClick={item.onClick}
+                    className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
+                      isScrolled
+                        ? 'text-gray-700 hover:text-gray-900'
+                        : 'text-gray-700 hover:text-gray-900'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ) : (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
+                      isScrolled
+                        ? 'text-gray-700 hover:text-gray-900'
+                        : 'text-gray-700 hover:text-gray-900'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
             </nav>
           )}
 
@@ -151,27 +201,49 @@ export function Header() {
         >
           <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-lg">
             <nav className="container-zen mx-auto py-4 space-y-2" aria-label="Mobile navigation">
-              {navItems.map((item, index) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`block px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target ${
-                    isMobileMenuOpen
-                      ? 'translate-x-0 opacity-100'
-                      : 'translate-x-4 opacity-0'
-                  }`}
-                  style={{
-                    transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
-                  }}
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    announceToScreenReader(`Navigating to ${item.label}`, 'assertive');
-                  }}
-                  tabIndex={isMobileMenuOpen ? 0 : -1}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item, index) =>
+                'onClick' in item ? (
+                  <button
+                    key={item.label}
+                    onClick={() => {
+                      item.onClick?.();
+                      setIsMobileMenuOpen(false);
+                      announceToScreenReader(item.label, 'assertive');
+                    }}
+                    className={`block w-full text-left px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target ${
+                      isMobileMenuOpen
+                        ? 'translate-x-0 opacity-100'
+                        : 'translate-x-4 opacity-0'
+                    }`}
+                    style={{
+                      transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
+                    }}
+                    tabIndex={isMobileMenuOpen ? 0 : -1}
+                  >
+                    {item.label}
+                  </button>
+                ) : (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`block px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target ${
+                      isMobileMenuOpen
+                        ? 'translate-x-0 opacity-100'
+                        : 'translate-x-4 opacity-0'
+                    }`}
+                    style={{
+                      transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
+                    }}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      announceToScreenReader(`Navigating to ${item.label}`, 'assertive');
+                    }}
+                    tabIndex={isMobileMenuOpen ? 0 : -1}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
             </nav>
           </div>
         </div>

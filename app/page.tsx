@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "@/types/supabase";
+import { ArrowRight } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -120,10 +121,12 @@ export default function Home() {
                   const anxietyProtocol = RESEARCH_PROTOCOLS.find(p => p.id === 'anxiety-alpha');
                   if (anxietyProtocol) handleStartProtocol(anxietyProtocol);
                 }}
-                size="lg"
-                className="w-full sm:w-auto"
+                variant="outline"
+                size="default"
+                className="border-primary/20 hover:bg-primary/5"
               >
-                Try Anxiety Relief (Most Popular)
+                <span>Try Anxiety Relief</span>
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </Button>
             </motion.div>
           </header>
@@ -138,24 +141,26 @@ export default function Home() {
           >
             {isSignedIn && (
               <motion.div variants={staggerItem} className="lg:col-span-2">
-                <div className="group flex h-full flex-col justify-between rounded-3xl border border-slate-200 bg-slate-900 p-7 text-left shadow-soft transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg">
+                <div className="group flex h-full flex-col rounded-3xl border border-slate-200 bg-slate-900 p-7 text-left shadow-soft transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg">
                   <div className="space-y-3 text-slate-100">
                     <p className="text-[0.75rem] uppercase tracking-[0.2em] text-primary/80">
                       Premium Program
                     </p>
-                    <h2 className="text-xl font-semibold tracking-tight">Deep Work Sprint</h2>
-                    <p className="text-base leading-relaxed text-slate-200/90">
-                      A guided 7-day cadence alternating sprints and resets to sharpen your shipping
-                      energy.
+                    <h2 className="text-lg font-semibold tracking-tight">Deep Work Sprint</h2>
+                    <p className="text-sm leading-relaxed text-slate-200/80">
+                      A guided 7-day cadence alternating sprints and resets to sharpen your shipping energy.
                     </p>
                   </div>
-                  <div className="mt-6 pt-6 border-t border-slate-200/20">
+                  <div className="mt-6 flex items-center justify-between">
+                    <span className="text-sm text-slate-400">7-day journey</span>
                     <Button
                       onClick={() => router.push("/programs/deep-work-sprint")}
-                      className="w-full bg-white text-slate-900 hover:bg-slate-100"
-                      size="lg"
+                      variant="ghost"
+                      size="sm"
+                      className="text-white hover:text-white/80 hover:bg-white/10"
                     >
-                      Start 7-Day Journey
+                      <span className="text-sm font-medium">Start</span>
+                      <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
                     </Button>
                   </div>
                 </div>

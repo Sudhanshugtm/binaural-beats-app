@@ -57,33 +57,26 @@ export function PresetCard({ protocol, onStart }: PresetCardProps) {
         </div>
 
         {/* Study Reference */}
-        <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-4">
-          <div className="flex items-baseline gap-2 text-[0.75rem] uppercase tracking-[0.18em] text-slate-700">
-            <span>Reference</span>
-            <span aria-hidden="true" className="h-1 w-1 rounded-full bg-slate-400" />
-          </div>
+        <div className="flex items-center justify-between pt-2">
           <a
             href={protocol.studyReference.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-medium text-slate-700 transition-colors hover:text-primary"
+            className="inline-flex items-center gap-1.5 text-xs text-slate-600 transition-colors hover:text-primary"
             aria-label={`View study by ${protocol.studyReference.authors} (${protocol.studyReference.year}) - opens in new tab`}
           >
             <span>{protocol.studyReference.authors} ({protocol.studyReference.year})</span>
             <ExternalLink className="w-3 h-3" aria-hidden="true" />
           </a>
-        </div>
-
-        {/* CTA Button */}
-        <div className="mt-2 pt-4 border-t border-slate-200">
           <Button
             onClick={() => onStart(protocol)}
-            className="w-full"
-            size="lg"
+            variant="ghost"
+            size="sm"
+            className="text-primary hover:text-primary/80 hover:bg-transparent -mr-2"
             aria-label={`Start ${protocol.name} session - ${protocol.duration} minutes at ${protocol.beatFrequency} Hz`}
           >
-            <span>Start Session</span>
-            <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+            <span className="text-sm font-medium">Start</span>
+            <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
           </Button>
         </div>
       </div>

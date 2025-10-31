@@ -141,23 +141,22 @@ export default function Home() {
           >
             {isSignedIn && (
               <motion.div variants={staggerItem} className="lg:col-span-2">
-                <div className="group flex h-full flex-col rounded-3xl border border-slate-200 bg-slate-900 p-7 text-left shadow-soft transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg">
-                  <div className="space-y-3 text-slate-100">
-                    <p className="text-[0.75rem] uppercase tracking-[0.2em] text-primary/80">
+                <div className="group flex h-full flex-col rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-white to-accent/5 p-7 text-left shadow-soft transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg hover:border-primary/30">
+                  <div className="space-y-3">
+                    <p className="text-[0.75rem] uppercase tracking-[0.2em] text-primary font-semibold">
                       Premium Program
                     </p>
-                    <h2 className="text-lg font-semibold tracking-tight">Deep Work Sprint</h2>
-                    <p className="text-sm leading-relaxed text-slate-200/80">
+                    <h2 className="text-lg font-semibold tracking-tight text-slate-900">Deep Work Sprint</h2>
+                    <p className="text-sm leading-relaxed text-slate-700">
                       A guided 7-day cadence alternating sprints and resets to sharpen your shipping energy.
                     </p>
                   </div>
                   <div className="mt-6 flex items-center justify-between">
-                    <span className="text-sm text-slate-400">7-day journey</span>
+                    <span className="text-sm text-slate-600">7-day journey</span>
                     <Button
                       onClick={() => router.push("/programs/deep-work-sprint")}
-                      variant="ghost"
+                      variant="default"
                       size="sm"
-                      className="text-white hover:text-white/80 hover:bg-white/10"
                     >
                       <span className="text-sm font-medium">Start</span>
                       <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />

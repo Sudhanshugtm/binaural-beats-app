@@ -83,21 +83,26 @@ type ProgressSessionsTable = {
   Relationships: never[];
 };
 
+type ProgressDailyTotalsView = {
+  Row: {
+    owner_key: string | null;
+    day: string;
+    sessions: number | null;
+    total_completed_seconds: number | null;
+    total_logged_seconds: number | null;
+  };
+  Insert: never;
+  Update: never;
+  Relationships: never[];
+};
+
 type PublicSchema = {
   Tables: {
     progress_sessions: ProgressSessionsTable;
+    progress_daily_totals: ProgressDailyTotalsView;
   } & Record<string, BaseTable>;
   Views: {
-    progress_daily_totals: {
-      Row: {
-        owner_key: string | null;
-        day: string;
-        sessions: number | null;
-        total_completed_seconds: number | null;
-        total_logged_seconds: number | null;
-      };
-      Relationships: never[];
-    };
+    progress_daily_totals: ProgressDailyTotalsView;
   } & Record<string, BaseView>;
   Functions: Record<string, BaseFunction>;
   Enums: Record<string, string>;

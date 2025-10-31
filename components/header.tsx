@@ -134,7 +134,7 @@ export function Header() {
                   <button
                     key={item.label}
                     onClick={item.onClick}
-                    className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
+                    className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target bg-transparent border-0 p-0 cursor-pointer ${
                       isScrolled
                         ? 'text-gray-700 hover:text-gray-900'
                         : 'text-gray-700 hover:text-gray-900'

@@ -142,7 +142,7 @@ export function Header() {
                     key={item.label}
                     type="button"
                     onClick={item.onClick}
-                    className={`${desktopNavItemClass} appearance-none bg-transparent border-0 focus-visible:ring-0`}
+                    className={`${desktopNavItemClass} appearance-none bg-transparent border-none outline-none shadow-none focus-visible:ring-0`}
                   >
                     {item.label}
                   </button>
@@ -201,12 +201,13 @@ export function Header() {
                 'onClick' in item ? (
                   <button
                     key={item.label}
+                    type="button"
                     onClick={() => {
                       item.onClick?.();
                       setIsMobileMenuOpen(false);
                       announceToScreenReader(item.label, 'assertive');
                     }}
-                    className={`block w-full text-left px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target ${
+                    className={`block w-full text-left px-4 py-3 text-gray-800 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-all duration-200 hover:translate-x-1 touch-target appearance-none bg-transparent border-none outline-none shadow-none ${
                       isMobileMenuOpen
                         ? 'translate-x-0 opacity-100'
                         : 'translate-x-4 opacity-0'

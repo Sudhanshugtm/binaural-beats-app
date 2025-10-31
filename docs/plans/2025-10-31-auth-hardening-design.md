@@ -60,3 +60,4 @@ Beatful remains invite-only with a single authorized Supabase account. We retain
 - `curl -X POST http://localhost:3000/api/auth/login -d '{"email":"<allowlisted>","password":"secret"}'` → expect `200 {"success":true}` when credentials valid.
 - Same request with non-allowlisted email → expect `401` and JSON error message.
 - Observe `auth_attempts` table (once created) to confirm metadata rows insert for each attempt.
+- In browser, submit wrong password thrice → submit button disables and warning appears for ~30s; CAPTCHA widget renders when threshold exceeded; after solving CAPTCHA and providing correct password, you are redirected to `/progress` once session is established.

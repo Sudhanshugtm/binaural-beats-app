@@ -129,11 +129,18 @@ export default function SimpleBinauralPlayer({ protocol }: SimpleBinauralPlayerP
         sessionIdRef.current = null;
       }
     } else {
+      // Reset timer if completed (allows restart)
+      const wasCompleted = timeRemaining === 0;
+      if (wasCompleted) {
+        setTimeRemaining(protocol.duration * 60);
+        setProgress(0);
+      }
+
       await startAudio();
       setIsPlaying(true);
 
       const now = Date.now();
-      const totalSeconds = timeRemaining;
+      const totalSeconds = wasCompleted ? protocol.duration * 60 : timeRemaining;
       sessionEndAtRef.current = now + totalSeconds * 1000;
 
       // Log session start if not already

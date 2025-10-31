@@ -57,7 +57,7 @@ export function Header() {
     ...baseNavItems,
     isSignedIn
       ? { href: "#", label: "Sign Out", onClick: handleSignOut }
-      : { href: "/auth/signin", label: "Sign In" }
+      : { href: "/login", label: "Sign In" }
   ];
 
   useEffect(() => {

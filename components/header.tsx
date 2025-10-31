@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAccessibility } from "@/components/AccessibilityProvider";
@@ -47,17 +47,25 @@ export function Header() {
     };
   }, [supabase]);
 
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     await supabase.auth.signOut();
+    setIsSignedIn(false);
+    setIsMobileMenuOpen(false);
     router.push('/');
-  };
+  }, [router, supabase]);
 
-  const navItems = [
-    ...baseNavItems,
-    isSignedIn
-      ? { href: "#", label: "Sign Out", onClick: handleSignOut }
-      : { href: "/login", label: "Sign In" }
-  ];
+  const navItems = useMemo(() => {
+    const items: NavItem[] = [...baseNavItems];
+    if (isSignedIn) {
+      items.push({ href: "/progress", label: "Progress" });
+      items.push({ href: "#", label: "Sign Out", onClick: handleSignOut });
+    } else {
+      items.push({ href: "/login", label: "Sign In" });
+    }
+    return items;
+  }, [handleSignOut, isSignedIn]);
+
+  const desktopNavItemClass = `inline-flex items-center justify-center text-sm font-semibold tracking-wide transition-colors duration-200 touch-target px-0 text-gray-700 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-md`;
 
   useEffect(() => {
     let ticking = false;
@@ -132,25 +140,14 @@ export function Header() {
                 'onClick' in item ? (
                   <button
                     key={item.label}
+                    type="button"
                     onClick={item.onClick}
-                    className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target bg-transparent border-0 p-0 cursor-pointer ${
-                      isScrolled
-                        ? 'text-gray-700 hover:text-gray-900'
-                        : 'text-gray-700 hover:text-gray-900'
-                    }`}
+                    className={`${desktopNavItemClass} bg-transparent border-0`}
                   >
                     {item.label}
                   </button>
                 ) : (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`text-sm font-semibold tracking-wide transition-colors duration-200 touch-target ${
-                      isScrolled
-                        ? 'text-gray-700 hover:text-gray-900'
-                        : 'text-gray-700 hover:text-gray-900'
-                    }`}
-                  >
+                  <Link key={item.href} href={item.href} className={desktopNavItemClass}>
                     {item.label}
                   </Link>
                 )

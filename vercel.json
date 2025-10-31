@@ -4,6 +4,9 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
+  "env": {
+    "ALLOWLISTED_LOGIN_EMAIL": "sudhanshu9252@gmail.com"
+  },
   "headers": [
     {
       "source": "/(.*)",

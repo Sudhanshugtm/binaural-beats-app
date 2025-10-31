@@ -73,28 +73,30 @@ export function DeepWorkSprintClient({ program }: DeepWorkSprintClientProps) {
 
   return (
     <div className="mx-auto max-w-4xl space-y-12 px-6 py-16">
-      <header className="space-y-4">
-        <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Program</p>
-        <h1 className="text-3xl font-semibold text-slate-900 sm:text-4xl">{program.name}</h1>
-        <p className="text-base text-slate-600 sm:text-lg">{program.summary}</p>
-        <div className="flex flex-wrap gap-3">
-          <Button size="lg" onClick={handleLaunchToday}>
+      <header className="space-y-6">
+        <div className="space-y-3">
+          <p className="text-sm uppercase tracking-[0.2em] text-slate-700">Program</p>
+          <h1 className="text-3xl font-semibold text-slate-900 sm:text-4xl">{program.name}</h1>
+          <p className="text-base text-slate-700 sm:text-lg">{program.summary}</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          <Button size="default" onClick={handleLaunchToday}>
             {state ? `Start Day ${dayIndex + 1}` : program.heroCta}
           </Button>
           {state && (
-            <Button variant="outline" onClick={handleReset}>
-              Restart program
+            <Button variant="ghost" size="sm" onClick={handleReset} className="text-slate-600 hover:text-slate-900">
+              Restart
             </Button>
           )}
-          <Button variant="ghost" onClick={() => router.push("/progress")}>
+          <Button variant="ghost" size="sm" onClick={() => router.push("/progress")} className="text-slate-600 hover:text-slate-900">
             View progress
           </Button>
         </div>
       </header>
 
       <section className="space-y-6">
-        <div className="rounded-3xl border border-slate-200 bg-white/80 px-6 py-5 shadow-soft backdrop-blur">
-          <p className="text-sm text-slate-600">
+        <div className="rounded-2xl border border-slate-200 bg-white/80 px-5 py-4 shadow-soft backdrop-blur">
+          <p className="text-sm text-slate-700">
             You&apos;re on{" "}
             <span className="font-semibold text-slate-900">
               Day {currentDay.day}: {currentDay.title}
@@ -104,68 +106,64 @@ export function DeepWorkSprintClient({ program }: DeepWorkSprintClientProps) {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-slate-900 sm:text-xl">Daily roadmap</h2>
-          <ol className="space-y-4">
+          <h2 className="text-lg font-semibold text-slate-900">Daily roadmap</h2>
+          <ol className="space-y-3">
             {program.days.map((day, index) => {
               const isActive = index === dayIndex;
               return (
                 <li
                   key={day.day}
-                  className={`rounded-3xl border px-5 py-5 transition ${
+                  className={`rounded-2xl border px-5 py-4 transition ${
                     isActive
-                      ? "border-primary/50 bg-primary/5 shadow-soft"
-                      : "border-slate-200 bg-white/85"
+                      ? "border-primary/30 bg-primary/5"
+                      : "border-slate-200 bg-white/60"
                   }`}
                 >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="space-y-3">
-                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                        Day {day.day}
-                      </p>
-                      <h3 className="text-base font-semibold text-slate-900 sm:text-lg">
-                        {day.title}
-                      </h3>
-                      <p className="text-sm text-slate-600">{day.intent}</p>
-                      <div className="grid gap-3 text-sm text-slate-600 sm:grid-cols-3">
-                        <div>
-                          <span className="font-medium text-slate-800">Duration:</span>{" "}
-                          {day.durationMinutes} min
-                        </div>
-                        <div>
-                          <span className="font-medium text-slate-800">Frequency:</span>{" "}
-                          {day.beatFrequency} Hz
-                        </div>
-                        <div>
-                          <span className="font-medium text-slate-800">Carrier:</span>{" "}
-                          {day.carrierLeft}/{day.carrierRight} Hz
-                        </div>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="space-y-2">
+                      <div className="flex items-baseline gap-3">
+                        <p className="text-sm uppercase tracking-[0.2em] text-slate-700">
+                          Day {day.day}
+                        </p>
+                        <h3 className="text-base font-semibold text-slate-900">
+                          {day.title}
+                        </h3>
+                      </div>
+                      <p className="text-sm text-slate-700">{day.intent}</p>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600">
+                        <span>{day.durationMinutes} min</span>
+                        <span>•</span>
+                        <span>{day.beatFrequency} Hz</span>
+                        <span>•</span>
+                        <span>{day.carrierLeft}/{day.carrierRight} Hz</span>
                       </div>
                     </div>
                     <Button
                       size="sm"
-                      variant={isActive ? "default" : "outline"}
+                      variant={isActive ? "default" : "ghost"}
                       onClick={() => handleJump(index)}
+                      className={!isActive ? "text-slate-600 hover:text-slate-900" : ""}
                     >
-                      {isActive ? "Start today" : "Jump to day"}
+                      {isActive ? "Start" : "Jump"}
                     </Button>
                   </div>
 
-                  <div className="mt-4 grid gap-4 text-sm text-slate-600 md:grid-cols-3">
+                  <div className="mt-4 grid gap-3 text-sm text-slate-700 md:grid-cols-3">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                        Before you start
+                      <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-600 mb-1">
+                        Before
                       </p>
                       <p>{day.before}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                        Focus cue
+                      <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-600 mb-1">
+                        Focus
                       </p>
                       <p>{day.focusCue}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                        After session
+                      <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-600 mb-1">
+                        After
                       </p>
                       <p>{day.after}</p>
                     </div>

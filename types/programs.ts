@@ -21,6 +21,7 @@ export type ProgramDefinition = {
   heroCta: string;
   totalDays: number;
   days: ProgramDay[];
+  disclaimer?: string;
 };
 
 export const DEEP_WORK_SPRINT: ProgramDefinition = {
@@ -31,6 +32,7 @@ export const DEEP_WORK_SPRINT: ProgramDefinition = {
     "A guided week of alternating sprints and resets. Follow the daily prompts, breathe into each frequency shift, and capture one breakthrough per session.",
   heroCta: "Start Deep Work Sprint",
   totalDays: 7,
+  disclaimer: "This program combines frequencies from published research (alpha, theta ranges) with experimental protocols. Individual sessions use frequencies not specifically validated in clinical studies. Designed as a productivity tool, not for clinical outcomes. Effect sizes in research are modest and individual responses vary significantly.",
   days: [
     {
       day: 1,

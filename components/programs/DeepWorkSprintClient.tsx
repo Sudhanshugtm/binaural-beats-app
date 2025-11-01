@@ -102,6 +102,12 @@ export function DeepWorkSprintClient({ program }: DeepWorkSprintClientProps) {
           <p className="text-sm uppercase tracking-[0.2em] text-slate-700">Program</p>
           <h1 className="text-3xl font-semibold text-slate-900 sm:text-4xl">{program.name}</h1>
           <p className="text-base text-slate-700 sm:text-lg">{program.summary}</p>
+          {program.disclaimer && (
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs sm:text-sm text-slate-700">
+              <p className="font-semibold text-slate-800 mb-1">Research Note</p>
+              <p className="leading-relaxed">{program.disclaimer}</p>
+            </div>
+          )}
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <Button size="default" onClick={handleLaunchToday}>

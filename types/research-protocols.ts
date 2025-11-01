@@ -35,7 +35,7 @@ export const RESEARCH_PROTOCOLS: ResearchProtocol[] = [
       title: 'The Efficiency of Binaural Beats on Anxiety and Depression',
       url: 'https://www.mdpi.com/2076-3417/14/13/5675'
     },
-    disclaimer: 'Based on clinical studies showing modest anxiety reduction. Individual results may vary.'
+    disclaimer: 'Based on 2024 systematic review of 12 studies (1,349 participants) showing significant anxiety reduction with alpha frequencies. Effect sizes were modest. Individual results may vary.'
   },
   {
     id: 'calm-alpha',
@@ -47,12 +47,12 @@ export const RESEARCH_PROTOCOLS: ResearchProtocol[] = [
     carrierRight: 210,
     category: 'relaxation',
     studyReference: {
-      authors: 'Multiple studies',
+      authors: 'Isik et al.',
       year: 2024,
-      title: 'Systematic Review: Alpha Frequency Effects',
+      title: 'The Efficiency of Binaural Beats on Anxiety and Depression—A Systematic Review',
       url: 'https://www.mdpi.com/2076-3417/14/13/5675'
     },
-    disclaimer: 'Alpha frequencies (8-13 Hz) showed consistent results for relaxation in systematic reviews.'
+    disclaimer: 'Alpha frequencies (8-13 Hz) showed significant results for relaxation and anxiety reduction across multiple studies in systematic review.'
   },
   {
     id: 'mood-theta',
@@ -64,12 +64,12 @@ export const RESEARCH_PROTOCOLS: ResearchProtocol[] = [
     carrierRight: 207,
     category: 'mood',
     studyReference: {
-      authors: 'Clinical Studies',
-      year: 2024,
-      title: 'Theta Frequencies and Mood States',
+      authors: 'Chaieb et al.',
+      year: 2015,
+      title: 'Auditory Beat Stimulation and its Effects on Cognition and Mood States',
       url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4428073/'
     },
-    disclaimer: 'Preliminary evidence for mood effects. Not a substitute for mental health treatment.'
+    disclaimer: 'Based on 2015 review showing mixed results for mood. Some studies found benefits while others showed increases in depression. Effects described as often weak and short-lived. Not a substitute for mental health treatment.'
   },
   {
     id: 'sleep-delta',
@@ -86,6 +86,6 @@ export const RESEARCH_PROTOCOLS: ResearchProtocol[] = [
       title: 'Delta Binaural Beats for Better Sleep',
       url: 'https://journals.sagepub.com/doi/full/10.1177/20552076221102243'
     },
-    disclaimer: 'May support relaxation before sleep. Effects on actual sleep quality are under study.'
+    disclaimer: 'Based on pilot study (n=20) showing significant improvements in sleep latency and duration. Study used 174/177 Hz carriers; this protocol uses 200/203 Hz. Individual results may vary.'
   }
 ];

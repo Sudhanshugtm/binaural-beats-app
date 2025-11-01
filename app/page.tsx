@@ -183,9 +183,9 @@ export default function Home() {
             transition={{ delay: 0.5 }}
             className="mx-auto max-w-[65ch] rounded-2xl border border-slate-200 bg-white/90 px-5 py-4 text-center text-xs sm:text-sm text-slate-700 shadow-soft"
           >
-            <p className="mb-2 font-semibold text-slate-800">Backed by Science</p>
+            <p className="mb-2 font-semibold text-slate-800">Research-Informed</p>
             <p className="leading-relaxed">
-              Our protocols are based on 20+ peer-reviewed studies showing benefits for relaxation and focus. Safe, natural, and effective for most users.
+              Our protocols are informed by peer-reviewed systematic reviews examining studies with over 1,300 participants. Research shows promising but mixed results, with modest effect sizes for relaxation and anxiety reduction. Individual responses vary. Not a substitute for medical treatment.
             </p>
           </motion.div>
         </div>

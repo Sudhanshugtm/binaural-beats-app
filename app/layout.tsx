@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     default: "Beatful - Binaural Beats for Focus & Meditation",
     template: "%s | Beatful - Binaural Beats App"
   },
-  description: "Transform your focus and meditation practice with scientifically-designed binaural beats. Free web app for mindful productivity, deep concentration, and relaxation. Start your peaceful journey today.",
+  description: "Research-informed binaural beats for relaxation and focus. Free web app with frequencies from peer-reviewed studies. Alpha, theta, and delta protocols for stress relief and meditation. Individual results vary.",
   keywords: [
     "binaural beats",
     "meditation app",

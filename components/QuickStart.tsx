@@ -27,9 +27,9 @@ const QUICK_START_MODES: QuickStartMode[] = [
     icon: Heart,
     duration: 10,
     frequency: 6,
-    description: "Perfect introduction to binaural beats with gentle, calming frequencies",
+    description: "Gentle introduction with theta frequencies (research shows mixed results for relaxation)",
     recommended: true,
-    benefits: ["Gentle introduction", "Stress relief", "Mental clarity"]
+    benefits: ["Beginner-friendly", "May reduce stress", "Short session"]
   },
   {
     id: "focus-boost",
@@ -37,9 +37,9 @@ const QUICK_START_MODES: QuickStartMode[] = [
     icon: Target,
     duration: 25,
     frequency: 10,
-    description: "Enhanced concentration for work or study sessions",
+    description: "Alpha frequency shown to support attention and relaxation in research",
     recommended: false,
-    benefits: ["Enhanced focus", "Improved productivity", "Mental stamina"]
+    benefits: ["May improve focus", "Research-backed frequency", "Moderate duration"]
   },
   {
     id: "creative-flow",
@@ -47,9 +47,9 @@ const QUICK_START_MODES: QuickStartMode[] = [
     icon: Sparkles,
     duration: 30,
     frequency: 8,
-    description: "Unlock creative potential with theta wave stimulation",
+    description: "Alpha-theta frequency for relaxation (creative benefits not validated)",
     recommended: false,
-    benefits: ["Creative thinking", "Inspiration", "Problem solving"]
+    benefits: ["May aid relaxation", "Exploratory frequency", "Extended session"]
   },
   {
     id: "deep-calm",
@@ -57,9 +57,9 @@ const QUICK_START_MODES: QuickStartMode[] = [
     icon: Brain,
     duration: 15,
     frequency: 4,
-    description: "Achieve deep relaxation and inner peace",
+    description: "Delta frequency associated with deep rest and sleep preparation",
     recommended: false,
-    benefits: ["Deep relaxation", "Stress reduction", "Inner peace"]
+    benefits: ["May support relaxation", "Sleep-associated frequency", "Quick session"]
   }
 ];
 

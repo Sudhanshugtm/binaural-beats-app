@@ -18,8 +18,8 @@ export default function FeatureGrid() {
     },
     {
       icon: Waves,
-      title: "Pure + Binaural",
-      desc: "Solfeggio pure tones and binaural modes in one place.",
+      title: "Research-Based Frequencies",
+      desc: "Alpha, theta, delta, and beta frequencies from peer-reviewed studies.",
     },
     {
       icon: Headphones,

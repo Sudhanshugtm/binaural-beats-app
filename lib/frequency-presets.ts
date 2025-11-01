@@ -11,5 +11,3 @@ export const BEAT_PRESETS: BeatPreset[] = [
   { name: 'Beta', frequency: 20, description: 'Concentration, alertness' },
 ];
 
-export const SOLFEGGIO_PRESETS = [396, 417, 528, 639, 741, 852, 963] as const;
-

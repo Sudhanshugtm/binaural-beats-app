@@ -50,14 +50,5 @@ export const WORK_MODES: WorkMode[] = [
     duration: 15,
     description: 'Gentle restoration for inner harmony',
   },
-  {
-    id: 'solfeggio-852',
-    name: 'Solfeggio 852Hz',
-    icon: '🔮',
-    frequency: 852,
-    duration: 90,
-    description: 'Awakening intuition and inner alignment',
-    isPureTone: true,
-  },
 ]
 
